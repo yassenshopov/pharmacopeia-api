@@ -74,6 +74,23 @@ export const ApprovalSchema = z.object({
   sponsor: z.string().optional(),
 });
 
+/**
+ * Verbatim narrative excerpts lifted from the structured-product-label
+ * sections of the openFDA drug label. These are reference text, not
+ * parsed structured data — the structured `dosing[]` rows and ICD-10
+ * codes are reserved for the later LLM-extraction stage. Each field is
+ * optional because not every label populates every section.
+ */
+export const LabelSectionsSchema = z.object({
+  boxedWarning: z.string().optional(),
+  dosageAndAdministration: z.string().optional(),
+  warningsAndPrecautions: z.string().optional(),
+  adverseReactions: z.string().optional(),
+  useInSpecificPopulations: z.string().optional(),
+  overdosage: z.string().optional(),
+});
+export type LabelSections = z.infer<typeof LabelSectionsSchema>;
+
 export const IdentifierSchema = z.object({
   rxcui: z.string().optional(),
   ndc: z.array(z.string()).default([]),
@@ -145,6 +162,12 @@ export const DrugSchema = DrugSummarySchema.extend({
    * structured DDI source lands.
    */
   interactionsNarrative: z.string().optional(),
+  /**
+   * Verbatim FDA structured-product-label narrative sections (boxed
+   * warning, dosage, adverse reactions, etc.). Reference text from the
+   * same openFDA label as the drug-level provenance.
+   */
+  labelSections: LabelSectionsSchema.optional(),
   identifiers: IdentifierSchema,
   chemical: ChemicalStructureSchema.optional(),
   provenance: ProvenanceSchema,

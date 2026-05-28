@@ -8,7 +8,11 @@
  *     Authoritative IDs, brand names, ingredients, ATC + EPC + MOA classes.
  *  2. openFDA       https://api.fda.gov/drug/label.json
  *     FDA-labeled narrative text for mechanism, indications,
- *     contraindications, and pharmacokinetics.
+ *     contraindications, pharmacokinetics, boxed warnings, dosage,
+ *     adverse reactions, warnings, special populations, overdosage,
+ *     plus NDC + UNII identifiers.
+ *  3. openFDA       https://api.fda.gov/drug/drugsfda.json
+ *     Original approval history (application number, type, date, sponsor).
  *
  * The script is idempotent: deterministic timestamps, sorted output,
  * stable hashing. Re-running it produces byte-identical files unless
@@ -46,65 +50,406 @@ const OUT_DIR = resolve(REPO_ROOT, "lib/data/seed");
 // Deterministic fixed timestamp so re-runs do not diff just because of clock.
 const EXTRACTED_AT = "2026-05-28T00:00:00.000Z";
 
-// Curated list of widely-prescribed drugs in the US. Targets ~50 valid records;
-// a handful may be dropped if upstream coverage is poor.
+/**
+ * Curated list of widely-prescribed and clinically-significant US
+ * medications, organised by therapeutic area for browsability.
+ *
+ * Targets ~300 valid records; a handful will be dropped at ingest time
+ * if RxNav cannot resolve the name to a mono-substance RxCUI or
+ * openFDA does not return a clean label. Each name resolves to a
+ * single active ingredient — combination products are deliberately
+ * out of scope for v0 (the ingest pipeline rejects them).
+ *
+ * Adding a drug here:
+ *   1. Append to the relevant therapeutic group (or open a new one).
+ *   2. Use the canonical generic name as a single token where possible
+ *      ("ramipril", not "ramipril 5 mg"). Multi-word names like
+ *      "insulin glargine" are fine — the script slugifies them.
+ *   3. Avoid combination products (FDA labels these as
+ *      "X AND Y") — they will be skipped by the openFDA mono-match.
+ *   4. Re-run `npm run ingest` and then `npm run ingest:structures`
+ *      to backfill the PubChem 2D diagram for the new entries.
+ */
 const DRUG_NAMES: ReadonlyArray<string> = [
-  // existing seed set
-  "metformin",
-  "lisinopril",
-  "atorvastatin",
-  "levothyroxine",
-  "amlodipine",
-  "omeprazole",
-  "sertraline",
-  "gabapentin",
-  "hydrochlorothiazide",
-  "ibuprofen",
-  // expansion
-  "albuterol",
-  "losartan",
-  "simvastatin",
+  // ── Analgesics, antipyretics, NSAIDs ─────────────────────────────
   "acetaminophen",
-  "prednisone",
-  "amoxicillin",
-  "azithromycin",
-  "ciprofloxacin",
-  "fluoxetine",
-  "escitalopram",
-  "alprazolam",
-  "lorazepam",
-  "citalopram",
-  "trazodone",
-  "montelukast",
-  "fluticasone",
-  "tramadol",
-  "oxycodone",
-  "furosemide",
-  "metoprolol",
-  "carvedilol",
-  "warfarin",
-  "clopidogrel",
   "aspirin",
-  "pantoprazole",
+  "celecoxib",
+  "diclofenac",
+  "etodolac",
+  "ibuprofen",
+  "indomethacin",
+  "ketoprofen",
+  "ketorolac",
+  "meloxicam",
+  "nabumetone",
+  "naproxen",
+  "piroxicam",
+
+  // ── Opioid analgesics ────────────────────────────────────────────
+  "buprenorphine",
+  "codeine",
+  "fentanyl",
+  "hydrocodone",
+  "hydromorphone",
+  "methadone",
+  "morphine",
+  "naloxone",
+  "naltrexone",
+  "oxycodone",
+  "oxymorphone",
+  "tapentadol",
+  "tramadol",
+
+  // ── Anticonvulsants / mood stabilisers ──────────────────────────
+  "carbamazepine",
+  "ethosuximide",
+  "gabapentin",
+  "lacosamide",
+  "lamotrigine",
+  "levetiracetam",
+  "oxcarbazepine",
+  "phenobarbital",
+  "phenytoin",
+  "pregabalin",
+  "topiramate",
+  "valproic acid",
+  "zonisamide",
+
+  // ── Antidepressants ──────────────────────────────────────────────
+  "amitriptyline",
+  "bupropion",
+  "citalopram",
+  "desvenlafaxine",
+  "doxepin",
+  "duloxetine",
+  "escitalopram",
+  "fluoxetine",
+  "fluvoxamine",
+  "mirtazapine",
+  "nortriptyline",
+  "paroxetine",
+  "selegiline",
+  "sertraline",
+  "trazodone",
+  "venlafaxine",
+  "vortioxetine",
+
+  // ── Anxiolytics, sedatives, hypnotics ───────────────────────────
+  "alprazolam",
+  "buspirone",
+  "chlordiazepoxide",
+  "clonazepam",
+  "diazepam",
+  "eszopiclone",
+  "lorazepam",
+  "oxazepam",
+  "ramelteon",
+  "temazepam",
+  "zolpidem",
+
+  // ── Antipsychotics & lithium ────────────────────────────────────
+  "aripiprazole",
+  "chlorpromazine",
+  "clozapine",
+  "haloperidol",
+  "lithium",
+  "lurasidone",
+  "olanzapine",
+  "paliperidone",
+  "quetiapine",
+  "risperidone",
+  "ziprasidone",
+
+  // ── ADHD & stimulants ───────────────────────────────────────────
+  "atomoxetine",
+  "lisdexamfetamine",
+  "methylphenidate",
+  "modafinil",
+
+  // ── Antimigraine ────────────────────────────────────────────────
+  "rizatriptan",
+  "sumatriptan",
+  "zolmitriptan",
+
+  // ── Antiparkinsonian / neurology ────────────────────────────────
+  "amantadine",
+  "donepezil",
+  "galantamine",
+  "levodopa",
+  "memantine",
+  "pramipexole",
+  "rivastigmine",
+  "ropinirole",
+
+  // ── Muscle relaxants ────────────────────────────────────────────
+  "baclofen",
+  "carisoprodol",
+  "cyclobenzaprine",
+  "metaxalone",
+  "methocarbamol",
+  "orphenadrine",
+  "tizanidine",
+
+  // ── Antihypertensives — ACE inhibitors / ARBs ───────────────────
+  "benazepril",
+  "candesartan",
+  "captopril",
+  "enalapril",
+  "fosinopril",
+  "irbesartan",
+  "lisinopril",
+  "losartan",
+  "olmesartan",
+  "quinapril",
+  "ramipril",
+  "telmisartan",
+  "valsartan",
+
+  // ── Antihypertensives — beta blockers ───────────────────────────
+  "atenolol",
+  "betaxolol",
+  "bisoprolol",
+  "carvedilol",
+  "labetalol",
+  "metoprolol",
+  "nadolol",
+  "nebivolol",
+  "propranolol",
+  "sotalol",
+
+  // ── Antihypertensives — calcium channel blockers ────────────────
+  "amlodipine",
+  "diltiazem",
+  "felodipine",
+  "nicardipine",
+  "nifedipine",
+  "verapamil",
+
+  // ── Antihypertensives — diuretics, other ────────────────────────
+  "bumetanide",
+  "chlorthalidone",
+  "clonidine",
+  "doxazosin",
+  "furosemide",
+  "hydrochlorothiazide",
+  "indapamide",
+  "prazosin",
+  "spironolactone",
+  "terazosin",
+  "torsemide",
+  "triamterene",
+
+  // ── Cardiac (rhythm, heart failure, antianginal) ────────────────
+  "amiodarone",
+  "digoxin",
+  "flecainide",
+  "isosorbide mononitrate",
+  "propafenone",
+  "ranolazine",
+
+  // ── Lipid lowering ──────────────────────────────────────────────
+  "atorvastatin",
+  "ezetimibe",
+  "fenofibrate",
+  "fluvastatin",
+  "gemfibrozil",
+  "lovastatin",
+  "niacin",
+  "pitavastatin",
+  "pravastatin",
+  "rosuvastatin",
+  "simvastatin",
+
+  // ── Anticoagulants & antiplatelets ──────────────────────────────
+  "apixaban",
+  "cilostazol",
+  "clopidogrel",
+  "dabigatran",
+  "edoxaban",
+  "enoxaparin",
+  "prasugrel",
+  "rivaroxaban",
+  "ticagrelor",
+  "warfarin",
+
+  // ── Antidiabetic ─────────────────────────────────────────────────
+  "canagliflozin",
+  "dapagliflozin",
+  "dulaglutide",
+  "empagliflozin",
+  "glimepiride",
+  "glipizide",
+  "glyburide",
+  "insulin glargine",
+  "insulin lispro",
+  "linagliptin",
+  "liraglutide",
+  "metformin",
+  "pioglitazone",
+  "repaglinide",
+  "saxagliptin",
+  "semaglutide",
+  "sitagliptin",
+
+  // ── Thyroid & hormones ──────────────────────────────────────────
+  "desmopressin",
+  "estradiol",
+  "levothyroxine",
+  "liothyronine",
+  "methimazole",
+  "propylthiouracil",
+  "testosterone",
+
+  // ── Bone & gout ─────────────────────────────────────────────────
+  "alendronate",
+  "allopurinol",
+  "colchicine",
+  "febuxostat",
+  "ibandronate",
+  "raloxifene",
+  "risedronate",
+  "zoledronic acid",
+
+  // ── BPH / urology ───────────────────────────────────────────────
+  "alfuzosin",
+  "dutasteride",
+  "finasteride",
+  "mirabegron",
+  "oxybutynin",
+  "solifenacin",
+  "tamsulosin",
+  "tolterodine",
+
+  // ── Antibiotics ─────────────────────────────────────────────────
+  "amoxicillin",
+  "ampicillin",
+  "azithromycin",
+  "cefdinir",
+  "ceftriaxone",
+  "cefuroxime",
+  "cephalexin",
+  "ciprofloxacin",
+  "clarithromycin",
+  "clindamycin",
+  "doxycycline",
+  "erythromycin",
+  "levofloxacin",
+  "linezolid",
+  "metronidazole",
+  "minocycline",
+  "moxifloxacin",
+  "nitrofurantoin",
+  "trimethoprim",
+  "vancomycin",
+
+  // ── Antifungals & antivirals ────────────────────────────────────
+  "acyclovir",
+  "dolutegravir",
+  "fluconazole",
+  "itraconazole",
+  "ketoconazole",
+  "oseltamivir",
+  "tenofovir",
+  "terbinafine",
+  "valacyclovir",
+  "valganciclovir",
+  "voriconazole",
+
+  // ── GI: acid, motility, IBD ─────────────────────────────────────
+  "dicyclomine",
   "esomeprazole",
   "famotidine",
-  "loratadine",
-  "cetirizine",
-  "diphenhydramine",
+  "lansoprazole",
+  "linaclotide",
+  "loperamide",
+  "mesalamine",
+  "metoclopramide",
+  "omeprazole",
   "ondansetron",
-  "methylprednisolone",
+  "pantoprazole",
+  "prochlorperazine",
+  "promethazine",
+  "rifaximin",
+  "sucralfate",
+
+  // ── Allergy / antihistamines ────────────────────────────────────
+  "cetirizine",
+  "chlorpheniramine",
+  "desloratadine",
+  "diphenhydramine",
+  "fexofenadine",
+  "hydroxyzine",
+  "levocetirizine",
+  "loratadine",
+  "meclizine",
+
+  // ── Respiratory: asthma, COPD ───────────────────────────────────
+  "albuterol",
+  "beclomethasone",
+  "budesonide",
+  "fluticasone",
+  "formoterol",
+  "ipratropium",
+  "mometasone",
+  "montelukast",
+  "roflumilast",
+  "salmeterol",
+  "theophylline",
+  "tiotropium",
+
+  // ── Corticosteroids (systemic) ──────────────────────────────────
   "dexamethasone",
-  "glimepiride",
-  "pioglitazone",
-  "rosuvastatin",
-  "pravastatin",
-  "ezetimibe",
-  "valsartan",
-  "finasteride",
-  "tamsulosin",
+  "hydrocortisone",
+  "methylprednisolone",
+  "prednisolone",
+  "prednisone",
+  "triamcinolone",
+
+  // ── Immunosuppressants & DMARDs ─────────────────────────────────
+  "azathioprine",
+  "hydroxychloroquine",
+  "leflunomide",
+  "methotrexate",
+  "mycophenolate",
+  "sulfasalazine",
+
+  // ── Dermatology ─────────────────────────────────────────────────
+  "isotretinoin",
+  "mupirocin",
+  "tacrolimus",
+  "tretinoin",
+
+  // ── Ophthalmic ──────────────────────────────────────────────────
+  "brimonidine",
+  "dorzolamide",
+  "latanoprost",
+  "timolol",
+  "travoprost",
+
+  // ── Oncology endocrine ──────────────────────────────────────────
+  "anastrozole",
+  "bicalutamide",
+  "exemestane",
+  "letrozole",
+  "tamoxifen",
+
+  // ── ED / pulmonary hypertension ─────────────────────────────────
   "sildenafil",
   "tadalafil",
-  "latanoprost",
+  "vardenafil",
+
+  // ── Antiemetics (oncology / vestibular) ─────────────────────────
+  "aprepitant",
+  "granisetron",
+
+  // ── Hematinics & supplements ────────────────────────────────────
+  "cyanocobalamin",
+  "ferrous sulfate",
+  "folic acid",
+
+  // ── Smoking cessation ───────────────────────────────────────────
+  "varenicline",
 ];
 
 // ────────────────────────────────────────────────────────────────────────
@@ -140,11 +485,29 @@ function cleanLabelText(text: string): string {
   return text
     .replace(/^\s*\d+(\.\d+)*\s+/i, "")
     .replace(
-      /^\s*(MECHANISM OF ACTION|INDICATIONS AND USAGE|INDICATIONS|CONTRAINDICATIONS?|PHARMACOKINETICS|CLINICAL PHARMACOLOGY)[:\s]+/i,
+      /^\s*(MECHANISM OF ACTION|INDICATIONS AND USAGE|INDICATIONS|CONTRAINDICATIONS?|PHARMACOKINETICS|CLINICAL PHARMACOLOGY|DOSAGE AND ADMINISTRATION|ADVERSE REACTIONS|WARNINGS AND PRECAUTIONS|WARNINGS AND CAUTIONS|WARNINGS|PRECAUTIONS|USE IN SPECIFIC POPULATIONS|OVERDOSAGE|BOXED WARNING|WARNING:?)[:\s]+/i,
       "",
     )
     .replace(/\s+/g, " ")
     .trim();
+}
+
+/**
+ * Clean and hard-cap a label section to `maxLen`, snapping to the last
+ * sentence boundary so excerpts don't end mid-word. Unlike
+ * `firstSentences`, this keeps as much text as fits — used for the
+ * richer reference sections (dosage, adverse reactions, warnings) where
+ * a two-sentence summary would be uselessly short.
+ */
+function clip(text: string, maxLen: number): string {
+  const cleaned = cleanLabelText(text);
+  if (!cleaned) return cleaned;
+  if (cleaned.length <= maxLen) return cleaned;
+  const hardCut = cleaned.slice(0, maxLen);
+  const lastPeriod = hardCut.lastIndexOf(". ");
+  return (
+    lastPeriod > maxLen * 0.5 ? hardCut.slice(0, lastPeriod + 1) : `${hardCut}…`
+  ).trim();
 }
 
 /**
@@ -425,6 +788,135 @@ async function fetchOpenFdaLabel(name: string): Promise<OpenFdaLabel | null> {
 }
 
 // ────────────────────────────────────────────────────────────────────────
+// openFDA drugsfda approval history
+// ────────────────────────────────────────────────────────────────────────
+
+interface ApprovalEntry {
+  date: string; // YYYY-MM-DD
+  applicationNumber: string;
+  type: "NDA" | "ANDA" | "BLA" | "OTC";
+  sponsor?: string;
+}
+
+function applicationType(appNo: string): ApprovalEntry["type"] | null {
+  const up = appNo.toUpperCase();
+  if (up.startsWith("NDA")) return "NDA";
+  if (up.startsWith("ANDA")) return "ANDA";
+  if (up.startsWith("BLA")) return "BLA";
+  if (up.startsWith("OTC")) return "OTC";
+  return null;
+}
+
+function fdaDateToIso(yyyymmdd: string): string | null {
+  if (!/^\d{8}$/.test(yyyymmdd)) return null;
+  const iso = `${yyyymmdd.slice(0, 4)}-${yyyymmdd.slice(4, 6)}-${yyyymmdd.slice(6, 8)}`;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : iso;
+}
+
+/**
+ * Pull original-approval records from openFDA's drugsfda endpoint. We
+ * keep one entry per application (the original "ORIG/1" approval), tag
+ * it by application type, and cap the list so a generic with hundreds of
+ * ANDAs doesn't bloat the record. NDA/BLA originals are prioritised over
+ * generic ANDAs since they carry the more interesting approval dates.
+ */
+async function fetchApprovalHistory(name: string): Promise<ApprovalEntry[]> {
+  const search = `openfda.generic_name:%22${encodeURIComponent(name)}%22`;
+  const url = `https://api.fda.gov/drug/drugsfda.json?search=${search}&limit=100`;
+  const resp = await fetchJson(url).catch(() => null);
+  const results: any[] = resp?.results ?? [];
+  if (!results.length) return [];
+
+  const entries: ApprovalEntry[] = [];
+  const seen = new Set<string>();
+
+  for (const r of results) {
+    const appNo: string | undefined = r?.application_number;
+    if (!appNo || seen.has(appNo)) continue;
+    const type = applicationType(appNo);
+    if (!type) continue;
+
+    const submissions: any[] = r?.submissions ?? [];
+    const orig = submissions.find(
+      (s) =>
+        (s?.submission_type ?? "").toUpperCase() === "ORIG" &&
+        String(s?.submission_number ?? "") === "1" &&
+        (s?.submission_status ?? "").toUpperCase() === "AP",
+    );
+    const iso = orig?.submission_status_date
+      ? fdaDateToIso(String(orig.submission_status_date))
+      : null;
+    if (!iso) continue;
+
+    seen.add(appNo);
+    const sponsor: string | undefined = r?.sponsor_name
+      ? titleCase(String(r.sponsor_name))
+      : undefined;
+    entries.push({ date: iso, applicationNumber: appNo, type, sponsor });
+  }
+
+  // Prioritise innovator applications, then oldest-first within the cap.
+  const rank: Record<ApprovalEntry["type"], number> = {
+    BLA: 0,
+    NDA: 1,
+    OTC: 2,
+    ANDA: 3,
+  };
+  entries.sort(
+    (a, b) => rank[a.type] - rank[b.type] || a.date.localeCompare(b.date),
+  );
+  const capped = entries.slice(0, 8);
+  // Present chronologically for the UI.
+  capped.sort((a, b) => a.date.localeCompare(b.date));
+  return capped;
+}
+
+// ────────────────────────────────────────────────────────────────────────
+// Mechanism targets (derived from MOA class names)
+// ────────────────────────────────────────────────────────────────────────
+
+const MOA_SUFFIXES = [
+  "inhibitors",
+  "inhibitor",
+  "agonists",
+  "agonist",
+  "antagonists",
+  "antagonist",
+  "blockers",
+  "blocker",
+  "modulators",
+  "modulator",
+  "activators",
+  "activator",
+  "stimulants",
+  "stimulant",
+  "agents",
+  "agent",
+  "reuptake inhibitors",
+];
+
+/**
+ * Derive plausible molecular/process targets from a drug's MOA-kind
+ * RxClass names by stripping the trailing mechanism word. E.g.
+ * "HMG-CoA Reductase Inhibitors" → "HMG-CoA Reductase". Conservative:
+ * a class only contributes a target when it ends in a known mechanism
+ * suffix, so we don't emit garbage.
+ */
+function deriveTargets(moaClassNames: string[]): string[] {
+  const targets = new Set<string>();
+  for (const raw of moaClassNames) {
+    const name = raw.trim();
+    const lower = name.toLowerCase();
+    const suffix = MOA_SUFFIXES.find((s) => lower.endsWith(` ${s}`));
+    if (!suffix) continue;
+    const stripped = name.slice(0, name.length - suffix.length).trim();
+    if (stripped.length >= 3) targets.add(stripped);
+  }
+  return Array.from(targets).sort();
+}
+
+// ────────────────────────────────────────────────────────────────────────
 // Per-drug ingest
 // ────────────────────────────────────────────────────────────────────────
 
@@ -443,9 +935,14 @@ type IngestResult = IngestOk | IngestFail;
 
 interface CoverageBits {
   mechanism: boolean;
+  targets: boolean;
   indications: boolean;
   contraindications: boolean;
   pharmacokinetics: boolean;
+  boxedWarning: boolean;
+  dosageNarrative: boolean;
+  adverseReactions: boolean;
+  approvalHistory: boolean;
   atc: boolean;
   brands: boolean;
   label: boolean;
@@ -473,7 +970,22 @@ async function ingestOne(name: string, idx: number, total: number): Promise<Inge
   const ciRaw: string | undefined = label?.raw?.contraindications?.[0];
   const pkRaw: string | undefined = label?.raw?.pharmacokinetics?.[0];
 
-  const mechanism = mechRaw ? { summary: firstSentences(mechRaw, 1500), targets: [] } : undefined;
+  // targets + a fallback summary derived from the drug's MOA-kind classes.
+  // When openFDA has no mechanism_of_action narrative we fall back to a
+  // classification-style summary so the derived targets aren't wasted.
+  const moaClassNames = rx.classRefs
+    .filter((c) => c.kind === "moa")
+    .map((c) => c.name);
+  const moaTargets = deriveTargets(moaClassNames);
+
+  const mechanism = mechRaw
+    ? { summary: firstSentences(mechRaw, 1500), targets: moaTargets }
+    : moaClassNames.length > 0
+      ? {
+          summary: `Mechanism-of-action class${moaClassNames.length > 1 ? "es" : ""}: ${moaClassNames.join("; ")}.`,
+          targets: moaTargets,
+        }
+      : undefined;
   const indications = indRaw
     ? [{ text: firstSentences(indRaw, 1200), icd10: [] as string[] }]
     : [];
@@ -481,6 +993,37 @@ async function ingestOne(name: string, idx: number, total: number): Promise<Inge
     ? [{ text: firstSentences(ciRaw, 1200), severity: "contraindicated" as const }]
     : [];
   const pharmacokinetics = pkRaw ? { metabolism: firstSentences(pkRaw, 600) } : undefined;
+
+  // Verbatim FDA label narrative sections (reference excerpts).
+  const boxedRaw: string | undefined = label?.raw?.boxed_warning?.[0];
+  const dosageRaw: string | undefined = label?.raw?.dosage_and_administration?.[0];
+  const warningsRaw: string | undefined =
+    label?.raw?.warnings_and_cautions?.[0] ?? label?.raw?.warnings?.[0];
+  const adverseRaw: string | undefined = label?.raw?.adverse_reactions?.[0];
+  const populationsRaw: string | undefined =
+    label?.raw?.use_in_specific_populations?.[0] ?? label?.raw?.pregnancy?.[0];
+  const overdoseRaw: string | undefined = label?.raw?.overdosage?.[0];
+
+  const labelSections = {
+    boxedWarning: boxedRaw ? clip(boxedRaw, 1400) : undefined,
+    dosageAndAdministration: dosageRaw ? clip(dosageRaw, 1600) : undefined,
+    warningsAndPrecautions: warningsRaw ? clip(warningsRaw, 1600) : undefined,
+    adverseReactions: adverseRaw ? clip(adverseRaw, 1600) : undefined,
+    useInSpecificPopulations: populationsRaw ? clip(populationsRaw, 1400) : undefined,
+    overdosage: overdoseRaw ? clip(overdoseRaw, 1200) : undefined,
+  };
+  const hasLabelSections = Object.values(labelSections).some(Boolean);
+
+  // openFDA identifier block (NDC list + UNII)
+  const ndc = Array.from(
+    new Set<string>((label?.raw?.openfda?.product_ndc ?? []) as string[]),
+  )
+    .sort()
+    .slice(0, 8);
+  const unii: string | undefined = label?.raw?.openfda?.unii?.[0];
+
+  // Approval history from openFDA drugsfda (one extra call, free + no auth).
+  const approvalHistory = await fetchApprovalHistory(name).catch(() => []);
 
   // ingredient (1:1 with drug for v0)
   const ingredientProv = makeProv(
@@ -528,11 +1071,13 @@ async function ingestOne(name: string, idx: number, total: number): Promise<Inge
     contraindications,
     dosing: [],
     pharmacokinetics,
-    approvalHistory: [],
+    approvalHistory,
+    labelSections: hasLabelSections ? labelSections : undefined,
     identifiers: {
       rxcui: rx.rxcui,
-      ndc: [],
+      ndc,
       atc: rx.atcCodes,
+      unii,
     },
     provenance: drugProv,
   };
@@ -549,9 +1094,14 @@ async function ingestOne(name: string, idx: number, total: number): Promise<Inge
 
   const coverage: CoverageBits = {
     mechanism: !!mechanism,
+    targets: moaTargets.length > 0,
     indications: indications.length > 0,
     contraindications: contraindications.length > 0,
     pharmacokinetics: !!pharmacokinetics,
+    boxedWarning: !!labelSections.boxedWarning,
+    dosageNarrative: !!labelSections.dosageAndAdministration,
+    adverseReactions: !!labelSections.adverseReactions,
+    approvalHistory: approvalHistory.length > 0,
     atc: rx.atcCodes.length > 0,
     brands: rx.brands.length > 0,
     label: !!label,
@@ -563,6 +1113,8 @@ async function ingestOne(name: string, idx: number, total: number): Promise<Inge
     `classes=${rx.classRefs.length}`,
     label ? "label=yes" : "label=no",
     mechanism ? "mech=yes" : "mech=no",
+    `approvals=${approvalHistory.length}`,
+    labelSections.boxedWarning ? "bw=yes" : "bw=no",
   ].join(" ");
   process.stderr.write(`${tag}: ✓ ${badges}\n`);
 
@@ -607,8 +1159,11 @@ const HEADER_DRUGS = `import type { Drug } from "@/lib/schemas";
  * Auto-generated by scripts/ingest/fetch-drugs.ts.
  *
  * Stage-0 drug records ingested from RxNav (RxCUI / brands / classes /
- * ATC codes) and openFDA drug label API (mechanism, indications,
- * contraindications, pharmacokinetics narrative).
+ * ATC codes / derived MOA targets), the openFDA drug label API
+ * (mechanism, indications, contraindications, pharmacokinetics, plus
+ * verbatim boxed-warning / dosage / adverse-reaction / warnings /
+ * special-population / overdosage sections, NDC + UNII), and the
+ * openFDA drugsfda API (approval history).
  *
  * Edits to this file will be overwritten on the next \`npm run ingest\`.
  * To curate a record by hand, drop it from the ingest list and move it
@@ -669,9 +1224,14 @@ async function main(): Promise<void> {
   const classMap = new Map<string, DrugClass>(); // key = `${kind}:${slug}`
   const coverage = {
     mechanism: 0,
+    targets: 0,
     indications: 0,
     contraindications: 0,
     pharmacokinetics: 0,
+    boxedWarning: 0,
+    dosageNarrative: 0,
+    adverseReactions: 0,
+    approvalHistory: 0,
     atc: 0,
     brands: 0,
     label: 0,
@@ -792,9 +1352,14 @@ export const SEED_INGREDIENTS_BY_SLUG: Record<string, Ingredient> =
   process.stderr.write(`classes:      ${classes.length}\n`);
   process.stderr.write(`\ncoverage (out of ${drugs.length} successful drugs):\n`);
   process.stderr.write(`  mechanism:          ${coverage.mechanism}/${drugs.length}\n`);
+  process.stderr.write(`  mechanism targets:  ${coverage.targets}/${drugs.length}\n`);
   process.stderr.write(`  indications:        ${coverage.indications}/${drugs.length}\n`);
   process.stderr.write(`  contraindications:  ${coverage.contraindications}/${drugs.length}\n`);
   process.stderr.write(`  pharmacokinetics:   ${coverage.pharmacokinetics}/${drugs.length}\n`);
+  process.stderr.write(`  boxed warning:      ${coverage.boxedWarning}/${drugs.length}\n`);
+  process.stderr.write(`  dosage narrative:   ${coverage.dosageNarrative}/${drugs.length}\n`);
+  process.stderr.write(`  adverse reactions:  ${coverage.adverseReactions}/${drugs.length}\n`);
+  process.stderr.write(`  approval history:   ${coverage.approvalHistory}/${drugs.length}\n`);
   process.stderr.write(`  ATC code:           ${coverage.atc}/${drugs.length}\n`);
   process.stderr.write(`  brand names:        ${coverage.brands}/${drugs.length}\n`);
   process.stderr.write(`  openFDA label:      ${coverage.label}/${drugs.length}\n`);
