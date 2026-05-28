@@ -1,5 +1,6 @@
 import { notFound, ok } from "@/lib/api/response";
 import { getRepository } from "@/lib/data/repository";
+import type { SimilarDrugsResponse } from "@/lib/schemas";
 
 export async function GET(
   _request: Request,
@@ -16,5 +17,5 @@ export async function GET(
     method: "tanimoto-2d-fingerprint",
     similar,
     total: similar.length,
-  });
+  } satisfies SimilarDrugsResponse);
 }

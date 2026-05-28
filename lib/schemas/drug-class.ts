@@ -30,12 +30,15 @@ export const DrugClassRefSchema = z.object({
 });
 export type DrugClassRef = z.infer<typeof DrugClassRefSchema>;
 
+export const DrugClassParentSchema = z.object({
+  slug: SlugSchema,
+  name: z.string(),
+});
+export type DrugClassParent = z.infer<typeof DrugClassParentSchema>;
+
 export const DrugClassSchema = DrugClassRefSchema.extend({
   description: z.string().optional(),
-  parent: z
-    .object({ slug: SlugSchema, name: z.string() })
-    .nullable()
-    .optional(),
+  parent: DrugClassParentSchema.nullable().optional(),
   drugCount: z.number().int().nonnegative(),
   provenance: ProvenanceSchema,
 });

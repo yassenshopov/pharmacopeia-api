@@ -26,16 +26,19 @@ export type InteractionCheckRequest = z.infer<
   typeof InteractionCheckRequestSchema
 >;
 
+export const InteractionSummarySchema = z.object({
+  contraindicated: z.number().int().nonnegative(),
+  major: z.number().int().nonnegative(),
+  moderate: z.number().int().nonnegative(),
+  minor: z.number().int().nonnegative(),
+  unknown: z.number().int().nonnegative(),
+});
+export type InteractionSummary = z.infer<typeof InteractionSummarySchema>;
+
 export const InteractionCheckResponseSchema = z.object({
   input: z.array(SlugSchema),
   pairs: z.array(InteractionSchema),
-  summary: z.object({
-    contraindicated: z.number().int().nonnegative(),
-    major: z.number().int().nonnegative(),
-    moderate: z.number().int().nonnegative(),
-    minor: z.number().int().nonnegative(),
-    unknown: z.number().int().nonnegative(),
-  }),
+  summary: InteractionSummarySchema,
 });
 export type InteractionCheckResponse = z.infer<
   typeof InteractionCheckResponseSchema

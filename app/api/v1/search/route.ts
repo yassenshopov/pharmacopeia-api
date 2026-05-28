@@ -1,5 +1,6 @@
 import { invalid, ok } from "@/lib/api/response";
 import { getRepository } from "@/lib/data/repository";
+import type { SearchResponse } from "@/lib/schemas";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -15,5 +16,5 @@ export async function GET(request: Request) {
     50,
   );
   const results = await getRepository().search(q, limit);
-  return ok({ query: q, results, total: results.length });
+  return ok({ query: q, results, total: results.length } satisfies SearchResponse);
 }

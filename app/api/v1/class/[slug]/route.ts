@@ -1,5 +1,6 @@
 import { notFound, ok } from "@/lib/api/response";
 import { getRepository } from "@/lib/data/repository";
+import type { ClassDetailResponse } from "@/lib/schemas";
 
 export async function GET(
   _request: Request,
@@ -11,5 +12,5 @@ export async function GET(
   if (!cls) return notFound(`Class '${slug}' not found`);
 
   const { items: drugs } = await repo.listDrugs({ classSlug: slug, limit: 200 });
-  return ok({ ...cls, drugs });
+  return ok({ ...cls, drugs } satisfies ClassDetailResponse);
 }
