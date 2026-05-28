@@ -26,18 +26,22 @@ export const SeveritySchema = z.enum([
 ]);
 export type Severity = z.infer<typeof SeveritySchema>;
 
-export const ExtractorSchema = z.enum([
-  "openfda",
-  "dailymed",
-  "rxnorm",
-  "rxclass",
-  "drugbank",
-  "drugs-at-fda",
-  "orange-book",
-  "manual",
-  "llm-sonnet-4.5",
-  "llm-haiku-4.5",
-]);
+/**
+ * `extractor` records which pipeline produced a record. We keep the
+ * surface intentionally permissive (any lowercase kebab-cased token,
+ * optionally with an `@version` suffix) so new sources and model
+ * families — `claude-opus-4.7`, `ingest-script@v1`, `atc-who`,
+ * `hand-curated` — can land without a schema migration. The shape is
+ * still validated; runtime classification (ai vs. sourced vs. curated)
+ * lives in `lib/provenance/kind.ts`.
+ */
+export const ExtractorSchema = z
+  .string()
+  .min(1)
+  .regex(
+    /^[a-z][a-z0-9-]*(@[a-z0-9.-]+)?$/,
+    "extractor must be lowercase-kebab, optionally suffixed with @version",
+  );
 export type Extractor = z.infer<typeof ExtractorSchema>;
 
 export const ProvenanceSchema = z.object({

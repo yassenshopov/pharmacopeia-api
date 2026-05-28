@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-outfit);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -48,83 +48,382 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ─────────────────────────────────────────────────────────────────────
+   Palette: "Apothecary"
+   - Light: warm parchment background, warm ink type, saffron-amber accent.
+   - Dark : ink with a subtle cool / teal undertone, brighter amber accent.
+   Hues are kept low-chroma on neutrals (~0.012 chroma) so the warmth is
+   felt rather than seen. Primary is reserved for CTAs, focus rings, and
+   inline highlights.
+   ───────────────────────────────────────────────────────────────────── */
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
+  color-scheme: light;
+  /* parchment + warm ink */
+  --background: oklch(0.985 0.008 78);
+  --foreground: oklch(0.22 0.028 62);
+
+  --card: oklch(0.992 0.006 78);
+  --card-foreground: oklch(0.22 0.028 62);
+  --popover: oklch(0.992 0.006 78);
+  --popover-foreground: oklch(0.22 0.028 62);
+
+  /* saffron / burnished amber */
+  --primary: oklch(0.585 0.155 58);
+  --primary-foreground: oklch(0.985 0.008 78);
+
+  --secondary: oklch(0.955 0.014 75);
+  --secondary-foreground: oklch(0.30 0.028 62);
+
+  --muted: oklch(0.95 0.014 75);
+  --muted-foreground: oklch(0.52 0.022 65);
+
+  --accent: oklch(0.94 0.018 75);
+  --accent-foreground: oklch(0.28 0.028 62);
+
+  --destructive: oklch(0.55 0.20 25);
+
+  --border: oklch(0.895 0.014 75);
+  --input: oklch(0.895 0.014 75);
+  --ring: oklch(0.585 0.155 58);
+
+  /* coordinated chart palette: saffron, petrol, terracotta, moss, aubergine */
+  --chart-1: oklch(0.585 0.155 58);
+  --chart-2: oklch(0.55 0.10 195);
+  --chart-3: oklch(0.50 0.13 25);
+  --chart-4: oklch(0.45 0.08 145);
+  --chart-5: oklch(0.40 0.07 290);
+
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  --sidebar: oklch(0.978 0.010 78);
+  --sidebar-foreground: oklch(0.22 0.028 62);
+  --sidebar-primary: oklch(0.585 0.155 58);
+  --sidebar-primary-foreground: oklch(0.985 0.008 78);
+  --sidebar-accent: oklch(0.94 0.018 75);
+  --sidebar-accent-foreground: oklch(0.28 0.028 62);
+  --sidebar-border: oklch(0.895 0.014 75);
+  --sidebar-ring: oklch(0.585 0.155 58);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  color-scheme: dark;
+  /* Warm ink — leather-bound apothecary book at night.
+     Same hue family (~70°) as the parchment light mode so the theme
+     reads as one coherent palette across both modes, just inverted
+     in luminance. No teal/blue undertone fighting the saffron accent. */
+  --background: oklch(0.155 0.006 70);
+  --foreground: oklch(0.95 0.006 78);
+
+  --card: oklch(0.205 0.008 70);
+  --card-foreground: oklch(0.95 0.006 78);
+  --popover: oklch(0.215 0.008 70);
+  --popover-foreground: oklch(0.95 0.006 78);
+
+  /* amber lifted to pop against warm-neutral ink */
+  --primary: oklch(0.785 0.148 72);
+  --primary-foreground: oklch(0.155 0.006 70);
+
+  --secondary: oklch(0.245 0.008 70);
+  --secondary-foreground: oklch(0.95 0.006 78);
+
+  --muted: oklch(0.225 0.008 70);
+  --muted-foreground: oklch(0.685 0.014 72);
+
+  --accent: oklch(0.26 0.010 70);
+  --accent-foreground: oklch(0.95 0.006 78);
+
+  --destructive: oklch(0.70 0.18 22);
+
+  --border: oklch(0.95 0.006 78 / 10%);
+  --input: oklch(0.95 0.006 78 / 13%);
+  --ring: oklch(0.785 0.148 72);
+
+  --chart-1: oklch(0.785 0.148 72);
+  --chart-2: oklch(0.72 0.10 195);
+  --chart-3: oklch(0.70 0.14 25);
+  --chart-4: oklch(0.65 0.08 145);
+  --chart-5: oklch(0.62 0.10 290);
+
+  --sidebar: oklch(0.19 0.008 70);
+  --sidebar-foreground: oklch(0.95 0.006 78);
+  --sidebar-primary: oklch(0.785 0.148 72);
+  --sidebar-primary-foreground: oklch(0.155 0.006 70);
+  --sidebar-accent: oklch(0.26 0.010 70);
+  --sidebar-accent-foreground: oklch(0.95 0.006 78);
+  --sidebar-border: oklch(0.95 0.006 78 / 10%);
+  --sidebar-ring: oklch(0.785 0.148 72);
 }
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
+  }
+  /* Visible focus only when navigating by keyboard. */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
   }
   body {
     @apply bg-background text-foreground;
+    -webkit-tap-highlight-color: color-mix(
+      in oklab,
+      var(--primary) 18%,
+      transparent
+    );
   }
   html {
     @apply font-sans;
+    /* Touch: collapse the 300ms double-tap-to-zoom delay on interactive elements. */
+    touch-action: manipulation;
+  }
+  /* Heading anchor targets land below the sticky header. */
+  :where(h1, h2, h3, h4, h5, h6)[id] {
+    scroll-margin-top: 5rem;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  /* Tabular numerals in monospace contexts for clean column alignment. */
+  code,
+  kbd,
+  pre,
+  samp,
+  .font-mono {
+    font-variant-numeric: tabular-nums;
+  }
+  /* Apothecary selection: amber tint on the highlight. */
+  ::selection {
+    background-color: color-mix(in oklab, var(--primary) 28%, transparent);
+    color: var(--foreground);
+  }
+  /* Skip-to-content link: hidden until focused via keyboard. */
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus-visible {
+    @apply not-sr-only fixed left-4 top-4 z-50 inline-flex h-10 items-center rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground shadow-sm outline-2 outline-offset-2 outline-ring;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Theme transition: View Transitions API circle reveal.
+   The new theme is unmasked from the toggle button's center as an
+   expanding clip-path circle. Browsers without the API just swap
+   themes instantly (handled in the toggle).
+   ───────────────────────────────────────────────────────────────────── */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: pharmacopeia-theme-reveal 650ms cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+}
+
+@keyframes pharmacopeia-theme-reveal {
+  from {
+    clip-path: circle(
+      0px at var(--theme-toggle-x, 50%) var(--theme-toggle-y, 50%)
+    );
+  }
+  to {
+    clip-path: circle(
+      var(--theme-toggle-r, 150vmax) at var(--theme-toggle-x, 50%)
+        var(--theme-toggle-y, 50%)
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Hero aurora keyframes
+   Decorative animated background for the landing hero. Used by
+   <HeroAurora /> in components/hero-aurora.tsx. Four heavily blurred
+   color blobs drift over a faint dot grid on slow, offset loops; a
+   linear bottom mask fades the whole composition into the next section.
+   Theme tracking is via --primary, --chart-2, --chart-4. Light mode
+   uses multiply for a warm tonal wash on parchment; dark mode uses
+   plus-lighter so the blobs glow off the deep ink background.
+   ───────────────────────────────────────────────────────────────────── */
+
+.hero-aurora {
+  -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 62%, transparent 100%);
+}
+
+.hero-aurora__grid {
+  background-image: radial-gradient(
+    circle,
+    var(--foreground) 1px,
+    transparent 1.4px
+  );
+  background-size: 22px 22px;
+  background-position: 0 0;
+  opacity: 0.07;
+}
+.dark .hero-aurora__grid {
+  opacity: 0.1;
+}
+
+.hero-aurora__blobs {
+  mix-blend-mode: multiply;
+}
+.dark .hero-aurora__blobs {
+  mix-blend-mode: plus-lighter;
+}
+
+.hero-aurora__blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(100px);
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.hero-aurora__blob--a {
+  left: -6%;
+  top: -20%;
+  height: 58vh;
+  width: 58vh;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--primary),
+    transparent 70%
+  );
+  opacity: 0.6;
+}
+.dark .hero-aurora__blob--a {
+  opacity: 0.45;
+}
+
+.hero-aurora__blob--b {
+  right: -6%;
+  top: -12%;
+  height: 62vh;
+  width: 62vh;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--chart-2),
+    transparent 70%
+  );
+  filter: blur(110px);
+  opacity: 0.55;
+}
+.dark .hero-aurora__blob--b {
+  opacity: 0.5;
+}
+
+.hero-aurora__blob--c {
+  left: 22%;
+  top: 35%;
+  height: 52vh;
+  width: 52vh;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--primary),
+    transparent 70%
+  );
+  filter: blur(120px);
+  opacity: 0.45;
+}
+.dark .hero-aurora__blob--c {
+  opacity: 0.35;
+}
+
+.hero-aurora__blob--d {
+  right: 18%;
+  bottom: -8%;
+  height: 46vh;
+  width: 46vh;
+  background: radial-gradient(
+    circle at 50% 50%,
+    var(--chart-4),
+    transparent 70%
+  );
+  opacity: 0.45;
+}
+.dark .hero-aurora__blob--d {
+  opacity: 0.4;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-aurora__blob--a {
+    animation: heroAuroraDriftA 28s cubic-bezier(0.45, 0, 0.55, 1) infinite
+      alternate;
+  }
+  .hero-aurora__blob--b {
+    animation: heroAuroraDriftB 34s cubic-bezier(0.45, 0, 0.55, 1) infinite
+      alternate;
+  }
+  .hero-aurora__blob--c {
+    animation: heroAuroraDriftC 30s cubic-bezier(0.45, 0, 0.55, 1) infinite
+      alternate;
+  }
+  .hero-aurora__blob--d {
+    animation: heroAuroraDriftD 26s cubic-bezier(0.45, 0, 0.55, 1) infinite
+      alternate;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Animations naturally don't apply (we gate them on no-preference above).
+     Slightly soften the still frame so the static composition reads as
+     intentional rather than as a frozen animation. */
+  .hero-aurora__blobs {
+    opacity: 0.72;
+  }
+}
+
+@keyframes heroAuroraDriftA {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    transform: translate3d(8%, 12%, 0) rotate(18deg) scale(1.08);
+  }
+}
+@keyframes heroAuroraDriftB {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    transform: translate3d(-10%, 8%, 0) rotate(-15deg) scale(1.12);
+  }
+}
+@keyframes heroAuroraDriftC {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    transform: translate3d(10%, -6%, 0) rotate(22deg) scale(1.06);
+  }
+}
+@keyframes heroAuroraDriftD {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  100% {
+    transform: translate3d(-6%, -10%, 0) rotate(-18deg) scale(1.08);
   }
 }

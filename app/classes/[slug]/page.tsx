@@ -1,13 +1,26 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CodeBlock } from "@/components/code-block";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getRepository } from "@/lib/data/repository";
+import type { DrugClass } from "@/lib/schemas";
+import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+function truncate(text: string, max = 158): string {
+  if (text.length <= max) return text;
+  return `${text.slice(0, max - 1).trimEnd()}…`;
+}
+
+function classDescription(cls: DrugClass): string {
+  const lead = `${cls.name} — ${cls.kind.toUpperCase()} pharmacological class with ${cls.drugCount} drug${cls.drugCount === 1 ? "" : "s"}.`;
+  return truncate(cls.description ? `${lead} ${cls.description}` : lead);
 }
 
 export async function generateMetadata({
@@ -15,8 +28,56 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const cls = await getRepository().getClass(slug);
-  if (!cls) return { title: "Not found" };
-  return { title: cls.name, description: cls.description };
+
+  if (!cls) {
+    return {
+      title: "Class not found",
+      description:
+        "The requested pharmacological class was not found in pharmacopeia.",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const description = classDescription(cls);
+  const url = absoluteUrl(`/classes/${cls.slug}`);
+  const ogImage = ogImageUrl({
+    title: cls.name,
+    subtitle: cls.kind.toUpperCase(),
+  });
+
+  return {
+    title: cls.name,
+    description,
+    keywords: [
+      cls.name,
+      cls.kind,
+      cls.code ?? "",
+      "drug class",
+      "pharmacological class",
+    ].filter(Boolean),
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      siteName: SITE_NAME,
+      title: cls.name,
+      description,
+      url,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${cls.name} — ${cls.kind.toUpperCase()} class`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: cls.name,
+      description,
+      images: [ogImage],
+    },
+  };
 }
 
 export default async function ClassDetailPage({ params }: PageProps) {
@@ -32,33 +93,37 @@ export default async function ClassDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
-      <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
-        <Link href="/classes" className="hover:text-foreground">
-          classes
-        </Link>
-        <span>/</span>
-        <code className="font-mono">{cls.slug}</code>
-      </div>
+      <Breadcrumbs
+        items={[
+          { label: "Classes", href: "/classes" },
+          { label: cls.name },
+        ]}
+      />
 
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-4xl font-semibold tracking-tight">{cls.name}</h1>
+          <h1 className="text-balance text-4xl font-semibold tracking-tight">
+            {cls.name}
+          </h1>
           {cls.description && (
-            <p className="mt-3 max-w-2xl text-muted-foreground">
+            <p className="mt-3 max-w-2xl text-pretty text-muted-foreground">
               {cls.description}
             </p>
           )}
           <div className="mt-4 flex flex-wrap gap-2">
-            <Badge variant="secondary" className="font-mono uppercase">
+            <Badge variant="secondary" className="font-mono uppercase" translate="no">
               {cls.kind}
             </Badge>
             {cls.code && (
-              <Badge variant="outline" className="font-mono">
+              <Badge variant="outline" className="font-mono" translate="no">
                 {cls.code}
               </Badge>
             )}
             {cls.parent && (
-              <Link href={`/classes/${cls.parent.slug}`}>
+              <Link
+                href={`/classes/${cls.parent.slug}`}
+                className="rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+              >
                 <Badge variant="outline" className="hover:bg-accent">
                   parent · {cls.parent.name}
                 </Badge>
@@ -69,7 +134,7 @@ export default async function ClassDetailPage({ params }: PageProps) {
 
         <div className="rounded-lg border border-border/80 bg-card/40 p-4 font-mono text-xs">
           <div className="mb-2 text-muted-foreground">GET</div>
-          <code>/api/v1/class/{cls.slug}</code>
+          <code translate="no">/api/v1/class/{cls.slug}</code>
         </div>
       </div>
 
@@ -84,9 +149,11 @@ export default async function ClassDetailPage({ params }: PageProps) {
           <li key={d.slug}>
             <Link
               href={`/drugs/${d.slug}`}
-              className="group flex h-full flex-col rounded-lg border border-border/80 bg-card/40 p-4 transition-colors hover:bg-accent/50"
+              className="group flex h-full flex-col rounded-lg border border-border/80 bg-card/40 p-4 transition-colors hover:bg-accent/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
             >
-              <span className="font-semibold">{d.name}</span>
+              <span className="font-semibold" translate="no">
+                {d.name}
+              </span>
               {d.shortDescription && (
                 <span className="mt-1 text-sm text-muted-foreground">
                   {d.shortDescription}

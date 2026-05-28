@@ -1,9 +1,47 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { ArrowRight, BookOpen, FlaskConical, GitBranch, Layers, Search, Sparkles } from "lucide-react";
 import { CodeBlock } from "@/components/code-block";
+import { HeroAurora } from "@/components/hero-aurora";
 import { StatCard } from "@/components/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { getRepository } from "@/lib/data/repository";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, ogImageUrl } from "@/lib/seo/site";
+
+const HOME_TITLE = `${SITE_NAME} · an open API for medications`;
+const HOME_OG_IMAGE = ogImageUrl({
+  title: "An open API for medications",
+  subtitle: "pharmacopeia.dev",
+});
+
+export const metadata: Metadata = {
+  title: {
+    absolute: HOME_TITLE,
+  },
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    title: HOME_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    images: [
+      {
+        url: HOME_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} — an open API for medications`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [HOME_OG_IMAGE],
+  },
+};
 
 const SAMPLE_RESPONSE = `{
   "slug": "metformin",
@@ -38,18 +76,22 @@ export default async function Home() {
   return (
     <div>
       {/* ─────────────────────────────── Hero */}
-      <section className="border-b border-border/60">
-        <div className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pt-24">
+      <section className="relative overflow-hidden border-b border-border/60">
+        <HeroAurora />
+        <div className="relative z-10 mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pt-24">
           <Badge
             variant="outline"
-            className="mb-8 font-mono text-xs font-normal"
+            className="mb-8 border-primary/30 bg-primary/10 font-mono text-xs font-normal text-primary"
           >
             v0 · early preview
           </Badge>
 
           <div className="flex flex-col gap-12 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-2xl">
-              <div className="mb-6 grid h-14 w-14 place-items-center rounded-lg border border-border/80 bg-foreground/5 font-mono text-2xl">
+              <div
+                aria-hidden="true"
+                className="mb-6 grid h-14 w-14 place-items-center rounded-lg border border-primary/30 bg-primary/10 font-mono text-2xl text-primary"
+              >
                 ℞
               </div>
               <h1 className="text-balance text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
@@ -58,29 +100,20 @@ export default async function Home() {
               <p className="mt-6 max-w-xl text-pretty text-lg leading-relaxed text-muted-foreground">
                 Drugs, classes, interactions, indications — structured,
                 versioned, free. A developer-first reference layer for the
-                world&apos;s pharmacopeia. Inspired by{" "}
-                <a
-                  href="https://pokeapi.co"
-                  className="text-foreground underline-offset-4 hover:underline"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  PokeAPI
-                </a>
-                .
+                world&rsquo;s pharmacopeia.
               </p>
 
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <Link
                   href="/docs"
-                  className="inline-flex h-10 items-center gap-2 rounded-md bg-foreground px-4 text-sm font-medium text-background transition-colors hover:bg-foreground/90"
+                  className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
                 >
                   Read the docs
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/drugs"
-                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent"
+                  className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
                 >
                   Browse drugs
                 </Link>
@@ -127,8 +160,8 @@ export default async function Home() {
               <a
                 href="https://zod.dev"
                 target="_blank"
-                rel="noreferrer"
-                className="text-foreground underline-offset-4 hover:underline"
+                rel="noopener noreferrer"
+                className="rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
               >
                 Zod
               </a>{" "}
@@ -152,15 +185,15 @@ export default async function Home() {
 
           <ul className="mt-10 grid gap-4 text-sm text-muted-foreground sm:grid-cols-3">
             <li className="flex items-start gap-2">
-              <Sparkles className="mt-0.5 h-4 w-4 flex-none text-foreground" />
+              <Sparkles className="mt-0.5 h-4 w-4 flex-none text-primary" aria-hidden="true" />
               Strongly-typed schema for drugs, classes, interactions, and indications.
             </li>
             <li className="flex items-start gap-2">
-              <GitBranch className="mt-0.5 h-4 w-4 flex-none text-foreground" />
+              <GitBranch className="mt-0.5 h-4 w-4 flex-none text-primary" aria-hidden="true" />
               Open data — every entity has a verifiable source URL and hash.
             </li>
             <li className="flex items-start gap-2">
-              <BookOpen className="mt-0.5 h-4 w-4 flex-none text-foreground" />
+              <BookOpen className="mt-0.5 h-4 w-4 flex-none text-primary" aria-hidden="true" />
               Generated docs from the same Zod schema that runs the API.
             </li>
           </ul>
@@ -231,24 +264,24 @@ export default async function Home() {
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <a
-              href="https://github.com"
+              href="https://github.com/yassenshopov"
               target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent"
+              rel="noopener noreferrer"
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
             >
               How to contribute
             </a>
             <Link
               href="/docs"
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent"
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
             >
               Get started
             </Link>
             <a
-              href="https://buymeacoffee.com"
+              href="https://buymeacoffee.com/yassenshopov"
               target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent"
+              rel="noopener noreferrer"
+              className="inline-flex h-10 items-center gap-2 rounded-md border border-border/80 bg-background px-4 text-sm font-medium transition-colors hover:bg-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
             >
               Buy me a coffee
             </a>
@@ -273,14 +306,20 @@ function StartCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col rounded-lg border border-border/80 bg-card/40 p-5 transition-colors hover:bg-accent/50"
+      className="group flex flex-col rounded-lg border border-border/80 bg-card/40 p-5 transition-colors hover:bg-accent/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
     >
-      <div className="mb-4 grid h-9 w-9 place-items-center rounded-md border border-border/80 bg-foreground/5 text-foreground">
+      <div
+        aria-hidden="true"
+        className="mb-4 grid h-9 w-9 place-items-center rounded-md border border-primary/25 bg-primary/10 text-primary"
+      >
         {icon}
       </div>
       <div className="flex items-center gap-1 font-medium">
         {title}
-        <ArrowRight className="h-3.5 w-3.5 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
+        <ArrowRight
+          aria-hidden="true"
+          className="h-3.5 w-3.5 opacity-0 transition-[opacity,transform] duration-150 ease-out group-hover:translate-x-0.5 group-hover:opacity-100 motion-reduce:transition-none"
+        />
       </div>
       <p className="mt-1 text-sm text-muted-foreground">{body}</p>
     </Link>

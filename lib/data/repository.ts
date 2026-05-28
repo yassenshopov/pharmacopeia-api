@@ -15,15 +15,16 @@ import {
   InteractionSchema,
   SeveritySchema,
 } from "@/lib/schemas";
-import { MOCK_CLASSES, MOCK_CLASSES_BY_SLUG } from "./mock/classes";
-import { MOCK_DRUGS, MOCK_DRUGS_BY_SLUG } from "./mock/drugs";
-import { MOCK_INGREDIENTS, MOCK_INGREDIENTS_BY_SLUG } from "./mock/ingredients";
-import { MOCK_INTERACTIONS } from "./mock/interactions";
+import { SEED_CLASSES, SEED_CLASSES_BY_SLUG } from "./seed/classes";
+import { SEED_DRUGS, SEED_DRUGS_BY_SLUG } from "./seed/drugs";
+import { getSeedInteractionsNarrative } from "./seed/drug-interactions-narratives";
+import { SEED_INGREDIENTS, SEED_INGREDIENTS_BY_SLUG } from "./seed/ingredients";
+import { SEED_INTERACTIONS } from "./seed/interactions";
 
 /**
- * Repository interface that hides whether records come from mock JSON,
- * Supabase, or any other backend. Every public API route should depend
- * on this contract — never on the mock data directly.
+ * Repository interface that hides whether records come from the static
+ * seed dataset, Supabase, or any other backend. Every public API route
+ * should depend on this contract — never on the seed data directly.
  */
 export interface PharmacopeiaRepository {
   getStats(): Promise<Stats>;
@@ -72,10 +73,10 @@ export const SearchResultSchema = z.object({
 export type SearchResult = z.infer<typeof SearchResultSchema>;
 
 // ────────────────────────────────────────────────────────────────────────
-// Mock implementation
+// Static seed implementation
 // ────────────────────────────────────────────────────────────────────────
 
-const VERSION = "v0.1.0-mock";
+const VERSION = "v0.1.0-seed";
 const UPDATED_AT = "2026-05-28T00:00:00.000Z";
 
 function paginate<T>(items: T[], opts?: ListOpts): List<T> {
@@ -100,27 +101,32 @@ function toSummary(d: Drug): DrugSummary {
   };
 }
 
-class MockRepository implements PharmacopeiaRepository {
+/**
+ * Repository implementation backed by the static TypeScript dataset in
+ * `lib/data/seed/`. Used for local development and as the v0 fallback
+ * when no `DATABASE_URL` is configured.
+ */
+class StaticRepository implements PharmacopeiaRepository {
   constructor() {
-    // Fail-fast validation: every mock record must satisfy its schema.
-    // This is the only place we re-validate mocks because once they're
-    // valid here, types guarantee they stay valid downstream.
-    MOCK_DRUGS.forEach((d) => DrugSchema.parse(d));
-    MOCK_CLASSES.forEach((c) => DrugClassSchema.parse(c));
-    MOCK_INGREDIENTS.forEach((i) => IngredientSchema.parse(i));
-    MOCK_INTERACTIONS.forEach((x) => InteractionSchema.parse(x));
+    // Fail-fast validation: every seed record must satisfy its schema.
+    // This is the only place we re-validate seed data because once it's
+    // valid here, types guarantee it stays valid downstream.
+    SEED_DRUGS.forEach((d) => DrugSchema.parse(d));
+    SEED_CLASSES.forEach((c) => DrugClassSchema.parse(c));
+    SEED_INGREDIENTS.forEach((i) => IngredientSchema.parse(i));
+    SEED_INTERACTIONS.forEach((x) => InteractionSchema.parse(x));
   }
 
   async getStats(): Promise<Stats> {
-    const indicationsCount = MOCK_DRUGS.reduce(
+    const indicationsCount = SEED_DRUGS.reduce(
       (acc, d) => acc + d.indications.length,
       0,
     );
     return {
-      drugs: MOCK_DRUGS.length,
-      classes: MOCK_CLASSES.length,
-      ingredients: MOCK_INGREDIENTS.length,
-      interactions: MOCK_INTERACTIONS.length,
+      drugs: SEED_DRUGS.length,
+      classes: SEED_CLASSES.length,
+      ingredients: SEED_INGREDIENTS.length,
+      interactions: SEED_INTERACTIONS.length,
       indications: indicationsCount,
       version: VERSION,
       updatedAt: UPDATED_AT,
@@ -130,7 +136,7 @@ class MockRepository implements PharmacopeiaRepository {
   async listDrugs(
     opts: ListOpts & { classSlug?: string } = {},
   ): Promise<List<DrugSummary>> {
-    let drugs = MOCK_DRUGS;
+    let drugs = SEED_DRUGS;
     if (opts.classSlug) {
       drugs = drugs.filter((d) =>
         d.classes.some((c) => c.slug === opts.classSlug),
@@ -140,29 +146,34 @@ class MockRepository implements PharmacopeiaRepository {
   }
 
   async getDrug(slug: string): Promise<Drug | null> {
-    return MOCK_DRUGS_BY_SLUG[slug] ?? null;
+    const drug = SEED_DRUGS_BY_SLUG[slug];
+    if (!drug) return null;
+    if (drug.interactionsNarrative) return drug;
+    const narrative = getSeedInteractionsNarrative(slug);
+    if (!narrative) return drug;
+    return { ...drug, interactionsNarrative: narrative.text };
   }
 
   async getDrugInteractions(slug: string): Promise<Interaction[]> {
-    return MOCK_INTERACTIONS.filter(
+    return SEED_INTERACTIONS.filter(
       (x) => x.drugA === slug || x.drugB === slug,
     );
   }
 
   async listClasses(opts?: ListOpts): Promise<List<DrugClass>> {
-    return paginate(MOCK_CLASSES, opts);
+    return paginate(SEED_CLASSES, opts);
   }
 
   async getClass(slug: string): Promise<DrugClass | null> {
-    return MOCK_CLASSES_BY_SLUG[slug] ?? null;
+    return SEED_CLASSES_BY_SLUG[slug] ?? null;
   }
 
   async listIngredients(opts?: ListOpts): Promise<List<Ingredient>> {
-    return paginate(MOCK_INGREDIENTS, opts);
+    return paginate(SEED_INGREDIENTS, opts);
   }
 
   async getIngredient(slug: string): Promise<Ingredient | null> {
-    return MOCK_INGREDIENTS_BY_SLUG[slug] ?? null;
+    return SEED_INGREDIENTS_BY_SLUG[slug] ?? null;
   }
 
   async search(query: string, limit = 10): Promise<SearchResult[]> {
@@ -171,7 +182,7 @@ class MockRepository implements PharmacopeiaRepository {
 
     const matches: SearchResult[] = [];
 
-    for (const d of MOCK_DRUGS) {
+    for (const d of SEED_DRUGS) {
       const haystack = [
         d.name,
         d.slug,
@@ -191,7 +202,7 @@ class MockRepository implements PharmacopeiaRepository {
       }
     }
 
-    for (const c of MOCK_CLASSES) {
+    for (const c of SEED_CLASSES) {
       if (
         c.name.toLowerCase().includes(q) ||
         c.slug.toLowerCase().includes(q)
@@ -205,7 +216,7 @@ class MockRepository implements PharmacopeiaRepository {
       }
     }
 
-    for (const i of MOCK_INGREDIENTS) {
+    for (const i of SEED_INGREDIENTS) {
       if (
         i.name.toLowerCase().includes(q) ||
         i.slug.toLowerCase().includes(q)
@@ -227,7 +238,7 @@ class MockRepository implements PharmacopeiaRepository {
       for (let j = i + 1; j < unique.length; j++) {
         const a = unique[i];
         const b = unique[j];
-        const match = MOCK_INTERACTIONS.find(
+        const match = SEED_INTERACTIONS.find(
           (x) =>
             (x.drugA === a && x.drugB === b) ||
             (x.drugA === b && x.drugB === a),
@@ -248,6 +259,6 @@ class MockRepository implements PharmacopeiaRepository {
 
 let _repo: PharmacopeiaRepository | null = null;
 export function getRepository(): PharmacopeiaRepository {
-  if (!_repo) _repo = new MockRepository();
+  if (!_repo) _repo = new StaticRepository();
   return _repo;
 }

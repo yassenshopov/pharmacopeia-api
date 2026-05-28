@@ -21,7 +21,7 @@ predictable JSON.
    `/api/v1`. Breaking changes ship as `/api/v2`.
 3. **Zod is the source of truth.** `lib/schemas/` defines every entity,
    request, and response. Route handlers validate inputs and the
-   repository validates mock data; runtime types and TypeScript types
+   repository validates seed data; runtime types and TypeScript types
    are both derived from Zod.
 4. **Per-record provenance.** Every persisted record carries a
    `provenance` object: `sourceUrl`, `sourceHash`, `extractedAt`,
@@ -33,7 +33,7 @@ predictable JSON.
    independently. Adding a new section is additive.
 6. **Repository indirection.** API routes depend on
    `getRepository()` from `lib/data/repository.ts`. They never import
-   `mock/` files directly. Swapping mock → Supabase is a single-file
+   `seed/` files directly. Swapping seed → Supabase is a single-file
    change.
 7. **Idempotent pipelines.** Any ingest or extract step must be
    re-runnable safely. Use upserts keyed on `(sourceId, sourceHash, section)`.
@@ -48,9 +48,9 @@ predictable JSON.
 ## Adding a new entity type
 
 1. Create a Zod schema in `lib/schemas/<entity>.ts`.
-2. Add mock data in `lib/data/mock/<entity>.ts`.
+2. Add seed data in `lib/data/seed/<entity>.ts`.
 3. Extend `PharmacopeiaRepository` with the new methods.
-4. Implement them in `MockRepository`, validating mocks at construction.
+4. Implement them in `StaticRepository`, validating seed data at construction.
 5. Add `app/api/v1/<entity>/...` route handlers using
    `getRepository()` and the shared `ok` / `notFound` helpers.
 6. Add a browse page `app/<entity>s/page.tsx` and detail page
@@ -67,12 +67,12 @@ Plan, do not change the API contract:
 3. Create `lib/data/supabase-repository.ts` implementing
    `PharmacopeiaRepository`.
 4. Update `getRepository()` to return `SupabaseRepository` when
-   `DATABASE_URL` is set, else fall back to mock.
+   `DATABASE_URL` is set, else fall back to the static seed repository.
 5. Add a `scripts/ingest/` pipeline that writes through the same
    schemas (download → parse → upsert).
 
-The mock repository stays in the tree as a fallback for local dev
-without env vars.
+The seed repository (static TypeScript data baked into the bundle)
+stays in the tree as a fallback for local dev without env vars.
 
 ## Data pipeline rules (Stage 2+)
 

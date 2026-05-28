@@ -1,14 +1,48 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
-import { Badge } from "@/components/ui/badge";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ClassesListClient } from "@/components/classes-list-client";
 import { getRepository } from "@/lib/data/repository";
+import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
-export const metadata: Metadata = {
-  title: "Drug classes",
-  description:
-    "Browse pharmacological classes — ATC, EPC, MoA, MeSH — with the drugs they contain.",
-};
+const CLASSES_PATH = "/classes";
+const CLASSES_TITLE = "Drug classes";
+const CLASSES_DESCRIPTION =
+  "Browse pharmacological classes — WHO ATC, FDA EPC, mechanism of action, and MeSH. Each class lists every drug it contains, with codes and parents.";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { pagination } = await getRepository().listClasses({ limit: 1 });
+  const ogImage = ogImageUrl({
+    title: "Drug classes",
+    subtitle: `${pagination.total} classifications`,
+  });
+  const url = absoluteUrl(CLASSES_PATH);
+  return {
+    title: CLASSES_TITLE,
+    description: CLASSES_DESCRIPTION,
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      title: CLASSES_TITLE,
+      description: CLASSES_DESCRIPTION,
+      url,
+      images: [
+        {
+          url: ogImage,
+          width: 1200,
+          height: 630,
+          alt: `${SITE_NAME} — drug classes`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: CLASSES_TITLE,
+      description: CLASSES_DESCRIPTION,
+      images: [ogImage],
+    },
+  };
+}
 
 export default async function ClassesPage() {
   const { items: classes, pagination } = await getRepository().listClasses({
@@ -17,6 +51,7 @@ export default async function ClassesPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+      <Breadcrumbs items={[{ label: "Classes" }]} />
       <div className="mb-12 flex flex-col gap-4">
         <div className="flex items-baseline justify-between gap-4">
           <h1 className="text-4xl font-semibold tracking-tight">Classes</h1>
@@ -30,39 +65,7 @@ export default async function ClassesPage() {
         </p>
       </div>
 
-      <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {classes.map((c) => (
-          <li key={c.slug}>
-            <Link
-              href={`/classes/${c.slug}`}
-              className="group flex h-full flex-col rounded-lg border border-border/80 bg-card/40 p-5 transition-colors hover:bg-accent/50"
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <div>
-                  <div className="flex items-center gap-1 font-semibold">
-                    {c.name}
-                    <ArrowRight className="h-3.5 w-3.5 opacity-0 transition-all group-hover:translate-x-0.5 group-hover:opacity-100" />
-                  </div>
-                  <code className="text-xs text-muted-foreground">
-                    {c.slug}
-                  </code>
-                </div>
-                <Badge variant="outline" className="font-mono text-[10px] uppercase">
-                  {c.kind}
-                </Badge>
-              </div>
-              {c.description && (
-                <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">
-                  {c.description}
-                </p>
-              )}
-              <div className="mt-4 text-xs text-muted-foreground">
-                {c.drugCount} {c.drugCount === 1 ? "drug" : "drugs"}
-              </div>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <ClassesListClient items={classes} />
     </div>
   );
 }

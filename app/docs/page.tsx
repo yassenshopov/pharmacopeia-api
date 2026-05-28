@@ -1,13 +1,49 @@
 import type { Metadata } from "next";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CodeBlock } from "@/components/code-block";
+import { ProvenanceBadgeSample } from "@/components/provenance-badge";
+import { Toc, type TocItem } from "@/components/toc";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getRepository } from "@/lib/data/repository";
+import { articleJsonLd, jsonLdScriptProps } from "@/lib/seo/jsonld";
+import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
+
+const DOCS_PATH = "/docs";
+const DOCS_TITLE = "Documentation";
+const DOCS_DESCRIPTION =
+  "Quickstart and endpoint reference for pharmacopeia — JSON-over-HTTP access to drugs, classes, ingredients, interactions, and search.";
+
+const DOCS_OG_IMAGE = ogImageUrl({
+  title: "Documentation",
+  subtitle: "API reference",
+});
 
 export const metadata: Metadata = {
-  title: "Docs",
-  description:
-    "Quickstart and endpoint reference for pharmacopeia — an open API for medications.",
+  title: DOCS_TITLE,
+  description: DOCS_DESCRIPTION,
+  alternates: { canonical: absoluteUrl(DOCS_PATH) },
+  openGraph: {
+    type: "article",
+    siteName: SITE_NAME,
+    title: DOCS_TITLE,
+    description: DOCS_DESCRIPTION,
+    url: absoluteUrl(DOCS_PATH),
+    images: [
+      {
+        url: DOCS_OG_IMAGE,
+        width: 1200,
+        height: 630,
+        alt: `${SITE_NAME} documentation`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: DOCS_TITLE,
+    description: DOCS_DESCRIPTION,
+    images: [DOCS_OG_IMAGE],
+  },
 };
 
 const QUICKSTART = `// Fetch a drug by slug
@@ -94,11 +130,36 @@ const ENDPOINTS: {
   },
 ];
 
+const DOCS_TOC: TocItem[] = [
+  { id: "quickstart", label: "Quickstart" },
+  { id: "conventions", label: "Conventions" },
+  { id: "search", label: "Search" },
+  { id: "interactions", label: "Interaction check" },
+  { id: "endpoints", label: "Endpoints" },
+  { id: "indicators", label: "How to read the indicators" },
+  { id: "disclaimer", label: "Disclaimer" },
+];
+
 export default async function DocsPage() {
   const stats = await getRepository().getStats();
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6">
+    <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6">
+      <script
+        {...jsonLdScriptProps(
+          articleJsonLd({
+            title: DOCS_TITLE,
+            description: DOCS_DESCRIPTION,
+            url: DOCS_PATH,
+            dateModified: stats.updatedAt,
+          }),
+        )}
+      />
+
+      <Breadcrumbs items={[{ label: "Docs" }]} />
+
+      <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_12rem] lg:items-start lg:gap-10">
+        <div className="min-w-0">
       <div className="mb-12">
         <h1 className="text-4xl font-semibold tracking-tight">Docs</h1>
         <p className="mt-3 text-muted-foreground">
@@ -180,20 +241,82 @@ export default async function DocsPage() {
             <li
               key={`${e.method} ${e.path}`}
               id={e.anchor}
-              className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4"
+              className="flex flex-col gap-1 scroll-mt-24 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4"
             >
               <Badge
                 variant={e.method === "GET" ? "secondary" : "default"}
                 className="w-fit font-mono text-[10px]"
+                translate="no"
               >
                 {e.method}
               </Badge>
-              <code className="font-mono text-sm">{e.path}</code>
+              <code className="break-all font-mono text-sm" translate="no">
+                {e.path}
+              </code>
               <p className="text-sm text-muted-foreground sm:ml-auto sm:text-right">
                 {e.description}
               </p>
             </li>
           ))}
+        </ul>
+      </Section>
+
+      <Section id="indicators" title="How to read the indicators">
+        <p className="mb-5 text-sm text-muted-foreground">
+          Every field on every page is tagged with the pipeline that
+          produced it. The badges below tell you at a glance how much
+          trust to extend before you act on a sentence. Hover or focus
+          any live badge to see the underlying extractor, confidence,
+          and source URL.
+        </p>
+        <ul className="divide-y divide-border/60 rounded-lg border border-border/80">
+          <li className="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-start sm:gap-5">
+            <ProvenanceBadgeSample kind="ai-extracted" label="AI-extracted" />
+            <div className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                AI-extracted.
+              </span>{" "}
+              An LLM produced or rewrote this content. Read critically
+              and cross-check against the linked source. Used for any
+              extractor starting with <code>llm-</code>,{" "}
+              <code>claude-</code>, <code>gpt-</code>,{" "}
+              <code>gemini-</code>, or <code>mistral-</code>.
+            </div>
+          </li>
+          <li className="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-start sm:gap-5">
+            <ProvenanceBadgeSample
+              kind="auto-sourced"
+              label="Sourced from openFDA"
+            />
+            <div className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                Auto-sourced.
+              </span>{" "}
+              A script fetched this directly from a structured,
+              authoritative source — humans wrote the words, our
+              pipeline just shipped them. Used for{" "}
+              <code>openfda</code>, <code>dailymed</code>,{" "}
+              <code>rxnav</code>, <code>drugbank-open</code>,{" "}
+              <code>atc-who</code>, and any <code>ingest-script@*</code>.
+            </div>
+          </li>
+          <li className="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-start sm:gap-5">
+            <span
+              role="img"
+              aria-label="No badge: curated by a maintainer"
+              className="inline-flex h-5 items-center rounded-full border border-dashed border-border px-2 text-[10px] font-medium text-muted-foreground/60"
+            >
+              no badge
+            </span>
+            <div className="text-sm text-muted-foreground">
+              <span className="font-semibold text-foreground">
+                Curated.
+              </span>{" "}
+              A maintainer typed this by hand. No badge is rendered —
+              default trust — but the underlying{" "}
+              <code>provenance</code> is still in the JSON payload.
+            </div>
+          </li>
         </ul>
       </Section>
 
@@ -206,6 +329,9 @@ export default async function DocsPage() {
           <code>provenance.sourceUrl</code> before acting on any field.
         </p>
       </Section>
+        </div>
+        <Toc items={DOCS_TOC} />
+      </div>
     </div>
   );
 }
@@ -220,14 +346,17 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="mt-14 scroll-mt-24">
+    <section id={id} className="mt-14 scroll-mt-24" aria-labelledby={`${id}-title`}>
       <div className="mb-4 flex items-baseline gap-2">
-        <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
+        <h2 id={`${id}-title`} className="text-2xl font-semibold tracking-tight">
+          {title}
+        </h2>
         <a
           href={`#${id}`}
-          className="font-mono text-xs text-muted-foreground hover:text-foreground"
+          aria-label={`Permalink to ${title}`}
+          className="rounded-sm font-mono text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
         >
-          #
+          <span aria-hidden="true">#</span>
         </a>
       </div>
       {children}

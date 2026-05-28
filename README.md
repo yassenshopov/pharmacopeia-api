@@ -1,10 +1,11 @@
 # pharmacopeia-api
 
 > An open, developer-first reference API for medications. JSON in, JSON
-> out, validated with Zod, free to use. Inspired by PokeAPI.
+> out, validated with Zod, free to use.
 
-This repository is the v0 preview. It ships with a hand-curated mock
-dataset for the 10 most-prescribed drugs in the United States so the
+This repository is the v0 preview. It ships with ~50 of the most-
+prescribed drugs in the United States, ingested from RxNav, openFDA,
+and PubChem and baked into the source tree as static seed data, so the
 entire site is browsable end-to-end without any database or external
 service.
 
@@ -53,7 +54,7 @@ lib/
   schemas/                    — Zod schemas, single source of truth
   data/
     repository.ts             — swappable Drug/Class/Ingredient repo
-    mock/                     — hand-curated MVP data
+    seed/                     — ingested static MVP data (RxNav/openFDA/PubChem)
   api/response.ts             — shared JSON response helpers
 components/
   site-header.tsx
@@ -82,8 +83,8 @@ The build is staged so each step delivers a working, shippable product.
 
 | Stage | Scope | Anthropic credits |
 |-------|----------------------------------------------|----------|
-| 0 ✅ | 10 drugs, mock data, full API + UI shape | ~$0 |
-| 1 | Top 200 drugs via openFDA + Sonnet extraction | ~$200 |
+| 0 ✅ | ~50 drugs, ingested static seed, full API + UI shape | ~$0 |
+| 1 | Top 200 drugs via openFDA + Sonnet extraction, Supabase | ~$200 |
 | 2 | Top 1,000 drugs, MCP server, llms.txt | ~$500 |
 | 3 | Top 5,000 drugs, Stripe billing, Pro endpoint | ~$1,500 |
 | 4 | Community PRs, new entity types | ongoing |

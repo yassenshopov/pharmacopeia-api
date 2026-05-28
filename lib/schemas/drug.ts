@@ -85,6 +85,29 @@ export const IdentifierSchema = z.object({
 });
 
 /**
+ * 2D chemical structure record for a single small molecule.
+ *
+ * Sourced from PubChem (NIH) at ingest time. SMILES is the canonical
+ * representation; the SVG diagram is rendered from it via openchemlib
+ * and persisted as a static asset under `public/structures/<slug>.svg`.
+ *
+ * Optional on the drug record because biologics, mixtures, and
+ * combination products don't have a clean single-molecule SVG; we'd
+ * rather omit the diagram than fake one.
+ */
+export const ChemicalStructureSchema = z.object({
+  smiles: z.string().min(1),
+  inchiKey: z.string().optional(),
+  iupacName: z.string().optional(),
+  pubchemCid: z.number().int().positive().optional(),
+  structureSvgPath: z
+    .string()
+    .regex(/^\/structures\/[a-z0-9-]+\.svg$/, "must be /structures/<slug>.svg"),
+  provenance: ProvenanceSchema,
+});
+export type ChemicalStructure = z.infer<typeof ChemicalStructureSchema>;
+
+/**
  * Compact Drug record returned by list/search endpoints. Keeps payloads
  * cheap when the caller just wants names and identifiers.
  */
@@ -114,7 +137,16 @@ export const DrugSchema = DrugSummarySchema.extend({
   pharmacokinetics: PharmacokineticsSchema.optional(),
   approvalHistory: z.array(ApprovalSchema).default([]),
   patientSummary: z.string().optional(),
+  /**
+   * Verbatim narrative from the openFDA drug label "Drug Interactions"
+   * section. One-sided (this drug × everything), not a pair-graph row,
+   * so it lives on the Drug record instead of in `Interaction[]`. The
+   * pair-graph `Interaction` schema is reserved for the day a real
+   * structured DDI source lands.
+   */
+  interactionsNarrative: z.string().optional(),
   identifiers: IdentifierSchema,
+  chemical: ChemicalStructureSchema.optional(),
   provenance: ProvenanceSchema,
 });
 export type Drug = z.infer<typeof DrugSchema>;
