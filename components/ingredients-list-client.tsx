@@ -6,28 +6,30 @@ import { useEffect, useId, useMemo, useState } from "react";
 
 import { PaginationControls } from "@/components/pagination-controls";
 import { Badge } from "@/components/ui/badge";
-import type { DrugSummary } from "@/lib/schemas";
+import type { Ingredient } from "@/lib/schemas";
 
 const PAGE_SIZE = 24;
 
-interface DrugsListClientProps {
-  items: DrugSummary[];
+interface IngredientsListClientProps {
+  items: Ingredient[];
 }
 
-function matches(drug: DrugSummary, q: string): boolean {
+function matches(ing: Ingredient, q: string): boolean {
   const haystack = [
-    drug.name,
-    drug.slug,
-    ...drug.synonyms,
-    ...drug.brands,
-    ...drug.ingredients.map((i) => i.name),
+    ing.name,
+    ing.slug,
+    ...ing.synonyms,
+    ing.molecularFormula ?? "",
+    ing.rxcui ?? "",
+    ing.unii ?? "",
+    ing.inchikey ?? "",
   ]
     .join(" ")
     .toLowerCase();
   return haystack.includes(q);
 }
 
-export function DrugsListClient({ items }: DrugsListClientProps) {
+export function IngredientsListClient({ items }: IngredientsListClientProps) {
   const inputId = useId();
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
@@ -35,7 +37,7 @@ export function DrugsListClient({ items }: DrugsListClientProps) {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return items;
-    return items.filter((d) => matches(d, q));
+    return items.filter((i) => matches(i, q));
   }, [items, query]);
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export function DrugsListClient({ items }: DrugsListClientProps) {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-1.5">
         <label htmlFor={inputId} className="sr-only">
-          Filter drugs
+          Filter ingredients
         </label>
         <div className="relative">
           <Search
@@ -66,7 +68,7 @@ export function DrugsListClient({ items }: DrugsListClientProps) {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Filter drugs by name, brand, or ingredient…"
+            placeholder="Filter ingredients by name, formula, or identifier…"
             autoComplete="off"
             spellCheck={false}
             className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-9 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/40 motion-reduce:transition-none"
@@ -95,7 +97,7 @@ export function DrugsListClient({ items }: DrugsListClientProps) {
 
       {filtered.length === 0 ? (
         <div className="rounded-lg border border-border/60 bg-card/40 p-8 text-center text-sm text-muted-foreground">
-          No drugs match{" "}
+          No ingredients match{" "}
           <span className="font-mono text-foreground">
             &ldquo;{trimmed}&rdquo;
           </span>
@@ -103,17 +105,17 @@ export function DrugsListClient({ items }: DrugsListClientProps) {
         </div>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {paginated.map((d) => (
-            <li key={d.slug}>
+          {paginated.map((i) => (
+            <li key={i.slug}>
               <Link
-                href={`/drugs/${d.slug}`}
+                href={`/ingredients/${i.slug}`}
                 className="group flex h-full flex-col rounded-lg border border-border/80 bg-card/40 p-5 transition-colors hover:bg-accent/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
               >
                 <div className="flex items-baseline justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-1 font-semibold">
                       <span className="truncate" translate="no">
-                        {d.name}
+                        {i.name}
                       </span>
                       <ArrowRight
                         aria-hidden="true"
@@ -124,35 +126,42 @@ export function DrugsListClient({ items }: DrugsListClientProps) {
                       className="block truncate text-xs text-muted-foreground"
                       translate="no"
                     >
-                      {d.slug}
+                      {i.slug}
                     </code>
                   </div>
-                  {d.classes[0] && (
-                    <Badge
-                      variant="secondary"
-                      className="font-mono text-[10px]"
-                    >
-                      {d.classes[0].name}
-                    </Badge>
-                  )}
+                  <Badge
+                    variant="outline"
+                    className="shrink-0 font-mono text-[10px]"
+                  >
+                    {i.drugCount} {i.drugCount === 1 ? "drug" : "drugs"}
+                  </Badge>
                 </div>
-                {d.shortDescription && (
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    {d.shortDescription}
-                  </p>
-                )}
-                {d.brands.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-1 text-[11px] text-muted-foreground">
-                    {d.brands.slice(0, 4).map((b) => (
-                      <span
-                        key={b}
-                        className="rounded-sm border border-border/60 px-1.5 py-0.5"
-                      >
-                        {b}
-                      </span>
-                    ))}
+                {i.molecularFormula && (
+                  <div
+                    className="mt-3 font-mono text-xs text-muted-foreground"
+                    translate="no"
+                  >
+                    {i.molecularFormula}
                   </div>
                 )}
+                <div className="mt-3 flex flex-wrap gap-1 font-mono text-[10px] text-muted-foreground">
+                  {i.rxcui && (
+                    <span
+                      className="rounded border border-border/60 px-1.5 py-0.5"
+                      translate="no"
+                    >
+                      RxCUI {i.rxcui}
+                    </span>
+                  )}
+                  {i.unii && (
+                    <span
+                      className="rounded border border-border/60 px-1.5 py-0.5"
+                      translate="no"
+                    >
+                      UNII {i.unii}
+                    </span>
+                  )}
+                </div>
               </Link>
             </li>
           ))}
@@ -165,7 +174,7 @@ export function DrugsListClient({ items }: DrugsListClientProps) {
           pageSize={PAGE_SIZE}
           total={filtered.length}
           onPageChange={setPage}
-          label="drugs"
+          label="ingredients"
         />
       )}
     </div>

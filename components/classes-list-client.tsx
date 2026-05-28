@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { ArrowRight, Search, X } from "lucide-react";
-import { useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 
+import { PaginationControls } from "@/components/pagination-controls";
 import { Badge } from "@/components/ui/badge";
 import type { DrugClass } from "@/lib/schemas";
+
+const PAGE_SIZE = 24;
 
 interface ClassesListClientProps {
   items: DrugClass[];
@@ -21,12 +24,22 @@ function matches(cls: DrugClass, q: string): boolean {
 export function ClassesListClient({ items }: ClassesListClientProps) {
   const inputId = useId();
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return items;
     return items.filter((c) => matches(c, q));
   }, [items, query]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [query]);
+
+  const paginated = useMemo(
+    () => filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE),
+    [filtered, page],
+  );
 
   const trimmed = query.trim();
   const showCount = trimmed.length > 0;
@@ -84,7 +97,7 @@ export function ClassesListClient({ items }: ClassesListClientProps) {
         </div>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((c) => (
+          {paginated.map((c) => (
             <li key={c.slug}>
               <Link
                 href={`/classes/${c.slug}`}
@@ -128,6 +141,16 @@ export function ClassesListClient({ items }: ClassesListClientProps) {
             </li>
           ))}
         </ul>
+      )}
+
+      {filtered.length > 0 && (
+        <PaginationControls
+          page={page}
+          pageSize={PAGE_SIZE}
+          total={filtered.length}
+          onPageChange={setPage}
+          label="classes"
+        />
       )}
     </div>
   );
