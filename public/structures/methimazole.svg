@@ -1,0 +1,30 @@
+<svg id="mol87" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>3-methyl-1H-imidazole-2-thione</title>
+  <style> #mol87 text {font-family: sans-serif;} #mol87 { pointer-events:none; } #mol87 .event  { pointer-events:all; } #mol87 line { stroke-linecap:round; } #mol87 polygon { stroke-linejoin:round; } </style>
+  <text x="163.55" y="110.7" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="137.56" y="139.56" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="127.45" y="139.56" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="179.26" y="150.63" stroke="none" font-size="14" fill="rgb(205,205,38)">S</text>
+  <line x1="146.67" y1="96.27" x2="130.62" y2="114.11" stroke="currentColor" stroke-width="1.44" />
+  <line x1="147.33" y1="100.92" x2="135.31" y2="114.28" stroke="currentColor" stroke-width="1.44" />
+  <line x1="163.91" y1="130.37" x2="177.05" y2="142.2" stroke="currentColor" stroke-width="1.44" />
+  <line x1="166.32" y1="127.69" x2="179.46" y2="139.52" stroke="currentColor" stroke-width="1.44" />
+  <line x1="189.38" y1="94.04" x2="174.65" y2="102.54" stroke="currentColor" stroke-width="1.44" />
+  <line x1="162.55" y1="103.34" x2="146.67" y2="96.27" stroke="currentColor" stroke-width="1.44" />
+  <line x1="130.62" y1="114.11" x2="138.57" y2="127.89" stroke="currentColor" stroke-width="1.44" />
+  <line x1="148.67" y1="133.61" x2="166.09" y2="129.9" stroke="currentColor" stroke-width="1.44" />
+  <line x1="167.86" y1="113.04" x2="166.09" y2="129.9" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol87:Bond:2" class="event" x1="146.67" y1="96.27" x2="130.62" y2="114.11" stroke-width="8" opacity="0" />
+  <line id="mol87:Bond:6" class="event" x1="166.09" y1="129.9" x2="183.93" y2="145.96" stroke-width="8" opacity="0" />
+  <line id="mol87:Bond:0" class="event" x1="189.38" y1="94.04" x2="168.6" y2="106.04" stroke-width="8" opacity="0" />
+  <line id="mol87:Bond:1" class="event" x1="168.6" y1="106.04" x2="146.67" y2="96.27" stroke-width="8" opacity="0" />
+  <line id="mol87:Bond:3" class="event" x1="130.62" y1="114.11" x2="142.62" y2="134.89" stroke-width="8" opacity="0" />
+  <line id="mol87:Bond:4" class="event" x1="142.62" y1="134.89" x2="166.09" y2="129.9" stroke-width="8" opacity="0" />
+  <line id="mol87:Bond:5" class="event" x1="168.6" y1="106.04" x2="166.09" y2="129.9" stroke-width="8" opacity="0" />
+  <circle id="mol87:Atom:0" class="event" cx="189.38" cy="94.04" r="8" opacity="0" />
+  <circle id="mol87:Atom:1" class="event" cx="168.6" cy="106.04" r="8" opacity="0" />
+  <circle id="mol87:Atom:2" class="event" cx="146.67" cy="96.27" r="8" opacity="0" />
+  <circle id="mol87:Atom:3" class="event" cx="130.62" cy="114.11" r="8" opacity="0" />
+  <circle id="mol87:Atom:4" class="event" cx="142.62" cy="134.89" r="8" opacity="0" />
+  <circle id="mol87:Atom:5" class="event" cx="166.09" cy="129.9" r="8" opacity="0" />
+  <circle id="mol87:Atom:6" class="event" cx="183.93" cy="145.96" r="8" opacity="0" />
+</svg>
