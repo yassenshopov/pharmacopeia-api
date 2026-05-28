@@ -142,6 +142,52 @@ export function articleJsonLd(params: {
   };
 }
 
+export function faqPageJsonLd(
+  items: { question: string; answer: string }[],
+  url: string,
+): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    url: absoluteUrl(url),
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
+export function definedTermSetJsonLd(params: {
+  name: string;
+  description: string;
+  url: string;
+  terms: { term: string; definition: string; slug: string }[];
+}): JsonLd {
+  const setUrl = absoluteUrl(params.url);
+  return {
+    "@context": "https://schema.org",
+    "@type": "DefinedTermSet",
+    "@id": `${setUrl}#glossary`,
+    name: params.name,
+    description: params.description,
+    url: setUrl,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    hasDefinedTerm: params.terms.map((t) => ({
+      "@type": "DefinedTerm",
+      "@id": `${setUrl}#${t.slug}`,
+      name: t.term,
+      description: t.definition,
+      inDefinedTermSet: `${setUrl}#glossary`,
+      url: `${setUrl}#${t.slug}`,
+    })),
+  };
+}
+
 export function jsonLdScriptProps(obj: JsonLd | JsonLd[]) {
   return {
     type: "application/ld+json" as const,
