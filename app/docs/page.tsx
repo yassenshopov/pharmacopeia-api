@@ -118,6 +118,18 @@ const ENDPOINTS: {
   },
   {
     method: "GET",
+    path: "/api/v1/atc",
+    description:
+      "Full WHO ATC hierarchy as a nested tree (levels 1–5) with intermediate group names.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/mechanisms/graph",
+    description:
+      "Mechanism-of-action network: drugs, MoA classes, and molecular targets as nodes and links.",
+  },
+  {
+    method: "GET",
     path: "/api/v1/ingredients",
     description: "List active ingredients with chemistry identifiers.",
   },

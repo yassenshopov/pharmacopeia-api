@@ -37,6 +37,12 @@ export function SiteHeader() {
           <Link href="/classes" className={navLinkClass}>
             Classes
           </Link>
+          <Link href="/atc" className={navLinkClass}>
+            ATC
+          </Link>
+          <Link href="/moa" className={navLinkClass}>
+            MoA
+          </Link>
           <Link href="/ingredients" className={navLinkClass}>
             Ingredients
           </Link>
