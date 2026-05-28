@@ -48,7 +48,6 @@ export type RoadmapItem = {
 };
 
 const SHIPPED_AT = "2026-05-28";
-const STARTED_AT = "2026-05-28";
 const NEXT_TARGET = "2026-06-30";
 
 export const ROADMAP_ITEMS: RoadmapItem[] = [
@@ -185,13 +184,44 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "real-data-ingest-rxnav-openfda",
     title:
-      "Real-data ingest pipeline: RxNav (NIH) + openFDA, 54 drugs / 237 classes / 54 ingredients",
-    body: "The seed dataset is no longer fictional — it's real public-source data joined from RxNav and openFDA. Lays the rails for the Supabase migration without changing the API shape.",
+      "Real-data ingest pipeline: RxNav (NIH) + openFDA, 310 drugs / 730 classes / 310 ingredients",
+    body: "The seed dataset is real public-source data joined from RxNav and openFDA. Idempotent re-runs keyed on (rxcui, hash) mean upstream refresh is one command. 100% openFDA label coverage; 100% mechanism (label + class-derived); 99% indications; 96% ATC; 93% brands; 93% contraindications.",
     status: "shipped",
     kind: "data",
     milestone: "v0",
     shippedAt: SHIPPED_AT,
     tags: ["rxnav", "openfda", "ingest"],
+  },
+  {
+    id: "depth-label-sections-approvals",
+    title:
+      "Depth pass: FDA label sections, approval history, NDC/UNII, derived MOA targets",
+    body: "Beyond the headline narrative, each record now carries verbatim openFDA label sections — boxed warning, dosage & administration, warnings & precautions, adverse reactions, use in specific populations, and overdosage — plus product NDCs and the UNII identifier from the same label. Approval history (application number, type, original approval date, sponsor) comes from the openFDA drugsfda endpoint. Mechanism targets are derived from the drug's MOA RxClass memberships, and drugs with no labeled mechanism narrative get a classification-style mechanism summary so the section is rarely empty. Coverage across the 310: dosage 99%, adverse reactions 93%, approval history 99%, derived targets 84%, boxed warnings 38%. All additive, all free-source, no schema break.",
+    status: "shipped",
+    kind: "data",
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
+    tags: ["openfda", "drugsfda", "ingest", "provenance"],
+  },
+  {
+    id: "structural-similarity-tanimoto",
+    title: "Structural analogs via Tanimoto similarity over 2D fingerprints",
+    body: "Every drug page surfaces its closest structural analogs, precomputed offline with OpenChemLib's 512-bit substructure index and the Tanimoto coefficient over the PubChem SMILES we already ingested. Large peptides/biologics are excluded (the fingerprint saturates and would link any two peptides), and the threshold is tuned for precision so same-class families — ACE inhibitors, benzodiazepines, beta blockers, PPIs — cluster cleanly. Exposed at /api/v1/drug/{slug}/similar. Structural proximity only, never therapeutic equivalence.",
+    status: "shipped",
+    kind: "data",
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
+    tags: ["pubchem", "openchemlib", "chemistry"],
+  },
+  {
+    id: "atc-explorer",
+    title: "ATC classification explorer",
+    body: "A /atc page that organises the WHO Anatomical Therapeutic Chemical hierarchy by anatomical main group, with each subgroup linking to its class record and member drugs. The 14 level-1 groups are anchored from the canonical WHO set since RxClass only returns the deeper subgroups.",
+    status: "shipped",
+    kind: "ui",
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
+    tags: ["atc", "rxclass"],
   },
   {
     id: "provenance-badge-ui",
@@ -233,8 +263,8 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "molecular-structures-pubchem",
     title:
-      "Molecular structure 2D diagrams from PubChem SMILES via OpenChemLib (10 drugs initially)",
-    body: "Drug pages now render the actual 2D structure where we have a SMILES string. Generated client-side from OpenChemLib so we never ship a megabyte of pre-rendered SVG.",
+      "Molecular structure 2D diagrams from PubChem SMILES via OpenChemLib (304 of 310 drugs)",
+    body: "Drug pages render the actual 2D structure from a PubChem-sourced SMILES, pre-generated via OpenChemLib and post-processed to follow `currentColor` so bonds stay legible in both palettes. The six skipped entries (biologics like dulaglutide and enoxaparin, and salts/polymers like sucralfate, cyanocobalamin, ferrous-sulfate, insulin-lispro) are cases where no single-component SMILES is meaningful.",
     status: "shipped",
     kind: "data",
     milestone: "v0",
@@ -318,68 +348,64 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     shippedAt: SHIPPED_AT,
   },
 
-  // ── In progress ───────────────────────────────────────────────────
   {
     id: "command-palette-search",
     title: "Global ⌘K command palette + inline list-page filter + /search page",
-    body: "One search surface across the site: a ⌘K palette anywhere, an inline filter on the drugs and classes index pages, and a full /search results page for deep queries.",
-    status: "in-progress",
+    body: "One search surface across the site: a ⌘K palette anywhere, an inline filter on every index page, and a full /search results page for deep queries.",
+    status: "shipped",
     kind: "ui",
-    startedAt: STARTED_AT,
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
     tags: ["cmdk", "search"],
-  },
-
-  // ── Next ──────────────────────────────────────────────────────────
-  {
-    id: "structures-remaining-44",
-    title: "Re-run molecule structure ingest for the remaining 44 drugs",
-    body: "Finish the PubChem SMILES pass so every drug with a known structure renders a 2D diagram, not just the first ten.",
-    status: "next",
-    kind: "data",
-    targetAt: NEXT_TARGET,
-    tags: ["pubchem"],
   },
   {
     id: "ingredients-pages",
     title: "/ingredients browse + detail pages",
-    body: "Ingredient records exist in the API but don't have public UI yet. Browse and detail pages close the loop and unlock ingredient-first navigation.",
-    status: "next",
+    body: "Ingredient records were already in the API; this exposes them with a browse index, a per-ingredient detail page (identifiers, structure where shared with the drug, and every drug that contains it), and ingredient-side filtering on /api/v1/drugs.",
+    status: "shipped",
     kind: "ui",
-    targetAt: NEXT_TARGET,
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
   },
   {
     id: "interactions-ui",
-    title: "/interactions browse + check UI",
-    body: "Interactive UI for the /api/v1/interactions/check endpoint, plus a browse view for the full interaction graph by severity.",
-    status: "next",
+    title: "/interactions interactive check UI",
+    body: "Interactive multi-select that posts to /api/v1/interactions/check, renders severity-graded pairs and a per-severity summary, and links to the per-drug openFDA narrative for the (still empty) pair-graph gap.",
+    status: "shipped",
     kind: "ui",
-    targetAt: NEXT_TARGET,
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
   },
   {
     id: "pagination-filtering",
-    title: "Pagination + filtering on drugs/classes lists",
-    body: "The lists already paginate at the API. Surface that in the UI so 5,000-drug datasets stay browsable without infinite scroll.",
-    status: "next",
+    title: "Pagination + client filter on drugs/classes/ingredients lists",
+    body: "Every browse page now paginates (24 per page, windowed control with first/last + neighbors) and the client filter scopes to the full dataset. Ready for 5,000-drug scale without changing the UI when server-side pagination lands.",
+    status: "shipped",
     kind: "ui",
-    targetAt: NEXT_TARGET,
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
   },
   {
     id: "theme-color-sync",
     title:
-      "Sync viewport.themeColor (dark) and manifest.theme_color to the warm-ink dark palette",
-    body: "Browser chrome on mobile still uses the old neutral dark color. Align it with the apothecary warm-ink so the seam between OS chrome and page goes away.",
-    status: "next",
+      "Sync viewport.themeColor (dark) and manifest.theme_color to the warm-ink palette",
+    body: "Mobile browser chrome and installed-PWA chrome now match the apothecary warm-ink. The seam between OS chrome and the page is gone in dark mode.",
+    status: "shipped",
     kind: "ui",
-    targetAt: NEXT_TARGET,
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
   },
   {
     id: "apple-touch-icon-set",
-    title: "Real apple-touch-icon.png and full icon set",
-    body: "Replace the placeholder favicon with a real touch icon, maskable PWA icon, and a clean Safari pinned-tab SVG.",
-    status: "next",
+    title: "Real apple-touch-icon + maskable PWA icon + Safari mask-icon",
+    body: "Generated 180×180 apple-touch and 32×32 favicon via Next file-based ImageResponse, plus static SVG + maskable SVG + monochrome Safari pinned-tab — replacing the create-next-app placeholder set.",
+    status: "shipped",
     kind: "ui",
-    targetAt: NEXT_TARGET,
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
   },
+
+  // ── Next ──────────────────────────────────────────────────────────
   {
     id: "supabase-stage-1",
     title:
@@ -510,9 +536,11 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "brand-generic-crosswalk",
     title: "Brand → generic crosswalk index page",
-    body: "A dedicated index that lets users land on a brand name (Glucophage) and pivot straight to the generic (metformin) with the full record.",
-    status: "later",
+    body: "A dedicated /brands index that lets users land on a brand name (Glucophage) and pivot straight to the generic (metformin) with the full record. Built from RxNorm brand concepts already in the dataset.",
+    status: "shipped",
     kind: "ui",
+    milestone: "v0",
+    shippedAt: SHIPPED_AT,
   },
 
   // ── Exploring ─────────────────────────────────────────────────────
@@ -526,19 +554,11 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   },
   {
     id: "atc-moa-visualizations",
-    title: "Visualizations: ATC tree explorer, MoA graph",
-    body: "Interactive D3 explorations of the ATC hierarchy and mechanism-of-action graph. Educational, not clinical — would need to scale beyond toy datasets.",
+    title: "Interactive visualizations: MoA graph, deeper ATC tree",
+    body: "A flat /atc explorer and structural-analog lists already ship. The open work is the interactive layer: a D3 mechanism-of-action graph and a fully expandable ATC tree (levels 1–5 with the intermediate WHO names). Educational, not clinical.",
     status: "exploring",
     kind: "ui",
     tags: ["d3", "visualization"],
-  },
-  {
-    id: "drug-similarity-tanimoto",
-    title: "Drug similarity (Tanimoto over SMILES fingerprints)",
-    body: "Chemistry-based similarity rankings between drugs. Cheap to compute, useful for \"find a structural analog\" navigation — needs careful framing so it isn't read as clinical substitution.",
-    status: "exploring",
-    kind: "research",
-    tags: ["chemistry"],
   },
   {
     id: "patient-facing-summary-mode",

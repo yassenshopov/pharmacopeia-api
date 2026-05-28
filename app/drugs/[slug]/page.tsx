@@ -4,7 +4,7 @@ import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArrowUpRight } from "lucide-react";
+import { AlertTriangle, ArrowUpRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CodeBlock } from "@/components/code-block";
 import { ProvenanceBadge } from "@/components/provenance-badge";
@@ -137,22 +137,38 @@ export default async function DrugDetailPage({ params }: PageProps) {
   if (!drug) notFound();
 
   const interactions = await repo.getDrugInteractions(slug);
+  const similar = await repo.getSimilarDrugs(slug);
   const structure = getSeedStructure(slug);
   const structureSvg = structure
     ? await loadStructureSvg(structure.structureSvgPath)
     : null;
 
+  const ls = drug.labelSections;
   const tocItems: TocItem[] = [];
+  if (ls?.boxedWarning)
+    tocItems.push({ id: "boxed-warning", label: "Boxed warning" });
   if (drug.mechanism) tocItems.push({ id: "mechanism", label: "Mechanism" });
   if (drug.indications.length > 0)
     tocItems.push({ id: "indications", label: "Indications" });
   if (drug.contraindications.length > 0)
     tocItems.push({ id: "contraindications", label: "Contraindications" });
-  if (drug.dosing.length > 0) tocItems.push({ id: "dosing", label: "Dosing" });
-  if (interactions.length > 0)
-    tocItems.push({ id: "interactions", label: "Interactions" });
+  if (ls?.dosageAndAdministration || drug.dosing.length > 0)
+    tocItems.push({ id: "dosing", label: "Dosing" });
+  if (ls?.warningsAndPrecautions)
+    tocItems.push({ id: "warnings", label: "Warnings" });
+  if (ls?.adverseReactions)
+    tocItems.push({ id: "adverse-reactions", label: "Adverse reactions" });
+  if (ls?.useInSpecificPopulations)
+    tocItems.push({ id: "populations", label: "Special populations" });
   if (drug.pharmacokinetics)
     tocItems.push({ id: "pharmacokinetics", label: "Pharmacokinetics" });
+  if (interactions.length > 0)
+    tocItems.push({ id: "interactions", label: "Interactions" });
+  if (ls?.overdosage) tocItems.push({ id: "overdosage", label: "Overdosage" });
+  if (drug.approvalHistory.length > 0)
+    tocItems.push({ id: "approvals", label: "Approval history" });
+  if (similar.length > 0)
+    tocItems.push({ id: "analogs", label: "Structural analogs" });
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
@@ -201,6 +217,28 @@ export default async function DrugDetailPage({ params }: PageProps) {
           <code translate="no">/api/v1/drug/{drug.slug}</code>
         </div>
       </div>
+
+      {ls?.boxedWarning && (
+        <section
+          id="boxed-warning"
+          aria-labelledby="boxed-warning-title"
+          className="mt-8 scroll-mt-24 rounded-lg border border-red-500/40 bg-red-500/5 p-5"
+        >
+          <div className="mb-2 flex items-center gap-2">
+            <AlertTriangle
+              aria-hidden="true"
+              className="h-4 w-4 text-red-600 dark:text-red-400"
+            />
+            <h2
+              id="boxed-warning-title"
+              className="text-sm font-semibold uppercase tracking-wider text-red-700 dark:text-red-300"
+            >
+              Boxed warning
+            </h2>
+          </div>
+          <p className="text-sm text-foreground/90">{ls.boxedWarning}</p>
+        </section>
+      )}
 
       {structure && (
         <StructureCard
@@ -297,10 +335,10 @@ export default async function DrugDetailPage({ params }: PageProps) {
             </Section>
           )}
 
-          {drug.dosing.length > 0 && (
+          {(ls?.dosageAndAdministration || drug.dosing.length > 0) && (
             <Section
               id="dosing"
-              title="Dosing"
+              title="Dosage & administration"
               badge={
                 <ProvenanceBadge
                   provenance={drug.provenance}
@@ -308,7 +346,13 @@ export default async function DrugDetailPage({ params }: PageProps) {
                 />
               }
             >
-              <ul className="space-y-3">
+              {ls?.dosageAndAdministration && (
+                <p className="text-sm leading-relaxed text-foreground/90">
+                  {ls.dosageAndAdministration}
+                </p>
+              )}
+              {drug.dosing.length > 0 && (
+              <ul className="mt-4 space-y-3">
                 {drug.dosing.map((d, i) => (
                   <li
                     key={i}
@@ -350,6 +394,58 @@ export default async function DrugDetailPage({ params }: PageProps) {
                   </li>
                 ))}
               </ul>
+              )}
+            </Section>
+          )}
+
+          {ls?.warningsAndPrecautions && (
+            <Section
+              id="warnings"
+              title="Warnings & precautions"
+              badge={
+                <ProvenanceBadge
+                  provenance={drug.provenance}
+                  variant="section"
+                />
+              }
+            >
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {ls.warningsAndPrecautions}
+              </p>
+            </Section>
+          )}
+
+          {ls?.adverseReactions && (
+            <Section
+              id="adverse-reactions"
+              title="Adverse reactions"
+              badge={
+                <ProvenanceBadge
+                  provenance={drug.provenance}
+                  variant="section"
+                />
+              }
+            >
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {ls.adverseReactions}
+              </p>
+            </Section>
+          )}
+
+          {ls?.useInSpecificPopulations && (
+            <Section
+              id="populations"
+              title="Use in specific populations"
+              badge={
+                <ProvenanceBadge
+                  provenance={drug.provenance}
+                  variant="section"
+                />
+              }
+            >
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {ls.useInSpecificPopulations}
+              </p>
             </Section>
           )}
 
@@ -449,6 +545,115 @@ export default async function DrugDetailPage({ params }: PageProps) {
                     </li>
                   );
                 })}
+              </ul>
+            </Section>
+          )}
+
+          {ls?.overdosage && (
+            <Section
+              id="overdosage"
+              title="Overdosage"
+              badge={
+                <ProvenanceBadge
+                  provenance={drug.provenance}
+                  variant="section"
+                />
+              }
+            >
+              <p className="text-sm leading-relaxed text-foreground/90">
+                {ls.overdosage}
+              </p>
+            </Section>
+          )}
+
+          {drug.approvalHistory.length > 0 && (
+            <Section
+              id="approvals"
+              title="Approval history"
+              badge={
+                <ProvenanceBadge
+                  provenance={drug.provenance}
+                  variant="section"
+                />
+              }
+            >
+              <ul className="space-y-2">
+                {drug.approvalHistory.map((a, i) => (
+                  <li
+                    key={`${a.applicationNumber}-${i}`}
+                    className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 rounded-md border border-border/60 px-3 py-2 text-sm"
+                  >
+                    <span className="flex items-baseline gap-2">
+                      <span className="font-mono text-xs tabular-nums">
+                        {formatExtractedDate(a.date)}
+                      </span>
+                      <span className="rounded border border-border/60 px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
+                        {a.type}
+                      </span>
+                      <span className="font-mono text-[11px] text-muted-foreground">
+                        {a.applicationNumber}
+                      </span>
+                    </span>
+                    {a.sponsor && (
+                      <span className="text-xs text-muted-foreground">
+                        {a.sponsor}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
+          {similar.length > 0 && (
+            <Section
+              id="analogs"
+              title="Structural analogs"
+              right={
+                <Link
+                  href={`/api/v1/drug/${drug.slug}/similar`}
+                  aria-label={`View structural analogs for ${drug.name} as JSON`}
+                  className="inline-flex items-center gap-1 rounded-sm text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                >
+                  View JSON
+                  <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                </Link>
+              }
+            >
+              <p className="mb-3 text-xs text-muted-foreground">
+                Ranked by 2D fingerprint (Tanimoto) similarity over PubChem
+                structures. Structural proximity only — not a claim of
+                therapeutic equivalence.
+              </p>
+              <ul className="grid gap-2 sm:grid-cols-2">
+                {similar.map((s) => (
+                  <li key={s.slug}>
+                    <Link
+                      href={`/drugs/${s.slug}`}
+                      className="group flex items-center justify-between gap-3 rounded-md border border-border/60 px-3 py-2 transition-colors hover:bg-accent/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                    >
+                      <span className="min-w-0">
+                        <span
+                          className="block truncate text-sm font-medium"
+                          translate="no"
+                        >
+                          {s.name}
+                        </span>
+                        {s.className && (
+                          <span className="block truncate text-xs text-muted-foreground">
+                            {s.className}
+                          </span>
+                        )}
+                      </span>
+                      <span
+                        className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground"
+                        title={`Tanimoto similarity ${s.score.toFixed(3)}`}
+                      >
+                        {(s.score * 100).toFixed(0)}%
+                      </span>
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </Section>
           )}

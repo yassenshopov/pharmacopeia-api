@@ -82,18 +82,29 @@ const ENDPOINTS: {
     method: "GET",
     path: "/api/v1/drugs",
     description:
-      "List drug summaries. Supports ?limit, ?offset, and ?class=<slug>.",
+      "List drug summaries. Supports ?limit, ?offset, ?class=<slug>, and ?ingredient=<slug>.",
   },
   {
     method: "GET",
     path: "/api/v1/drug/{slug}",
     description:
-      "Full drug record with mechanism, indications, dosing, PK, identifiers.",
+      "Full drug record: mechanism + targets, indications, contraindications, FDA label sections (boxed warning, dosage, adverse reactions, warnings, special populations, overdosage), PK, approval history, and identifiers.",
   },
   {
     method: "GET",
     path: "/api/v1/drug/{slug}/interactions",
     description: "All interactions involving the given drug.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/drug/{slug}/similar",
+    description:
+      "Structurally similar drugs, ranked by 2D fingerprint (Tanimoto) similarity over PubChem structures.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/brands",
+    description: "Brand → generic crosswalk for every brand name in the dataset.",
   },
   {
     method: "GET",

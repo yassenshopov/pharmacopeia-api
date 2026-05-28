@@ -228,16 +228,16 @@ export default async function Home() {
               body={`${stats.classes} pharmacological classes (ATC, EPC, MoA).`}
             />
             <StartCard
-              href="/drugs/metformin"
-              icon={<Sparkles className="h-5 w-5" />}
-              title="Example: metformin"
-              body="A complete drug entity with every field populated."
+              href="/ingredients"
+              icon={<FlaskConical className="h-5 w-5" />}
+              title="Browse ingredients"
+              body={`${stats.ingredients} active substances with chemistry crosswalks.`}
             />
             <StartCard
-              href="/docs#interactions"
+              href="/interactions"
               icon={<GitBranch className="h-5 w-5" />}
               title="Check interactions"
-              body="POST a list of drugs, get back severity-graded pairs."
+              body="Pick a set of drugs and check them pairwise by severity."
             />
             <StartCard
               href="/docs#search"

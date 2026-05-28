@@ -12,10 +12,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const stats = await repo.getStats();
   const lastModified = new Date(stats.updatedAt);
 
-  const [{ items: drugs }, { items: classes }] = await Promise.all([
-    repo.listDrugs({ limit: 200 }),
-    repo.listClasses({ limit: 200 }),
-  ]);
+  const [{ items: drugs }, { items: classes }, { items: ingredients }] =
+    await Promise.all([
+      repo.listDrugs({ limit: 200 }),
+      repo.listClasses({ limit: 200 }),
+      repo.listIngredients({ limit: 200 }),
+    ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -35,6 +37,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified,
       changeFrequency: "weekly",
       priority: 0.8,
+    },
+    {
+      url: absoluteUrl("/ingredients"),
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.8,
+    },
+    {
+      url: absoluteUrl("/brands"),
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: absoluteUrl("/atc"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: absoluteUrl("/interactions"),
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
     },
     {
       url: absoluteUrl("/docs"),
@@ -64,5 +90,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...staticRoutes, ...drugRoutes, ...classRoutes];
+  const ingredientRoutes: MetadataRoute.Sitemap = ingredients.map((i) => ({
+    url: absoluteUrl(`/ingredients/${i.slug}`),
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
+  return [
+    ...staticRoutes,
+    ...drugRoutes,
+    ...classRoutes,
+    ...ingredientRoutes,
+  ];
 }

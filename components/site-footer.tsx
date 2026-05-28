@@ -52,6 +52,26 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/ingredients" className={linkClass}>
+                Ingredients
+              </Link>
+            </li>
+            <li>
+              <Link href="/brands" className={linkClass}>
+                Brands
+              </Link>
+            </li>
+            <li>
+              <Link href="/atc" className={linkClass}>
+                ATC classification
+              </Link>
+            </li>
+            <li>
+              <Link href="/interactions" className={linkClass}>
+                Interactions
+              </Link>
+            </li>
+            <li>
               <Link href="/docs" className={linkClass}>
                 Docs
               </Link>
