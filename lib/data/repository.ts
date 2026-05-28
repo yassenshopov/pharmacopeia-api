@@ -17,9 +17,13 @@ import {
 } from "@/lib/schemas";
 import { SEED_CLASSES, SEED_CLASSES_BY_SLUG } from "./seed/classes";
 import { SEED_DRUGS, SEED_DRUGS_BY_SLUG } from "./seed/drugs";
-import { getSeedInteractionsNarrative } from "./seed/drug-interactions-narratives";
+import {
+  getSeedInteractionsNarrative,
+  SEED_DRUG_INTERACTIONS_NARRATIVES,
+} from "./seed/drug-interactions-narratives";
 import { SEED_INGREDIENTS, SEED_INGREDIENTS_BY_SLUG } from "./seed/ingredients";
 import { SEED_INTERACTIONS } from "./seed/interactions";
+import { getSeedSimilar } from "./seed/similarity";
 
 /**
  * Repository interface that hides whether records come from the static
@@ -29,9 +33,18 @@ import { SEED_INTERACTIONS } from "./seed/interactions";
 export interface PharmacopeiaRepository {
   getStats(): Promise<Stats>;
 
-  listDrugs(opts?: ListOpts & { classSlug?: string }): Promise<List<DrugSummary>>;
+  listDrugs(
+    opts?: ListOpts & { classSlug?: string; ingredientSlug?: string },
+  ): Promise<List<DrugSummary>>;
   getDrug(slug: string): Promise<Drug | null>;
   getDrugInteractions(slug: string): Promise<Interaction[]>;
+
+  /**
+   * Structurally similar drugs (Tanimoto over 2D fingerprints),
+   * precomputed offline. Educational structural proximity only — never
+   * a claim of therapeutic equivalence.
+   */
+  getSimilarDrugs(slug: string): Promise<SimilarDrugResult[]>;
 
   listClasses(opts?: ListOpts): Promise<List<DrugClass>>;
   getClass(slug: string): Promise<DrugClass | null>;
@@ -39,9 +52,30 @@ export interface PharmacopeiaRepository {
   listIngredients(opts?: ListOpts): Promise<List<Ingredient>>;
   getIngredient(slug: string): Promise<Ingredient | null>;
 
+  /**
+   * Brand → generic crosswalk. Every brand name across the dataset,
+   * mapped to the generic drug(s) it markets. Lets a reader land on a
+   * brand (Glucophage) and pivot to the generic (metformin).
+   */
+  listBrands(): Promise<BrandEntry[]>;
+
+  /**
+   * WHO ATC classification grouped by anatomical main group (level 1).
+   * Each group lists the ATC subgroups present in the dataset.
+   */
+  listAtcGroups(): Promise<AtcGroup[]>;
+
   search(query: string, limit?: number): Promise<SearchResult[]>;
 
   checkInteractions(slugs: string[]): Promise<InteractionCheckResponse>;
+
+  /**
+   * Slugs of drugs that carry an openFDA "drug interactions" narrative.
+   * Surfaced as a set so the /interactions UI can mark which selected
+   * drugs have a one-sided narrative to read, given the pair-graph
+   * dataset is still empty.
+   */
+  listInteractionNarrativeSlugs(): Promise<string[]>;
 }
 
 export interface Stats {
@@ -63,6 +97,52 @@ export interface List<T> {
   items: T[];
   pagination: Pagination;
 }
+
+export interface SimilarDrugResult {
+  slug: string;
+  name: string;
+  score: number;
+  className?: string;
+}
+
+export interface BrandEntry {
+  brand: string;
+  drugs: { slug: string; name: string }[];
+}
+
+export interface AtcGroup {
+  letter: string;
+  name: string;
+  classes: DrugClass[];
+}
+
+/**
+ * WHO ATC level-1 anatomical main groups. Static, canonical, and
+ * complete (14 groups). RxClass only hands us the deeper subgroups, so
+ * we supply the top level ourselves to anchor the hierarchy.
+ */
+const ATC_LEVEL1: ReadonlyArray<{ letter: string; name: string }> = [
+  { letter: "A", name: "Alimentary tract and metabolism" },
+  { letter: "B", name: "Blood and blood forming organs" },
+  { letter: "C", name: "Cardiovascular system" },
+  { letter: "D", name: "Dermatologicals" },
+  { letter: "G", name: "Genito-urinary system and sex hormones" },
+  {
+    letter: "H",
+    name: "Systemic hormonal preparations, excluding sex hormones and insulins",
+  },
+  { letter: "J", name: "Antiinfectives for systemic use" },
+  { letter: "L", name: "Antineoplastic and immunomodulating agents" },
+  { letter: "M", name: "Musculo-skeletal system" },
+  { letter: "N", name: "Nervous system" },
+  {
+    letter: "P",
+    name: "Antiparasitic products, insecticides and repellents",
+  },
+  { letter: "R", name: "Respiratory system" },
+  { letter: "S", name: "Sensory organs" },
+  { letter: "V", name: "Various" },
+];
 
 export const SearchResultSchema = z.object({
   slug: z.string(),
@@ -134,12 +214,17 @@ class StaticRepository implements PharmacopeiaRepository {
   }
 
   async listDrugs(
-    opts: ListOpts & { classSlug?: string } = {},
+    opts: ListOpts & { classSlug?: string; ingredientSlug?: string } = {},
   ): Promise<List<DrugSummary>> {
     let drugs = SEED_DRUGS;
     if (opts.classSlug) {
       drugs = drugs.filter((d) =>
         d.classes.some((c) => c.slug === opts.classSlug),
+      );
+    }
+    if (opts.ingredientSlug) {
+      drugs = drugs.filter((d) =>
+        d.ingredients.some((i) => i.slug === opts.ingredientSlug),
       );
     }
     return paginate(drugs.map(toSummary), opts);
@@ -160,6 +245,21 @@ class StaticRepository implements PharmacopeiaRepository {
     );
   }
 
+  async getSimilarDrugs(slug: string): Promise<SimilarDrugResult[]> {
+    const results: SimilarDrugResult[] = [];
+    for (const s of getSeedSimilar(slug)) {
+      const d = SEED_DRUGS_BY_SLUG[s.slug];
+      if (!d) continue;
+      results.push({
+        slug: d.slug,
+        name: d.name,
+        score: s.score,
+        className: d.classes.find((c) => c.kind === "epc")?.name ?? d.classes[0]?.name,
+      });
+    }
+    return results;
+  }
+
   async listClasses(opts?: ListOpts): Promise<List<DrugClass>> {
     return paginate(SEED_CLASSES, opts);
   }
@@ -174,6 +274,48 @@ class StaticRepository implements PharmacopeiaRepository {
 
   async getIngredient(slug: string): Promise<Ingredient | null> {
     return SEED_INGREDIENTS_BY_SLUG[slug] ?? null;
+  }
+
+  async listBrands(): Promise<BrandEntry[]> {
+    const map = new Map<string, { brand: string; drugs: Map<string, string> }>();
+    for (const d of SEED_DRUGS) {
+      for (const brand of d.brands) {
+        const key = brand.toLowerCase();
+        let entry = map.get(key);
+        if (!entry) {
+          entry = { brand, drugs: new Map() };
+          map.set(key, entry);
+        }
+        entry.drugs.set(d.slug, d.name);
+      }
+    }
+    return [...map.values()]
+      .map((e) => ({
+        brand: e.brand,
+        drugs: [...e.drugs.entries()]
+          .map(([slug, name]) => ({ slug, name }))
+          .sort((a, b) => a.name.localeCompare(b.name)),
+      }))
+      .sort((a, b) => a.brand.localeCompare(b.brand));
+  }
+
+  async listAtcGroups(): Promise<AtcGroup[]> {
+    const byLetter = new Map<string, DrugClass[]>();
+    for (const c of SEED_CLASSES) {
+      if (c.kind !== "atc" || !c.code) continue;
+      const letter = c.code[0].toUpperCase();
+      const list = byLetter.get(letter) ?? [];
+      list.push(c);
+      byLetter.set(letter, list);
+    }
+    const groups: AtcGroup[] = [];
+    for (const { letter, name } of ATC_LEVEL1) {
+      const classes = byLetter.get(letter);
+      if (!classes || classes.length === 0) continue;
+      classes.sort((a, b) => (a.code ?? "").localeCompare(b.code ?? ""));
+      groups.push({ letter, name, classes });
+    }
+    return groups;
   }
 
   async search(query: string, limit = 10): Promise<SearchResult[]> {
@@ -254,6 +396,10 @@ class StaticRepository implements PharmacopeiaRepository {
     for (const p of pairs) summary[p.severity] += 1;
 
     return { input: unique, pairs, summary };
+  }
+
+  async listInteractionNarrativeSlugs(): Promise<string[]> {
+    return Object.keys(SEED_DRUG_INTERACTIONS_NARRATIVES).sort();
   }
 }
 
