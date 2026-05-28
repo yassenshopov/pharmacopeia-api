@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Safari pinned-tab icon. Must be a single-color flat SVG; Safari
+  recolors it on the fly to match the user's accent color. Background
+  is intentionally transparent  the glyph is the entire icon.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <text
+    x="50%"
+    y="50%"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="56"
+    font-weight="700"
+    fill="#000000"
+  >&#8478;</text>
+</svg>

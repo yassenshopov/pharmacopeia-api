@@ -68,8 +68,18 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
     shortcut: "/favicon.ico",
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/safari-pinned-tab.svg",
+        color: "#c08032",
+      },
+    ],
   },
   manifest: "/manifest.webmanifest",
   alternates: {
@@ -113,13 +123,24 @@ export const metadata: Metadata = {
   category: "technology",
 };
 
+/**
+ * Theme color values mirror the `--background` token for each scheme in
+ * `app/globals.css`. Kept as hex (not oklch) because mobile browser
+ * chrome and PWA hosts still vary in oklch support.
+ *
+ *   light → oklch(0.985 0.008 78) (parchment)
+ *   dark  → oklch(0.155 0.006 70) (warm-ink)
+ */
+const THEME_COLOR_LIGHT = "#fbf5e9";
+const THEME_COLOR_DARK = "#1c1916";
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   colorScheme: "light dark",
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "oklch(0.985 0.008 78)" },
-    { media: "(prefers-color-scheme: dark)", color: "oklch(0.165 0.018 235)" },
+    { media: "(prefers-color-scheme: light)", color: THEME_COLOR_LIGHT },
+    { media: "(prefers-color-scheme: dark)", color: THEME_COLOR_DARK },
   ],
 };
 

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Maskable PWA icon. The PWA "maskable" purpose tells the platform
+  it may safely crop into the icon's outer 10%, so all meaningful
+  content must live inside the central 80% "safe zone". Here the
+  warm-ink fill covers the whole canvas and the glyph is centered
+  and sized to fit inside the safe zone.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="pharmacopeia">
+  <title>pharmacopeia</title>
+  <rect width="64" height="64" fill="#1c1916"/>
+  <text
+    x="50%"
+    y="50%"
+    text-anchor="middle"
+    dominant-baseline="central"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="30"
+    font-weight="700"
+    fill="#e9a35a"
+  >&#8478;</text>
+</svg>
