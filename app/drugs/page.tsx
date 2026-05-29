@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DrugsListClient } from "@/components/drugs-list-client";
 import { getRepository } from "@/lib/data/repository";
+import { SEED_STRUCTURES } from "@/lib/data/seed/structures";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
 const DRUGS_PATH = "/drugs";
@@ -48,6 +49,7 @@ export default async function DrugsPage() {
   const { items: drugs, pagination } = await getRepository().listDrugs({
     limit: 200,
   });
+  const structureSlugs = Object.keys(SEED_STRUCTURES);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -66,7 +68,7 @@ export default async function DrugsPage() {
         </p>
       </div>
 
-      <DrugsListClient items={drugs} />
+      <DrugsListClient items={drugs} structureSlugs={structureSlugs} />
     </div>
   );
 }
