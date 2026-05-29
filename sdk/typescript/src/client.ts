@@ -2,6 +2,7 @@
 // Source of truth: lib/schemas/*.ts + lib/sdk/manifest.ts
 
 import type {
+  AdverseEventStatsResponse,
   BrandsResponse,
   ChangelogResponse,
   ClassDetailResponse,
@@ -9,12 +10,19 @@ import type {
   Drug,
   DrugInteractionsResponse,
   DrugListResponse,
+  DrugLiteratureResponse,
+  DrugShortagesResponse,
+  DrugsBatchRequest,
+  DrugsBatchResponse,
   HealthResponse,
   Ingredient,
   IngredientListResponse,
   InteractionCheckRequest,
   InteractionCheckResponse,
+  ReactionResponse,
+  ReactionsListResponse,
   SearchResponse,
+  ShortagesResponse,
   SimilarDrugsResponse,
   Stats,
   StructureSearchRequest,
@@ -132,8 +140,13 @@ export class PharmacopeiaClient {
   }
 
   /** Fetch a single drug by slug. */
-  getDrug(slug: string): Promise<Drug> {
-    return this.request<Drug>("GET", `/drug/${encodeURIComponent(slug)}`, {});
+  getDrug(slug: string, query: { fields?: string } = {}): Promise<Drug> {
+    return this.request<Drug>("GET", `/drug/${encodeURIComponent(slug)}`, { query });
+  }
+
+  /** Fetch up to 100 drug records in a single round-trip. Returns the full records found plus the slugs that did not resolve. */
+  getDrugsBatch(body: DrugsBatchRequest): Promise<DrugsBatchResponse> {
+    return this.request<DrugsBatchResponse>("POST", `/drugs/batch`, { body });
   }
 
   /** List known interactions for a drug. */
@@ -194,6 +207,36 @@ export class PharmacopeiaClient {
   /** Rank drugs in the dataset by 2D Tanimoto similarity to a caller-supplied SMILES. Structural proximity only. */
   structureSearch(body: StructureSearchRequest): Promise<StructureSearchResponse> {
     return this.request<StructureSearchResponse>("POST", `/structure-search`, { body });
+  }
+
+  /** FDA shortage entries (active, resolved, discontinuation) for a drug. Reference statistics only. */
+  getDrugShortages(slug: string): Promise<DrugShortagesResponse> {
+    return this.request<DrugShortagesResponse>("GET", `/drug/${encodeURIComponent(slug)}/shortages`, {});
+  }
+
+  /** Every shortage entry across the dataset, sorted by drug then presentation. */
+  listShortages(): Promise<ShortagesResponse> {
+    return this.request<ShortagesResponse>("GET", `/shortages`, {});
+  }
+
+  /** Aggregate FAERS report counts for a drug — top reactions by reporting volume. NOT incidence rates, signals, or causality. */
+  getDrugAdverseEvents(slug: string): Promise<AdverseEventStatsResponse> {
+    return this.request<AdverseEventStatsResponse>("GET", `/drug/${encodeURIComponent(slug)}/adverse-events`, {});
+  }
+
+  /** Curated PubMed references for a drug, pinned to MeSH major topic at ingest time. */
+  getDrugLiterature(slug: string): Promise<DrugLiteratureResponse> {
+    return this.request<DrugLiteratureResponse>("GET", `/drug/${encodeURIComponent(slug)}/literature`, {});
+  }
+
+  /** Browse MedDRA Preferred Terms reported to FAERS across the dataset, ordered by total reporting volume. Reference statistics only — NOT a symptom checker. */
+  listReactions(query: { limit?: number; offset?: number } = {}): Promise<ReactionsListResponse> {
+    return this.request<ReactionsListResponse>("GET", `/reactions`, { query });
+  }
+
+  /** Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical. */
+  getReaction(slug: string): Promise<ReactionResponse> {
+    return this.request<ReactionResponse>("GET", `/reaction/${encodeURIComponent(slug)}`, {});
   }
 
   /** Recent record-level changes (typed mirror of /feed.xml and /feed.json). */

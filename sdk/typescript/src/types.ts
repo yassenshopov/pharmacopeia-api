@@ -176,6 +176,16 @@ export interface Drug {
   provenance: Provenance;
 }
 
+export interface DrugsBatchRequest {
+  slugs: string[];
+}
+
+export interface DrugsBatchResponse {
+  found: Drug[];
+  missing: string[];
+  total: number;
+}
+
 export interface Interaction {
   drugA: string;
   drugB: string;
@@ -221,6 +231,9 @@ export interface HealthResponse {
   updatedAt: string;
   time: string;
   uptime?: number;
+  repository: "static" | "supabase";
+  commit?: string;
+  region?: string;
 }
 
 export interface SimilarDrugResult {
@@ -334,4 +347,136 @@ export interface ChangelogEntry {
 export interface ChangelogResponse {
   entries: ChangelogEntry[];
   total: number;
+}
+
+export type ShortageStatus = "active" | "resolved" | "discontinuation" | "to-be-discontinued";
+
+export interface ShortageEntry {
+  drug: string;
+  status: ShortageStatus;
+  presentation: string;
+  sponsor?: string;
+  reason?: string;
+  therapeuticCategory?: string;
+  fdaUpdatedAt: string;
+  provenance: Provenance;
+}
+
+export interface DrugShortagesResponse {
+  drug: { slug: string; name: string };
+  entries: ShortageEntry[];
+  anyActive: boolean;
+  total: number;
+}
+
+export interface ShortagesResponse {
+  entries: ShortageEntry[];
+  total: number;
+}
+
+export interface AdverseEventReport {
+  reaction: string;
+  count: number;
+}
+
+export interface AdverseEventStats {
+  drug: string;
+  totalReports: number;
+  topReactions: AdverseEventReport[];
+  windowStart?: string;
+  windowEnd?: string;
+  disclaimer: string;
+  provenance: Provenance;
+}
+
+export interface AdverseEventStatsResponse {
+  drug: { slug: string; name: string };
+  stats: AdverseEventStats | null;
+}
+
+export interface LiteratureReference {
+  pmid: string;
+  title: string;
+  journal: string;
+  year: number;
+  authors: string[];
+  doi?: string;
+  pubmedUrl: string;
+}
+
+export interface DrugLiteratureResponse {
+  drug: { slug: string; name: string };
+  references: LiteratureReference[];
+  total: number;
+}
+
+export interface ReactionSummary {
+  slug: string;
+  name: string;
+  aliases: string[];
+  drugCount: number;
+  totalReports: number;
+}
+
+export interface ReactionDrugRow {
+  drug: string;
+  name: string;
+  count: number;
+  share: number | null;
+  drugTotalReports: number;
+}
+
+export interface RelatedReaction {
+  slug: string;
+  name: string;
+  sharedDrugs: number;
+  similarity: number;
+}
+
+export interface MeshTreeNode {
+  uid: string;
+  descriptorId: string;
+  name: string;
+}
+
+export interface ReactionMeta {
+  meshDescriptorId: string;
+  meshUid: string;
+  meshDescriptorName: string;
+  meshEntryTerms: string[];
+  scopeNote: string;
+  treeNumbers: string[];
+  parents: MeshTreeNode[];
+  meshBrowserUrl: string;
+  references: LiteratureReference[];
+  provenance: Provenance;
+}
+
+export interface Reaction {
+  slug: string;
+  name: string;
+  aliases: string[];
+  drugCount: number;
+  totalReports: number;
+  drugs: ReactionDrugRow[];
+  relatedReactions: RelatedReaction[];
+  meta: ReactionMeta | null;
+  disclaimer: string;
+}
+
+export interface ReactionsListResponse {
+  items: ReactionSummary[];
+  pagination: Pagination;
+}
+
+export interface ReactionResponse {
+  slug: string;
+  name: string;
+  aliases: string[];
+  drugCount: number;
+  totalReports: number;
+  drugs: ReactionDrugRow[];
+  relatedReactions: RelatedReaction[];
+  meta: ReactionMeta | null;
+  disclaimer: string;
 }

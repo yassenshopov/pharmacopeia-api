@@ -224,6 +224,20 @@ class Drug(BaseModel):
     provenance: Provenance
 
 
+class DrugsBatchRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slugs: List[str]
+
+
+class DrugsBatchResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    found: List[Drug]
+    missing: List[str]
+    total: int
+
+
 class Interaction(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
@@ -281,6 +295,9 @@ class HealthResponse(BaseModel):
     updated_at: str = Field(alias="updatedAt")
     time: str
     uptime: Optional[int] = None
+    repository: Literal["static", "supabase"]
+    commit: Optional[str] = None
+    region: Optional[str] = None
 
 
 class SimilarDrugResult(BaseModel):
@@ -428,3 +445,168 @@ class ChangelogResponse(BaseModel):
 
     entries: List[ChangelogEntry]
     total: int
+
+
+ShortageStatus = Literal["active", "resolved", "discontinuation", "to-be-discontinued"]
+
+
+class ShortageEntry(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: str
+    status: ShortageStatus
+    presentation: str
+    sponsor: Optional[str] = None
+    reason: Optional[str] = None
+    therapeutic_category: Optional[str] = Field(default=None, alias="therapeuticCategory")
+    fda_updated_at: str = Field(alias="fdaUpdatedAt")
+    provenance: Provenance
+
+
+class DrugShortagesResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: Dict[str, Any]
+    entries: List[ShortageEntry]
+    any_active: bool = Field(alias="anyActive")
+    total: int
+
+
+class ShortagesResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    entries: List[ShortageEntry]
+    total: int
+
+
+class AdverseEventReport(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    reaction: str
+    count: int
+
+
+class AdverseEventStats(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: str
+    total_reports: int = Field(alias="totalReports")
+    top_reactions: List[AdverseEventReport] = Field(alias="topReactions")
+    window_start: Optional[str] = Field(default=None, alias="windowStart")
+    window_end: Optional[str] = Field(default=None, alias="windowEnd")
+    disclaimer: str
+    provenance: Provenance
+
+
+class AdverseEventStatsResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: Dict[str, Any]
+    stats: Optional[AdverseEventStats]
+
+
+class LiteratureReference(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    pmid: str
+    title: str
+    journal: str
+    year: int
+    authors: List[str]
+    doi: Optional[str] = None
+    pubmed_url: str = Field(alias="pubmedUrl")
+
+
+class DrugLiteratureResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: Dict[str, Any]
+    references: List[LiteratureReference]
+    total: int
+
+
+class ReactionSummary(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    aliases: List[str]
+    drug_count: int = Field(alias="drugCount")
+    total_reports: int = Field(alias="totalReports")
+
+
+class ReactionDrugRow(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: str
+    name: str
+    count: int
+    share: Optional[float]
+    drug_total_reports: int = Field(alias="drugTotalReports")
+
+
+class RelatedReaction(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    shared_drugs: int = Field(alias="sharedDrugs")
+    similarity: float
+
+
+class MeshTreeNode(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    uid: str
+    descriptor_id: str = Field(alias="descriptorId")
+    name: str
+
+
+class ReactionMeta(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    mesh_descriptor_id: str = Field(alias="meshDescriptorId")
+    mesh_uid: str = Field(alias="meshUid")
+    mesh_descriptor_name: str = Field(alias="meshDescriptorName")
+    mesh_entry_terms: List[str] = Field(alias="meshEntryTerms")
+    scope_note: str = Field(alias="scopeNote")
+    tree_numbers: List[str] = Field(alias="treeNumbers")
+    parents: List[MeshTreeNode]
+    mesh_browser_url: str = Field(alias="meshBrowserUrl")
+    references: List[LiteratureReference]
+    provenance: Provenance
+
+
+class Reaction(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    aliases: List[str]
+    drug_count: int = Field(alias="drugCount")
+    total_reports: int = Field(alias="totalReports")
+    drugs: List[ReactionDrugRow]
+    related_reactions: List[RelatedReaction] = Field(alias="relatedReactions")
+    meta: Optional[ReactionMeta]
+    disclaimer: str
+
+
+class ReactionsListResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    items: List[ReactionSummary]
+    pagination: Pagination
+
+
+class ReactionResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    aliases: List[str]
+    drug_count: int = Field(alias="drugCount")
+    total_reports: int = Field(alias="totalReports")
+    drugs: List[ReactionDrugRow]
+    related_reactions: List[RelatedReaction] = Field(alias="relatedReactions")
+    meta: Optional[ReactionMeta]
+    disclaimer: str

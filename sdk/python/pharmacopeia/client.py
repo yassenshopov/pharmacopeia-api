@@ -6,6 +6,7 @@ from typing import Any, Dict, Optional
 from urllib.parse import quote
 
 from .models import (
+    AdverseEventStatsResponse,
     BrandsResponse,
     ChangelogResponse,
     ClassDetailResponse,
@@ -13,12 +14,19 @@ from .models import (
     Drug,
     DrugInteractionsResponse,
     DrugListResponse,
+    DrugLiteratureResponse,
+    DrugShortagesResponse,
+    DrugsBatchRequest,
+    DrugsBatchResponse,
     HealthResponse,
     Ingredient,
     IngredientListResponse,
     InteractionCheckRequest,
     InteractionCheckResponse,
+    ReactionResponse,
+    ReactionsListResponse,
     SearchResponse,
+    ShortagesResponse,
     SimilarDrugsResponse,
     Stats,
     StructureSearchRequest,
@@ -124,10 +132,16 @@ class PharmacopeiaClient:
         data = self._request("GET", "/drugs", params=params)
         return DrugListResponse.model_validate(data)
 
-    def get_drug(self, slug: str) -> Drug:
+    def get_drug(self, slug: str, *, fields: Optional[str] = None) -> Drug:
         """Fetch a single drug by slug."""
-        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}")
+        params = _drop_none({"fields": fields})
+        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}", params=params)
         return Drug.model_validate(data)
+
+    def get_drugs_batch(self, body: DrugsBatchRequest) -> DrugsBatchResponse:
+        """Fetch up to 100 drug records in a single round-trip. Returns the full records found plus the slugs that did not resolve."""
+        data = self._request("POST", "/drugs/batch", json_body=body.model_dump(by_alias=True, exclude_none=True))
+        return DrugsBatchResponse.model_validate(data)
 
     def get_drug_interactions(self, slug: str) -> DrugInteractionsResponse:
         """List known interactions for a drug."""
@@ -191,6 +205,37 @@ class PharmacopeiaClient:
         """Rank drugs in the dataset by 2D Tanimoto similarity to a caller-supplied SMILES. Structural proximity only."""
         data = self._request("POST", "/structure-search", json_body=body.model_dump(by_alias=True, exclude_none=True))
         return StructureSearchResponse.model_validate(data)
+
+    def get_drug_shortages(self, slug: str) -> DrugShortagesResponse:
+        """FDA shortage entries (active, resolved, discontinuation) for a drug. Reference statistics only."""
+        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/shortages")
+        return DrugShortagesResponse.model_validate(data)
+
+    def list_shortages(self) -> ShortagesResponse:
+        """Every shortage entry across the dataset, sorted by drug then presentation."""
+        data = self._request("GET", "/shortages")
+        return ShortagesResponse.model_validate(data)
+
+    def get_drug_adverse_events(self, slug: str) -> AdverseEventStatsResponse:
+        """Aggregate FAERS report counts for a drug — top reactions by reporting volume. NOT incidence rates, signals, or causality."""
+        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/adverse-events")
+        return AdverseEventStatsResponse.model_validate(data)
+
+    def get_drug_literature(self, slug: str) -> DrugLiteratureResponse:
+        """Curated PubMed references for a drug, pinned to MeSH major topic at ingest time."""
+        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/literature")
+        return DrugLiteratureResponse.model_validate(data)
+
+    def list_reactions(self, *, limit: Optional[int] = None, offset: Optional[int] = None) -> ReactionsListResponse:
+        """Browse MedDRA Preferred Terms reported to FAERS across the dataset, ordered by total reporting volume. Reference statistics only — NOT a symptom checker."""
+        params = _drop_none({"limit": limit, "offset": offset})
+        data = self._request("GET", "/reactions", params=params)
+        return ReactionsListResponse.model_validate(data)
+
+    def get_reaction(self, slug: str) -> ReactionResponse:
+        """Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical."""
+        data = self._request("GET", f"/reaction/{quote(str(slug), safe='')}")
+        return ReactionResponse.model_validate(data)
 
     def list_changelog(self, *, limit: Optional[int] = None, since: Optional[str] = None) -> ChangelogResponse:
         """Recent record-level changes (typed mirror of /feed.xml and /feed.json)."""
