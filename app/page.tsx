@@ -152,7 +152,11 @@ export default async function Home() {
   return (
     <div>
       {/* ─────────────────────────────── Hero */}
-      <section className="relative overflow-hidden border-b border-border/60">
+      {/* `isolate` confines the inner `z-10` wrapper and the aurora's
+          mix-blend-mode to this section's stacking context so portaled
+          overlays (nav dropdowns, command menu, tooltips) reliably paint
+          on top. */}
+      <section className="relative isolate overflow-hidden border-b border-border/60">
         <HeroAurora />
         <div className="relative z-10 mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-6 sm:pt-24">
           {latestChange && (

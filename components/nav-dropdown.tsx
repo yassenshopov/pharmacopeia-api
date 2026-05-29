@@ -44,10 +44,18 @@ export function NavDropdown({
         />
       </PopoverPrimitive.Trigger>
       <PopoverPrimitive.Portal>
-        <PopoverPrimitive.Positioner sideOffset={8} align="start">
+        {/* z-index lives on the Positioner because that's the positioned
+            (absolute) element — z-index on the Popup itself is a no-op and
+            lets in-page stacking contexts (e.g. the hero's `z-10` wrapper)
+            paint over the dropdown. */}
+        <PopoverPrimitive.Positioner
+          sideOffset={8}
+          align="start"
+          className="z-50"
+        >
           <PopoverPrimitive.Popup
             className={cn(
-              "z-50 w-72 rounded-lg border border-border/60 bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/5 outline-none",
+              "w-72 rounded-lg border border-border/60 bg-popover p-1 text-popover-foreground shadow-lg ring-1 ring-foreground/5 outline-none",
               "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
               "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
               "motion-reduce:animate-none motion-reduce:duration-0",
