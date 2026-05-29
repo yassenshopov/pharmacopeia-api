@@ -8,7 +8,7 @@ import { getRepository } from "@/lib/data/repository";
  * carry the WHO group names, level 4 maps to a class record (`slug`),
  * and level 5 leaves are the substances (drugs) in the dataset.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const tree = await getRepository().getAtcTree();
   const groups = tree.length;
   const subgroups = tree.reduce(
@@ -22,5 +22,8 @@ export async function GET() {
       ),
     0,
   );
-  return ok({ source: "WHO ATC/DDD Index", levels: 5, groups, subgroups, tree });
+  return ok(
+    { source: "WHO ATC/DDD Index", levels: 5, groups, subgroups, tree },
+    { request },
+  );
 }

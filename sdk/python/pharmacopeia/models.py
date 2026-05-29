@@ -273,6 +273,16 @@ class Stats(BaseModel):
     updated_at: str = Field(alias="updatedAt")
 
 
+class HealthResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    status: Literal["ok"]
+    version: str
+    updated_at: str = Field(alias="updatedAt")
+    time: str
+    uptime: Optional[int] = None
+
+
 class SimilarDrugResult(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
@@ -362,4 +372,59 @@ class SearchResponse(BaseModel):
 
     query: str
     results: List[SearchResult]
+    total: int
+
+
+class StructureMatch(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    score: float
+    class_name: Optional[str] = Field(default=None, alias="className")
+    smiles: str
+
+
+class StructureSearchRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    smiles: str
+    limit: int
+    threshold: float
+
+
+class StructureSearchResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    query: Dict[str, Any]
+    method: Literal["tanimoto-2d-fingerprint"]
+    total: int
+    results: List[StructureMatch]
+
+
+ChangelogKind = Literal["drug", "class", "ingredient", "interaction", "structure", "dataset", "endpoint"]
+
+
+ChangelogAction = Literal["added", "updated", "removed", "released"]
+
+
+class ChangelogEntry(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    kind: ChangelogKind
+    action: ChangelogAction
+    entity_slug: Optional[str] = Field(default=None, alias="entitySlug")
+    title: str
+    summary: str
+    timestamp: str
+    url: str
+    sources: List[str]
+    tags: List[str]
+
+
+class ChangelogResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    entries: List[ChangelogEntry]
     total: int

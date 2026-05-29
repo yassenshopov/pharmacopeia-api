@@ -3,7 +3,7 @@ import { getRepository } from "@/lib/data/repository";
 import type { ClassDetailResponse } from "@/lib/schemas";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
@@ -12,5 +12,5 @@ export async function GET(
   if (!cls) return notFound(`Class '${slug}' not found`);
 
   const { items: drugs } = await repo.listDrugs({ classSlug: slug, limit: 200 });
-  return ok({ ...cls, drugs } satisfies ClassDetailResponse);
+  return ok({ ...cls, drugs } satisfies ClassDetailResponse, { request });
 }

@@ -1,5 +1,6 @@
 import type {
   BrandEntry,
+  ChangelogEntry,
   Drug,
   DrugClass,
   DrugSummary,
@@ -10,8 +11,10 @@ import type {
   SearchResult,
   SimilarDrugResult,
   Stats,
+  StructureMatch,
 } from "@/lib/schemas";
 import {
+  ChangelogEntrySchema,
   DrugSchema,
   DrugClassSchema,
   IngredientSchema,
@@ -37,7 +40,9 @@ import {
 } from "./seed/drug-interactions-narratives";
 import { SEED_INGREDIENTS, SEED_INGREDIENTS_BY_SLUG } from "./seed/ingredients";
 import { SEED_INTERACTIONS } from "./seed/interactions";
+import { SEED_CHANGELOG } from "./seed/changelog";
 import { getSeedSimilar } from "./seed/similarity";
+import { searchByStructure } from "./structure-search";
 
 /**
  * Repository interface that hides whether records come from the static
@@ -59,6 +64,18 @@ export interface PharmacopeiaRepository {
    * a claim of therapeutic equivalence.
    */
   getSimilarDrugs(slug: string): Promise<SimilarDrugResult[]>;
+
+  /**
+   * Rank every indexed drug by 2D Tanimoto similarity to the
+   * caller-supplied SMILES. Same fingerprint family that powers the
+   * offline per-drug analog lists, computed online against an arbitrary
+   * query molecule. Throws `InvalidSmilesError` for unparseable input.
+   * Structural proximity only — never a claim of therapeutic equivalence.
+   */
+  searchByStructure(
+    smiles: string,
+    opts: { limit: number; threshold: number },
+  ): Promise<StructureMatch[]>;
 
   listClasses(opts?: ListOpts): Promise<List<DrugClass>>;
   getClass(slug: string): Promise<DrugClass | null>;
@@ -106,6 +123,21 @@ export interface PharmacopeiaRepository {
    * dataset is still empty.
    */
   listInteractionNarrativeSlugs(): Promise<string[]>;
+
+  /**
+   * Public "what's new" feed. Returns notable record-level and
+   * surface-level changes, newest first. Powers `/feed.xml`,
+   * `/feed.json`, and the `/changelog` HTML page so consumers and
+   * curators can watch the dataset evolve without scraping.
+   */
+  listChangelog(opts?: ListChangelogOpts): Promise<ChangelogEntry[]>;
+}
+
+export interface ListChangelogOpts {
+  /** Maximum number of entries to return; defaults to 50. */
+  limit?: number;
+  /** ISO timestamp; only entries strictly after this are returned. */
+  since?: string;
 }
 
 export interface ListOpts {
@@ -240,6 +272,7 @@ class StaticRepository implements PharmacopeiaRepository {
     SEED_CLASSES.forEach((c) => DrugClassSchema.parse(c));
     SEED_INGREDIENTS.forEach((i) => IngredientSchema.parse(i));
     SEED_INTERACTIONS.forEach((x) => InteractionSchema.parse(x));
+    SEED_CHANGELOG.forEach((c) => ChangelogEntrySchema.parse(c));
   }
 
   async getStats(): Promise<Stats> {
@@ -288,6 +321,13 @@ class StaticRepository implements PharmacopeiaRepository {
     return SEED_INTERACTIONS.filter(
       (x) => x.drugA === slug || x.drugB === slug,
     );
+  }
+
+  async searchByStructure(
+    smiles: string,
+    opts: { limit: number; threshold: number },
+  ): Promise<StructureMatch[]> {
+    return searchByStructure(smiles, opts);
   }
 
   async getSimilarDrugs(slug: string): Promise<SimilarDrugResult[]> {
@@ -609,6 +649,21 @@ class StaticRepository implements PharmacopeiaRepository {
 
   async listInteractionNarrativeSlugs(): Promise<string[]> {
     return Object.keys(SEED_DRUG_INTERACTIONS_NARRATIVES).sort();
+  }
+
+  async listChangelog(opts?: ListChangelogOpts): Promise<ChangelogEntry[]> {
+    const limit = Math.min(Math.max(opts?.limit ?? 50, 1), 200);
+    const sinceMs = opts?.since ? Date.parse(opts.since) : Number.NaN;
+    const cutoff = Number.isFinite(sinceMs) ? sinceMs : null;
+
+    const entries = SEED_CHANGELOG.slice().sort(
+      (a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp),
+    );
+    const filtered =
+      cutoff === null
+        ? entries
+        : entries.filter((e) => Date.parse(e.timestamp) > cutoff);
+    return filtered.slice(0, limit);
   }
 }
 

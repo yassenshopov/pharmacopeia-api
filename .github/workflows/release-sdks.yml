@@ -1,0 +1,181 @@
+name: Release SDKs
+
+# Publish @pharmacopeia/client to npm and pharmacopeia to PyPI on release.
+#
+# Trigger options:
+#   1. Create a GitHub Release whose tag matches `sdk-v<semver>`
+#      (e.g. `sdk-v0.2.0`). The tag drives the package version, so
+#      `npm i @pharmacopeia/client@0.2.0` and `pip install pharmacopeia==0.2.0`
+#      both resolve to the same generated contract.
+#   2. Manual `workflow_dispatch` with a version input.
+#
+# Secrets required:
+#   - NPM_TOKEN — automation token with publish access to `@pharmacopeia/client`.
+#
+# PyPI publishing uses OIDC (trusted publishing). Configure the project on
+# PyPI under https://pypi.org/manage/account/publishing/ with:
+#   owner       : <github-owner>
+#   repository  : pharmacopeia-api
+#   workflow    : release-sdks.yml
+#   environment : pypi
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "SemVer to publish (no leading v, e.g. 0.2.0)"
+        required: true
+        type: string
+      dry_run:
+        description: "Build only, do not publish"
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-sdks-${{ github.event.release.tag_name || github.event.inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  # ────────────────────────────────────────────────────────────────────
+  resolve-version:
+    name: Resolve version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.derive.outputs.version }}
+    steps:
+      - name: Derive version from tag or input
+        id: derive
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          set -euo pipefail
+          if [ -n "${INPUT_VERSION:-}" ]; then
+            raw="$INPUT_VERSION"
+          else
+            raw="${TAG_NAME:-}"
+          fi
+          if [ -z "$raw" ]; then
+            echo "::error::No version available from release tag or workflow input."
+            exit 1
+          fi
+          # Strip optional `sdk-v` or `v` prefix from tags.
+          version="${raw#sdk-v}"
+          version="${version#v}"
+          if ! printf "%s" "$version" | grep -Eq '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)([-+][0-9A-Za-z.-]+)*$'; then
+            echo "::error::Not a SemVer version: $raw"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $version"
+
+  # ────────────────────────────────────────────────────────────────────
+  publish-npm:
+    name: Publish @pharmacopeia/client to npm
+    needs: resolve-version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@pharmacopeia/client
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Regenerate SDK from Zod schemas
+        run: npm run codegen
+
+      - name: Stamp SDK manifests with release version
+        run: npm run sdk:set-version -- ${{ needs.resolve-version.outputs.version }}
+
+      - name: Install TypeScript SDK dependencies
+        working-directory: sdk/typescript
+        run: npm install --no-audit --no-fund
+
+      - name: Build TypeScript SDK
+        working-directory: sdk/typescript
+        run: npm run build
+
+      - name: Publish to npm (dry run)
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        working-directory: sdk/typescript
+        run: npm publish --dry-run --access public
+
+      - name: Publish to npm
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: sdk/typescript
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
+
+  # ────────────────────────────────────────────────────────────────────
+  publish-pypi:
+    name: Publish pharmacopeia to PyPI
+    needs: resolve-version
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: pypi
+      url: https://pypi.org/project/pharmacopeia/
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Regenerate SDK from Zod schemas
+        run: npm run codegen
+
+      - name: Stamp SDK manifests with release version
+        run: npm run sdk:set-version -- ${{ needs.resolve-version.outputs.version }}
+
+      - name: Install Python build tooling
+        run: python -m pip install --upgrade build
+
+      - name: Build sdist + wheel
+        working-directory: sdk/python
+        run: python -m build
+
+      - name: Publish to PyPI (dry run)
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        working-directory: sdk/python
+        run: |
+          echo "Built artefacts:"
+          ls -la dist
+
+      - name: Publish to PyPI
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: sdk/python/dist
+          print-hash: true

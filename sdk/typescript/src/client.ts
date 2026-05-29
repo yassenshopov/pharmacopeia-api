@@ -3,11 +3,13 @@
 
 import type {
   BrandsResponse,
+  ChangelogResponse,
   ClassDetailResponse,
   ClassListResponse,
   Drug,
   DrugInteractionsResponse,
   DrugListResponse,
+  HealthResponse,
   Ingredient,
   IngredientListResponse,
   InteractionCheckRequest,
@@ -15,6 +17,8 @@ import type {
   SearchResponse,
   SimilarDrugsResponse,
   Stats,
+  StructureSearchRequest,
+  StructureSearchResponse,
 } from "./types";
 
 /** Base URL of the pharmacopeia API (origin + `/api/v1`). */
@@ -172,6 +176,11 @@ export class PharmacopeiaClient {
     return this.request<Stats>("GET", `/stats`, {});
   }
 
+  /** Liveness + dataset-version probe. Tiny payload for monitors and clients. */
+  getHealth(): Promise<HealthResponse> {
+    return this.request<HealthResponse>("GET", `/health`, {});
+  }
+
   /** Full-text search across drugs, classes, and ingredients. */
   search(query: { q: string; limit?: number }): Promise<SearchResponse> {
     return this.request<SearchResponse>("GET", `/search`, { query });
@@ -180,5 +189,15 @@ export class PharmacopeiaClient {
   /** Check a set of 2–20 drug slugs for pairwise interactions. */
   checkInteractions(body: InteractionCheckRequest): Promise<InteractionCheckResponse> {
     return this.request<InteractionCheckResponse>("POST", `/interactions/check`, { body });
+  }
+
+  /** Rank drugs in the dataset by 2D Tanimoto similarity to a caller-supplied SMILES. Structural proximity only. */
+  structureSearch(body: StructureSearchRequest): Promise<StructureSearchResponse> {
+    return this.request<StructureSearchResponse>("POST", `/structure-search`, { body });
+  }
+
+  /** Recent record-level changes (typed mirror of /feed.xml and /feed.json). */
+  listChangelog(query: { limit?: number; since?: string } = {}): Promise<ChangelogResponse> {
+    return this.request<ChangelogResponse>("GET", `/changelog`, { query });
   }
 }

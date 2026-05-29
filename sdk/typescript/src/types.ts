@@ -215,6 +215,14 @@ export interface Stats {
   updatedAt: string;
 }
 
+export interface HealthResponse {
+  status: "ok";
+  version: string;
+  updatedAt: string;
+  time: string;
+  uptime?: number;
+}
+
 export interface SimilarDrugResult {
   slug: string;
   name: string;
@@ -282,5 +290,48 @@ export interface BrandsResponse {
 export interface SearchResponse {
   query: string;
   results: SearchResult[];
+  total: number;
+}
+
+export interface StructureMatch {
+  slug: string;
+  name: string;
+  score: number;
+  className?: string;
+  smiles: string;
+}
+
+export interface StructureSearchRequest {
+  smiles: string;
+  limit: number;
+  threshold: number;
+}
+
+export interface StructureSearchResponse {
+  query: { smiles: string; limit: number; threshold: number };
+  method: "tanimoto-2d-fingerprint";
+  total: number;
+  results: StructureMatch[];
+}
+
+export type ChangelogKind = "drug" | "class" | "ingredient" | "interaction" | "structure" | "dataset" | "endpoint";
+
+export type ChangelogAction = "added" | "updated" | "removed" | "released";
+
+export interface ChangelogEntry {
+  id: string;
+  kind: ChangelogKind;
+  action: ChangelogAction;
+  entitySlug?: string;
+  title: string;
+  summary: string;
+  timestamp: string;
+  url: string;
+  sources: string[];
+  tags: string[];
+}
+
+export interface ChangelogResponse {
+  entries: ChangelogEntry[];
   total: number;
 }

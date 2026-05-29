@@ -16,5 +16,8 @@ export async function GET(request: Request) {
     50,
   );
   const results = await getRepository().search(q, limit);
-  return ok({ query: q, results, total: results.length } satisfies SearchResponse);
+  return ok(
+    { query: q, results, total: results.length } satisfies SearchResponse,
+    { request },
+  );
 }

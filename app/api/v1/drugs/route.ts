@@ -14,5 +14,5 @@ export async function GET(request: Request) {
     ingredientSlug,
   });
 
-  return ok(result);
+  return ok(result, { request });
 }

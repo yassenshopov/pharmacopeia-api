@@ -5,5 +5,5 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const { limit, offset } = parseLimitOffset(url);
   const result = await getRepository().listIngredients({ limit, offset });
-  return ok(result);
+  return ok(result, { request });
 }

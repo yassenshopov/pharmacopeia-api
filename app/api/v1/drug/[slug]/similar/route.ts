@@ -3,7 +3,7 @@ import { getRepository } from "@/lib/data/repository";
 import type { SimilarDrugsResponse } from "@/lib/schemas";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ slug: string }> },
 ) {
   const { slug } = await params;
@@ -12,10 +12,13 @@ export async function GET(
   if (!drug) return notFound(`Drug '${slug}' not found`);
 
   const similar = await repo.getSimilarDrugs(slug);
-  return ok({
-    drug: { slug: drug.slug, name: drug.name },
-    method: "tanimoto-2d-fingerprint",
-    similar,
-    total: similar.length,
-  } satisfies SimilarDrugsResponse);
+  return ok(
+    {
+      drug: { slug: drug.slug, name: drug.name },
+      method: "tanimoto-2d-fingerprint",
+      similar,
+      total: similar.length,
+    } satisfies SimilarDrugsResponse,
+    { request },
+  );
 }

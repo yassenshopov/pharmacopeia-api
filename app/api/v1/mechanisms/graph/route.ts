@@ -9,7 +9,7 @@ import { getRepository } from "@/lib/data/repository";
  * they act on. Suitable for force-directed rendering. Educational
  * structural view only — not a claim of clinical equivalence.
  */
-export async function GET() {
+export async function GET(request: Request) {
   const graph = await getRepository().getMechanismGraph();
   const counts = graph.nodes.reduce(
     (acc, n) => {
@@ -18,9 +18,12 @@ export async function GET() {
     },
     { drug: 0, moa: 0, target: 0 } as Record<string, number>,
   );
-  return ok({
-    method: "class-membership + label-derived targets",
-    counts: { ...counts, links: graph.links.length },
-    ...graph,
-  });
+  return ok(
+    {
+      method: "class-membership + label-derived targets",
+      counts: { ...counts, links: graph.links.length },
+      ...graph,
+    },
+    { request },
+  );
 }

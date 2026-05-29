@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CodeBlock } from "@/components/code-block";
 import { ProvenanceBadgeSample } from "@/components/provenance-badge";
@@ -67,12 +68,52 @@ const res = await fetch(
 );
 const { pairs, summary } = await res.json();`;
 
+const STRUCTURE_SEARCH_SAMPLE = `// Paste a SMILES, get the structurally closest drugs
+const res = await fetch(
+  "https://pharmacopeia.dev/api/v1/structure-search",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      smiles: "CC(=O)NC1=CC=C(C=C1)O",
+      limit: 10,
+      threshold: 0.4,
+    }),
+  },
+);
+const { results } = await res.json();`;
+
+const GRAPHQL_SAMPLE = `// Field-selected query — one round-trip, exactly the shape you want
+const res = await fetch("https://pharmacopeia.dev/api/graphql", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    query: \`
+      query Metformin {
+        drug(slug: "metformin") {
+          name
+          mechanism { summary targets }
+          similar { slug name score }
+          interactions { drugB severity description }
+        }
+      }
+    \`,
+  }),
+});
+const { data } = await res.json();`;
+
 const ENDPOINTS: {
   method: "GET" | "POST";
   path: string;
   description: string;
   anchor?: string;
 }[] = [
+  {
+    method: "GET",
+    path: "/api/v1/health",
+    description:
+      "Liveness probe + dataset snapshot version. Tiny envelope for monitors and load balancers.",
+  },
   {
     method: "GET",
     path: "/api/v1/stats",
@@ -151,6 +192,27 @@ const ENDPOINTS: {
       "Pairwise interaction check. Body: { drugs: string[] }. Returns severity-graded pairs.",
     anchor: "interactions",
   },
+  {
+    method: "POST",
+    path: "/api/v1/structure-search",
+    description:
+      "Paste a SMILES and rank drugs in the dataset by 2D Tanimoto similarity. Body: { smiles, limit?, threshold? }. Structural proximity only.",
+    anchor: "structure-search",
+  },
+  {
+    method: "POST",
+    path: "/api/graphql",
+    description:
+      "Field-selected GraphQL surface over the same repository. GET the endpoint in a browser to open GraphiQL.",
+    anchor: "graphql",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/changelog",
+    description:
+      "Recent record-level changes (typed mirror of /feed.xml and /feed.json). Supports ?limit and ?since=<ISO-8601>.",
+    anchor: "feed",
+  },
 ];
 
 const DOCS_TOC: TocItem[] = [
@@ -158,7 +220,11 @@ const DOCS_TOC: TocItem[] = [
   { id: "conventions", label: "Conventions" },
   { id: "search", label: "Search" },
   { id: "interactions", label: "Interaction check" },
+  { id: "structure-search", label: "Structure search" },
+  { id: "graphql", label: "GraphQL" },
   { id: "endpoints", label: "Endpoints" },
+  { id: "feed", label: "Change feed (RSS / JSON)" },
+  { id: "sdks", label: "SDKs (npm / PyPI)" },
   { id: "indicators", label: "How to read the indicators" },
   { id: "disclaimer", label: "Disclaimer" },
 ];
@@ -232,7 +298,57 @@ export default async function DocsPage() {
           <li>
             <strong className="text-foreground">Cache-friendly.</strong>{" "}
             <code>GET</code> responses ship with{" "}
-            <code>Cache-Control: public, s-maxage=3600</code>.
+            <code>Cache-Control: public, s-maxage=3600</code> and a strong{" "}
+            <code>ETag</code>. Send the previous tag back in{" "}
+            <code>If-None-Match</code> and you'll get a{" "}
+            <code>304 Not Modified</code> with no body.
+          </li>
+          <li>
+            <strong className="text-foreground">OpenAPI + try-it.</strong>{" "}
+            Every endpoint is described in the live OpenAPI 3.1 document at{" "}
+            <code>
+              <Link
+                href="/api/v1/openapi.json"
+                className="underline-offset-4 hover:underline"
+              >
+                /api/v1/openapi.json
+              </Link>
+            </code>{" "}
+            and rendered as an interactive reference at{" "}
+            <code>
+              <Link href="/reference" className="underline-offset-4 hover:underline">
+                /reference
+              </Link>
+            </code>
+            .
+          </li>
+          <li>
+            <strong className="text-foreground">LLM-friendly.</strong>{" "}
+            A short{" "}
+            <code>
+              <Link href="/llms.txt" className="underline-offset-4 hover:underline">
+                /llms.txt
+              </Link>
+            </code>{" "}
+            index and a long-form{" "}
+            <code>
+              <Link
+                href="/llms-full.txt"
+                className="underline-offset-4 hover:underline"
+              >
+                /llms-full.txt
+              </Link>
+            </code>{" "}
+            follow the{" "}
+            <a
+              href="https://llmstxt.org/"
+              className="underline-offset-4 hover:underline"
+              rel="noreferrer"
+              target="_blank"
+            >
+              llmstxt.org
+            </a>{" "}
+            convention.
           </li>
         </ul>
       </Section>
@@ -256,6 +372,46 @@ export default async function DocsPage() {
           label="interactions/check"
           language="ts"
         />
+      </Section>
+
+      <Section id="structure-search" title="Structure search">
+        <p className="mb-4 text-sm text-muted-foreground">
+          Paste a SMILES and rank every drug in the dataset by 2D Tanimoto
+          similarity, using the same OpenChemLib 512-bit fingerprint family
+          that backs each drug&apos;s structural-analogs list. Use{" "}
+          <code>limit</code> to cap the result count and{" "}
+          <code>threshold</code> (0–1) to drop weak matches. Try it
+          interactively at{" "}
+          <a
+            href="/structure-search"
+            className="rounded-sm underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            /structure-search
+          </a>
+          . Structural proximity only — never therapeutic equivalence.
+        </p>
+        <CodeBlock
+          code={STRUCTURE_SEARCH_SAMPLE}
+          label="structure-search"
+          language="ts"
+        />
+      </Section>
+
+      <Section id="graphql" title="GraphQL">
+        <p className="mb-4 text-sm text-muted-foreground">
+          A thin GraphQL layer over the same repository. Pick exactly the
+          fields and relations you need in one query — a drug, its
+          mechanism, its interactions, and its structural analogs in a
+          single round-trip. Open{" "}
+          <a
+            href="/api/graphql"
+            className="rounded-sm font-mono underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            /api/graphql
+          </a>{" "}
+          in a browser for the GraphiQL IDE with a worked example.
+        </p>
+        <CodeBlock code={GRAPHQL_SAMPLE} label="graphql" language="ts" />
       </Section>
 
       <Section id="endpoints" title="Endpoints">
@@ -282,6 +438,110 @@ export default async function DocsPage() {
             </li>
           ))}
         </ul>
+      </Section>
+
+      <Section id="feed" title="Change feed (RSS / JSON)">
+        <p className="mb-4 text-sm text-muted-foreground">
+          A public &ldquo;what&rsquo;s new&rdquo; feed of recent record
+          changes — new drugs, new endpoints, new ingestion batches — so
+          consumers and curators can watch the dataset evolve without
+          scraping. Same entries served over RSS 2.0 and{" "}
+          <a
+            href="https://www.jsonfeed.org/version/1.1/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            JSON Feed 1.1
+          </a>
+          . Browse the same entries at{" "}
+          <Link
+            href="/changelog"
+            className="rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            /changelog
+          </Link>
+          .
+        </p>
+        <ul className="divide-y divide-border/60 rounded-lg border border-border/80">
+          <li className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4">
+            <Badge variant="secondary" className="w-fit font-mono text-[10px]" translate="no">
+              GET
+            </Badge>
+            <code className="break-all font-mono text-sm" translate="no">
+              /feed.xml
+            </code>
+            <p className="text-sm text-muted-foreground sm:ml-auto sm:text-right">
+              RSS 2.0 feed. Drop into Feedly, NetNewsWire, or any reader.
+            </p>
+          </li>
+          <li className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-baseline sm:gap-4">
+            <Badge variant="secondary" className="w-fit font-mono text-[10px]" translate="no">
+              GET
+            </Badge>
+            <code className="break-all font-mono text-sm" translate="no">
+              /feed.json
+            </code>
+            <p className="text-sm text-muted-foreground sm:ml-auto sm:text-right">
+              JSON Feed 1.1. Each item carries the structured{" "}
+              <code>_pharmacopeia</code> extension (kind, action,
+              entity slug, sources) for automation.
+            </p>
+          </li>
+        </ul>
+      </Section>
+
+      <Section id="sdks" title="SDKs (npm / PyPI)">
+        <p className="mb-4 text-sm text-muted-foreground">
+          Thin, fully-typed clients so consumers don&rsquo;t hand-roll{" "}
+          <code>fetch</code> wrappers. Types are generated from the same
+          Zod schemas the API uses, so request and response shapes can
+          never silently drift from the server. Tagged releases on GitHub
+          publish both packages automatically.
+        </p>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-lg border border-border/80 bg-card/40 p-4">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-mono text-sm" translate="no">
+                @pharmacopeia/client
+              </h3>
+              <Badge variant="outline" className="font-mono text-[10px]">
+                npm
+              </Badge>
+            </div>
+            <CodeBlock
+              code={`npm install @pharmacopeia/client`}
+              label="install"
+              language="bash"
+            />
+          </div>
+          <div className="rounded-lg border border-border/80 bg-card/40 p-4">
+            <div className="mb-2 flex items-center justify-between">
+              <h3 className="font-mono text-sm" translate="no">
+                pharmacopeia
+              </h3>
+              <Badge variant="outline" className="font-mono text-[10px]">
+                PyPI
+              </Badge>
+            </div>
+            <CodeBlock
+              code={`pip install pharmacopeia`}
+              label="install"
+              language="bash"
+            />
+          </div>
+        </div>
+        <p className="mt-4 text-xs text-muted-foreground">
+          The full           machine-readable contract — every endpoint, every
+          schema — lives at{" "}
+          <a
+            href="/api/v1/openapi.json"
+            className="rounded-sm text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            <code>/api/v1/openapi.json</code>
+          </a>{" "}
+          if you&rsquo;d rather generate your own client.
+        </p>
       </Section>
 
       <Section id="indicators" title="How to read the indicators">

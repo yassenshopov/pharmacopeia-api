@@ -4,6 +4,10 @@ import {
   ApprovalSchema,
   BrandEntrySchema,
   BrandsResponseSchema,
+  ChangelogActionSchema,
+  ChangelogEntrySchema,
+  ChangelogKindSchema,
+  ChangelogResponseSchema,
   ChemicalStructureSchema,
   ClassDetailResponseSchema,
   ClassListResponseSchema,
@@ -18,6 +22,7 @@ import {
   DrugRefSchema,
   DrugSchema,
   DrugSummarySchema,
+  HealthResponseSchema,
   IdentifierSchema,
   IndicationSchema,
   IngredientListResponseSchema,
@@ -39,6 +44,9 @@ import {
   SimilarDrugResultSchema,
   SimilarDrugsResponseSchema,
   StatsSchema,
+  StructureMatchSchema,
+  StructureSearchRequestSchema,
+  StructureSearchResponseSchema,
 } from "@/lib/schemas";
 
 /**
@@ -82,6 +90,7 @@ export const SCHEMA_REGISTRY: ReadonlyArray<
   ["InteractionCheckRequest", InteractionCheckRequestSchema],
   ["InteractionCheckResponse", InteractionCheckResponseSchema],
   ["Stats", StatsSchema],
+  ["HealthResponse", HealthResponseSchema],
   ["SimilarDrugResult", SimilarDrugResultSchema],
   ["BrandEntry", BrandEntrySchema],
   ["SearchResult", SearchResultSchema],
@@ -93,6 +102,13 @@ export const SCHEMA_REGISTRY: ReadonlyArray<
   ["ClassDetailResponse", ClassDetailResponseSchema],
   ["BrandsResponse", BrandsResponseSchema],
   ["SearchResponse", SearchResponseSchema],
+  ["StructureMatch", StructureMatchSchema],
+  ["StructureSearchRequest", StructureSearchRequestSchema],
+  ["StructureSearchResponse", StructureSearchResponseSchema],
+  ["ChangelogKind", ChangelogKindSchema],
+  ["ChangelogAction", ChangelogActionSchema],
+  ["ChangelogEntry", ChangelogEntrySchema],
+  ["ChangelogResponse", ChangelogResponseSchema],
 ] as const;
 
 export type SchemaName = (typeof SCHEMA_REGISTRY)[number][0];

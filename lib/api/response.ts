@@ -1,25 +1,76 @@
+import { createHash } from "node:crypto";
 import { NextResponse } from "next/server";
 import type { ApiError } from "@/lib/schemas";
 
 /**
  * Consistent JSON responses for every v1 route. We always set
  * cache headers so Vercel's edge handles repeat traffic for free,
- * and an `X-Robots-Tag` so search engines never index our JSON
- * payloads as web pages.
+ * an `X-Robots-Tag` so search engines never index our JSON payloads
+ * as web pages, and a strong `ETag` so well-behaved clients and the
+ * CDN can revalidate with a tiny `If-None-Match` round trip instead
+ * of refetching the full body.
  */
 
 const DEFAULT_CACHE = "public, s-maxage=3600, stale-while-revalidate=86400";
 const NOINDEX = "noindex, nofollow";
 
+/**
+ * Strong ETag over the serialised body. SHA-1 is fine here — this is a
+ * cache key, not a security primitive — and is short enough to keep
+ * headers small. Truncated to 16 hex chars (64 bits of entropy) so
+ * accidental collisions across versions of a single endpoint are
+ * effectively impossible while keeping the header tight.
+ */
+function computeEtag(body: string): string {
+  const digest = createHash("sha1").update(body).digest("hex").slice(0, 16);
+  return `"${digest}"`;
+}
+
+/**
+ * RFC 9110 `If-None-Match` matching: comma-separated list of ETags, or
+ * `*` matching any current representation. We never emit weak tags, so
+ * we don't bother stripping the `W/` prefix on inbound values either.
+ */
+function ifNoneMatchHits(ifNoneMatch: string, etag: string): boolean {
+  if (ifNoneMatch.trim() === "*") return true;
+  return ifNoneMatch
+    .split(",")
+    .some((candidate) => candidate.trim() === etag);
+}
+
 export function ok<T>(
   data: T,
-  init?: { cacheControl?: string; status?: number },
+  init?: {
+    cacheControl?: string;
+    status?: number;
+    /** Pass the incoming request to enable 304 Not Modified short-circuiting. */
+    request?: Request;
+  },
 ): NextResponse {
-  return NextResponse.json(data, {
+  const body = JSON.stringify(data);
+  const etag = computeEtag(body);
+  const cacheControl = init?.cacheControl ?? DEFAULT_CACHE;
+
+  const ifNoneMatch = init?.request?.headers.get("if-none-match");
+  if (ifNoneMatch && ifNoneMatchHits(ifNoneMatch, etag)) {
+    return new NextResponse(null, {
+      status: 304,
+      headers: {
+        "Cache-Control": cacheControl,
+        ETag: etag,
+        Vary: "Accept-Encoding",
+        "X-Robots-Tag": NOINDEX,
+      },
+    });
+  }
+
+  return new NextResponse(body, {
     status: init?.status ?? 200,
     headers: {
-      "Cache-Control": init?.cacheControl ?? DEFAULT_CACHE,
+      "Cache-Control": cacheControl,
       "Content-Type": "application/json; charset=utf-8",
+      ETag: etag,
+      Vary: "Accept-Encoding",
       "X-Robots-Tag": NOINDEX,
     },
   });

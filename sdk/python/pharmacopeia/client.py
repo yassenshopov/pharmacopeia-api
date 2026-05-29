@@ -7,11 +7,13 @@ from urllib.parse import quote
 
 from .models import (
     BrandsResponse,
+    ChangelogResponse,
     ClassDetailResponse,
     ClassListResponse,
     Drug,
     DrugInteractionsResponse,
     DrugListResponse,
+    HealthResponse,
     Ingredient,
     IngredientListResponse,
     InteractionCheckRequest,
@@ -19,6 +21,8 @@ from .models import (
     SearchResponse,
     SimilarDrugsResponse,
     Stats,
+    StructureSearchRequest,
+    StructureSearchResponse,
 )
 
 DEFAULT_BASE_URL = "https://pharmacopeia.dev/api/v1"
@@ -167,6 +171,11 @@ class PharmacopeiaClient:
         data = self._request("GET", "/stats")
         return Stats.model_validate(data)
 
+    def get_health(self) -> HealthResponse:
+        """Liveness + dataset-version probe. Tiny payload for monitors and clients."""
+        data = self._request("GET", "/health")
+        return HealthResponse.model_validate(data)
+
     def search(self, *, q: str, limit: Optional[int] = None) -> SearchResponse:
         """Full-text search across drugs, classes, and ingredients."""
         params = _drop_none({"q": q, "limit": limit})
@@ -177,3 +186,14 @@ class PharmacopeiaClient:
         """Check a set of 2–20 drug slugs for pairwise interactions."""
         data = self._request("POST", "/interactions/check", json_body=body.model_dump(by_alias=True, exclude_none=True))
         return InteractionCheckResponse.model_validate(data)
+
+    def structure_search(self, body: StructureSearchRequest) -> StructureSearchResponse:
+        """Rank drugs in the dataset by 2D Tanimoto similarity to a caller-supplied SMILES. Structural proximity only."""
+        data = self._request("POST", "/structure-search", json_body=body.model_dump(by_alias=True, exclude_none=True))
+        return StructureSearchResponse.model_validate(data)
+
+    def list_changelog(self, *, limit: Optional[int] = None, since: Optional[str] = None) -> ChangelogResponse:
+        """Recent record-level changes (typed mirror of /feed.xml and /feed.json)."""
+        params = _drop_none({"limit": limit, "since": since})
+        data = self._request("GET", "/changelog", params=params)
+        return ChangelogResponse.model_validate(data)

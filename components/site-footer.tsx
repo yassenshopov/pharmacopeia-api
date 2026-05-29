@@ -91,6 +91,21 @@ export function SiteFooter() {
                 Roadmap
               </Link>
             </li>
+            <li>
+              <Link href="/compare" className={linkClass}>
+                Compare drugs
+              </Link>
+            </li>
+            <li>
+              <Link href="/changelog" className={linkClass}>
+                Changelog
+              </Link>
+            </li>
+            <li>
+              <a href="/feed.xml" className={linkClass}>
+                RSS feed
+              </a>
+            </li>
           </ul>
         </nav>
 
