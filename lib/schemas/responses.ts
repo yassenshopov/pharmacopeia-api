@@ -1,10 +1,14 @@
 import { z } from "zod";
 import { ChangelogEntrySchema } from "./changelog";
 import { DrugClassSchema } from "./drug-class";
-import { DrugSummarySchema } from "./drug";
+import { DrugSchema, DrugSummarySchema } from "./drug";
 import { IngredientSchema } from "./ingredient";
 import { InteractionSchema } from "./interaction";
 import { PaginationSchema, SlugSchema } from "./shared";
+import { ShortageEntrySchema } from "./shortage";
+import { AdverseEventStatsSchema } from "./adverse-events";
+import { LiteratureReferenceSchema } from "./literature";
+import { ReactionSchema, ReactionSummarySchema } from "./reaction";
 
 /**
  * Response envelope schemas for the public v1 API.
@@ -38,13 +42,24 @@ export type Stats = z.infer<typeof StatsSchema>;
 /**
  * Liveness + dataset-version envelope. Intentionally tiny so monitors
  * and load balancers can poll it cheaply without parsing a real payload.
- *  - `status`    : always `"ok"` when the route returns 200.
- *  - `version`   : current dataset snapshot identifier (matches
- *                  `Stats.version`).
- *  - `updatedAt` : ISO timestamp of the current dataset snapshot.
- *  - `time`      : ISO timestamp the response was generated, for clock
- *                  skew and freshness checks.
- *  - `uptime`    : process uptime in whole seconds, when available.
+ *  - `status`     : always `"ok"` when the route returns 200.
+ *  - `version`    : current dataset snapshot identifier (matches
+ *                   `Stats.version`).
+ *  - `updatedAt`  : ISO timestamp of the current dataset snapshot.
+ *  - `time`       : ISO timestamp the response was generated, for clock
+ *                   skew and freshness checks.
+ *  - `uptime`     : process uptime in whole seconds, when available.
+ *  - `repository` : which repository implementation is currently
+ *                   serving requests — `"static"` (seed data baked into
+ *                   the bundle) or `"supabase"` (live Postgres). Lets
+ *                   monitors distinguish "API is up but on fallback"
+ *                   from "API is up on the real backend".
+ *  - `commit`     : short git SHA the deployment was built from, when
+ *                   the build platform exposes one (Vercel sets
+ *                   `VERCEL_GIT_COMMIT_SHA`). Absent in local dev.
+ *  - `region`     : platform region serving the request (e.g.
+ *                   `iad1`), when available — useful for triaging
+ *                   regional outages.
  */
 export const HealthResponseSchema = z.object({
   status: z.literal("ok"),
@@ -52,6 +67,9 @@ export const HealthResponseSchema = z.object({
   updatedAt: z.string(),
   time: z.string(),
   uptime: z.number().int().nonnegative().optional(),
+  repository: z.enum(["static", "supabase"]),
+  commit: z.string().optional(),
+  region: z.string().optional(),
 });
 export type HealthResponse = z.infer<typeof HealthResponseSchema>;
 
@@ -181,3 +199,106 @@ export const ChangelogResponseSchema = z.object({
   total: z.number().int().nonnegative(),
 });
 export type ChangelogResponse = z.infer<typeof ChangelogResponseSchema>;
+
+/**
+ * Batch drug lookup request: fetch many full drug records in a single
+ * round-trip. Capped at 100 slugs per call so a request can't fan out
+ * into a denial-of-service against the dataset, and duplicates are
+ * deduped server-side so callers don't pay for redundant entries.
+ */
+export const DrugsBatchRequestSchema = z.object({
+  slugs: z.array(SlugSchema).min(1).max(100),
+});
+export type DrugsBatchRequest = z.infer<typeof DrugsBatchRequestSchema>;
+
+/**
+ * Batch drug lookup response. `found` carries the full Drug records in
+ * the same order the caller asked for them (with duplicates collapsed),
+ * and `missing` lists the slugs that did not resolve so a caller can
+ * surface them without diffing the request and the response themselves.
+ */
+export const DrugsBatchResponseSchema = z.object({
+  found: z.array(DrugSchema),
+  missing: z.array(SlugSchema),
+  total: z.number().int().nonnegative(),
+});
+export type DrugsBatchResponse = z.infer<typeof DrugsBatchResponseSchema>;
+
+/**
+ * Per-drug shortage envelope. `entries` may contain multiple rows when
+ * more than one presentation of the drug is on the FDA list (different
+ * strengths or dosage forms). `anyActive` is a cheap roll-up so a UI
+ * can decide whether to render a status badge without scanning the
+ * list — it's true iff at least one entry has `status: "active"`.
+ */
+export const DrugShortagesResponseSchema = z.object({
+  drug: z.object({ slug: SlugSchema, name: z.string() }),
+  entries: z.array(ShortageEntrySchema),
+  anyActive: z.boolean(),
+  total: z.number().int().nonnegative(),
+});
+export type DrugShortagesResponse = z.infer<typeof DrugShortagesResponseSchema>;
+
+/**
+ * Global shortage index envelope. Returns every shortage entry across
+ * the dataset, ordered by drug slug then presentation, so a `/shortages`
+ * page or a refresh monitor can iterate the whole set in one call.
+ */
+export const ShortagesResponseSchema = z.object({
+  entries: z.array(ShortageEntrySchema),
+  total: z.number().int().nonnegative(),
+});
+export type ShortagesResponse = z.infer<typeof ShortagesResponseSchema>;
+
+/**
+ * Per-drug FAERS aggregate envelope. Wraps `AdverseEventStats` with
+ * the parent drug reference so the SDK and UI never have to fan out a
+ * second drug lookup just to render the section header.
+ *
+ * **Reference statistics only.** See `AdverseEventStatsSchema` for the
+ * full framing — counts are reporting volume, not incidence, not
+ * causality.
+ */
+export const AdverseEventStatsResponseSchema = z.object({
+  drug: z.object({ slug: SlugSchema, name: z.string() }),
+  stats: AdverseEventStatsSchema.nullable(),
+});
+export type AdverseEventStatsResponse = z.infer<
+  typeof AdverseEventStatsResponseSchema
+>;
+
+/**
+ * Per-drug PubMed literature envelope. Returns the curated list of
+ * PMIDs the ingest pipeline picked for this drug (typically the
+ * top-N papers with the drug as a MeSH major topic) plus the parent
+ * drug reference.
+ */
+export const DrugLiteratureResponseSchema = z.object({
+  drug: z.object({ slug: SlugSchema, name: z.string() }),
+  references: z.array(LiteratureReferenceSchema),
+  total: z.number().int().nonnegative(),
+});
+export type DrugLiteratureResponse = z.infer<
+  typeof DrugLiteratureResponseSchema
+>;
+
+/**
+ * Reactions browse envelope. Lightweight per-row records ordered by
+ * total reporting volume desc — the dense end of the FAERS distribution
+ * surfaces first so the page is useful before any filtering. Capped to
+ * 200 per request like every other browse endpoint in the API.
+ */
+export const ReactionsListResponseSchema = z.object({
+  items: z.array(ReactionSummarySchema),
+  pagination: PaginationSchema,
+});
+export type ReactionsListResponse = z.infer<typeof ReactionsListResponseSchema>;
+
+/**
+ * Reaction detail envelope. The full reaction record with per-drug
+ * rows and Jaccard-ranked related reactions. The FAERS disclaimer is
+ * inside `Reaction.disclaimer` itself so SDK consumers never have to
+ * re-state it.
+ */
+export const ReactionResponseSchema = ReactionSchema;
+export type ReactionResponse = z.infer<typeof ReactionResponseSchema>;

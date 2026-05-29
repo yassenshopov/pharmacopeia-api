@@ -129,7 +129,13 @@ const ENDPOINTS: {
     method: "GET",
     path: "/api/v1/drug/{slug}",
     description:
-      "Full drug record: mechanism + targets, indications, contraindications, FDA label sections (boxed warning, dosage, adverse reactions, warnings, special populations, overdosage), PK, approval history, and identifiers.",
+      "Full drug record: mechanism + targets, indications, contraindications, FDA label sections (boxed warning, dosage, adverse reactions, warnings, special populations, overdosage), PK, approval history, and identifiers. Supports ?fields=<csv> sparse fieldsets to omit heavy sections.",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/drugs/batch",
+    description:
+      "Resolve up to 100 drug slugs in a single round-trip. Body: { slugs: string[] }. Returns the found records plus the slugs that did not resolve.",
   },
   {
     method: "GET",
@@ -141,6 +147,42 @@ const ENDPOINTS: {
     path: "/api/v1/drug/{slug}/similar",
     description:
       "Structurally similar drugs, ranked by 2D fingerprint (Tanimoto) similarity over PubChem structures.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/drug/{slug}/shortages",
+    description:
+      "FDA shortage entries (active, resolved, discontinuation) for a drug. Reference statistics only.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/shortages",
+    description:
+      "Every FDA shortage entry across the dataset, ordered by drug then presentation.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/drug/{slug}/adverse-events",
+    description:
+      "Aggregate FAERS report counts — top reactions by reporting volume. NOT incidence rates, signals, or causality.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/drug/{slug}/literature",
+    description:
+      "Curated PubMed references, pinned to MeSH major topic at ingest time.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/reactions",
+    description:
+      "Browse MedDRA Preferred Terms reported to FAERS across the dataset (paginated).",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/reaction/{slug}",
+    description:
+      "One reaction with per-drug counts/shares plus related reactions by Jaccard similarity. Alias slugs 301-redirect to canonical.",
   },
   {
     method: "GET",

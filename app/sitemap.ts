@@ -12,12 +12,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const stats = await repo.getStats();
   const lastModified = new Date(stats.updatedAt);
 
-  const [{ items: drugs }, { items: classes }, { items: ingredients }] =
-    await Promise.all([
-      repo.listDrugs({ limit: 200 }),
-      repo.listClasses({ limit: 200 }),
-      repo.listIngredients({ limit: 200 }),
-    ]);
+  const [
+    { items: drugs },
+    { items: classes },
+    { items: ingredients },
+    { items: reactions },
+  ] = await Promise.all([
+    repo.listDrugs({ limit: 200 }),
+    repo.listClasses({ limit: 200 }),
+    repo.listIngredients({ limit: 200 }),
+    repo.listReactions({ limit: 200 }),
+  ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -58,6 +63,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: absoluteUrl("/interactions"),
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
+      url: absoluteUrl("/reactions"),
       lastModified,
       changeFrequency: "weekly",
       priority: 0.7,
@@ -133,10 +144,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const reactionRoutes: MetadataRoute.Sitemap = reactions.map((r) => ({
+    url: absoluteUrl(`/reactions/${r.slug}`),
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   return [
     ...staticRoutes,
     ...drugRoutes,
     ...classRoutes,
     ...ingredientRoutes,
+    ...reactionRoutes,
   ];
 }

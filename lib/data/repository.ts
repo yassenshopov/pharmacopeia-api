@@ -1,4 +1,5 @@
 import type {
+  AdverseEventStats,
   BrandEntry,
   ChangelogEntry,
   Drug,
@@ -7,19 +8,27 @@ import type {
   Ingredient,
   Interaction,
   InteractionCheckResponse,
+  LiteratureReference,
   Pagination,
+  Reaction,
+  ReactionSummary,
   SearchResult,
+  ShortageEntry,
   SimilarDrugResult,
   Stats,
   StructureMatch,
 } from "@/lib/schemas";
 import {
+  AdverseEventStatsSchema,
   ChangelogEntrySchema,
+  DrugLiteratureSchema,
   DrugSchema,
   DrugClassSchema,
   IngredientSchema,
   InteractionSchema,
+  ReactionSchema,
   SeveritySchema,
+  ShortageEntrySchema,
 } from "@/lib/schemas";
 
 // Re-exported so existing consumers can keep importing these types from
@@ -41,7 +50,18 @@ import {
 import { SEED_INGREDIENTS, SEED_INGREDIENTS_BY_SLUG } from "./seed/ingredients";
 import { SEED_INTERACTIONS } from "./seed/interactions";
 import { SEED_CHANGELOG } from "./seed/changelog";
+import {
+  getSeedAdverseEvents,
+  SEED_ADVERSE_EVENTS,
+} from "./seed/adverse-events";
+import { getSeedLiterature, SEED_LITERATURE } from "./seed/literature";
+import {
+  getSeedShortages,
+  listAllSeedShortages,
+  SEED_SHORTAGES,
+} from "./seed/shortages";
 import { getSeedSimilar } from "./seed/similarity";
+import { getReactionIndex, resolveReactionSlug } from "./reactions-index";
 import { searchByStructure } from "./structure-search";
 
 /**
@@ -56,6 +76,16 @@ export interface PharmacopeiaRepository {
     opts?: ListOpts & { classSlug?: string; ingredientSlug?: string },
   ): Promise<List<DrugSummary>>;
   getDrug(slug: string): Promise<Drug | null>;
+  /**
+   * Resolve many slug → Drug lookups in one call. Returns the full
+   * records for every slug that resolved (deduped, in caller order)
+   * plus the slugs that did not resolve so callers don't have to diff
+   * the request and the response themselves.
+   */
+  getDrugsBatch(slugs: string[]): Promise<{
+    found: Drug[];
+    missing: string[];
+  }>;
   getDrugInteractions(slug: string): Promise<Interaction[]>;
 
   /**
@@ -131,6 +161,65 @@ export interface PharmacopeiaRepository {
    * curators can watch the dataset evolve without scraping.
    */
   listChangelog(opts?: ListChangelogOpts): Promise<ChangelogEntry[]>;
+
+  /**
+   * FDA shortage entries for a single drug. Returns every reported
+   * presentation (strengths, dosage forms) of the drug currently
+   * tracked on the openFDA shortages list, including resolved and
+   * discontinued entries. Reference statistics only — for clinical
+   * decisions, consult the FDA database directly.
+   */
+  getDrugShortages(slug: string): Promise<ShortageEntry[]>;
+
+  /**
+   * Every shortage entry across the dataset, sorted by drug then
+   * presentation. Powers the `/shortages` browse index and refresh
+   * monitoring.
+   */
+  listShortages(): Promise<ShortageEntry[]>;
+
+  /**
+   * Aggregate FAERS adverse-event counts for a single drug. Returns
+   * `null` when the dataset has no snapshot for this drug — empty
+   * results are NOT the same as zero reports. **These are voluntarily
+   * submitted reports, not incidence rates, not signals, not
+   * causality.** Reference statistics only.
+   */
+  getAdverseEventStats(slug: string): Promise<AdverseEventStats | null>;
+
+  /**
+   * Curated PubMed references for a drug. Pinned to MeSH major topic
+   * at ingest time for precision; an empty list means no high-quality
+   * match, not "no literature exists".
+   */
+  getDrugLiterature(slug: string): Promise<LiteratureReference[]>;
+
+  /**
+   * Browse index of reactions (MedDRA Preferred Terms) reported to
+   * FAERS across the dataset. Ordered by total reporting volume desc.
+   * Each summary carries `drugCount`, `totalReports`, and any
+   * British/American spelling aliases. NOT a symptom checker.
+   */
+  listReactions(opts?: ListOpts): Promise<List<ReactionSummary>>;
+
+  /**
+   * One reaction with its full per-drug breakdown plus related
+   * reactions ranked by Jaccard similarity over the drug-id sets. The
+   * `slug` argument may be a canonical or an alias; use
+   * {@link resolveReactionSlug} when the route needs to decide between
+   * serving and 301-redirecting.
+   */
+  getReaction(slug: string): Promise<Reaction | null>;
+
+  /**
+   * Resolve a reaction slug to its canonical form, also reporting
+   * whether the supplied slug matched the canonical or an alias. Lets
+   * UI routes 301-redirect alias URLs to the canonical reaction page
+   * without duplicating the index lookup.
+   */
+  resolveReactionSlug(
+    slug: string,
+  ): Promise<{ canonical: string; matched: string } | null>;
 }
 
 export interface ListChangelogOpts {
@@ -273,6 +362,22 @@ class StaticRepository implements PharmacopeiaRepository {
     SEED_INGREDIENTS.forEach((i) => IngredientSchema.parse(i));
     SEED_INTERACTIONS.forEach((x) => InteractionSchema.parse(x));
     SEED_CHANGELOG.forEach((c) => ChangelogEntrySchema.parse(c));
+    for (const entries of Object.values(SEED_SHORTAGES)) {
+      for (const entry of entries) ShortageEntrySchema.parse(entry);
+    }
+    for (const stats of Object.values(SEED_ADVERSE_EVENTS)) {
+      AdverseEventStatsSchema.parse(stats);
+    }
+    for (const lit of Object.values(SEED_LITERATURE)) {
+      DrugLiteratureSchema.parse(lit);
+    }
+    // Reactions are *derived* from SEED_ADVERSE_EVENTS by
+    // `reactions-index`. Materialise once here so any regression in the
+    // builder fails fast at app start, not at the first request.
+    const reactionIndex = getReactionIndex();
+    for (const reaction of reactionIndex.reactions.values()) {
+      ReactionSchema.parse(reaction);
+    }
   }
 
   async getStats(): Promise<Stats> {
@@ -315,6 +420,22 @@ class StaticRepository implements PharmacopeiaRepository {
     const narrative = getSeedInteractionsNarrative(slug);
     if (!narrative) return drug;
     return { ...drug, interactionsNarrative: narrative.text };
+  }
+
+  async getDrugsBatch(
+    slugs: string[],
+  ): Promise<{ found: Drug[]; missing: string[] }> {
+    const seen = new Set<string>();
+    const found: Drug[] = [];
+    const missing: string[] = [];
+    for (const slug of slugs) {
+      if (seen.has(slug)) continue;
+      seen.add(slug);
+      const drug = await this.getDrug(slug);
+      if (drug) found.push(drug);
+      else missing.push(slug);
+    }
+    return { found, missing };
   }
 
   async getDrugInteractions(slug: string): Promise<Interaction[]> {
@@ -665,10 +786,58 @@ class StaticRepository implements PharmacopeiaRepository {
         : entries.filter((e) => Date.parse(e.timestamp) > cutoff);
     return filtered.slice(0, limit);
   }
+
+  async getDrugShortages(slug: string): Promise<ShortageEntry[]> {
+    return getSeedShortages(slug);
+  }
+
+  async listShortages(): Promise<ShortageEntry[]> {
+    return listAllSeedShortages();
+  }
+
+  async getAdverseEventStats(
+    slug: string,
+  ): Promise<AdverseEventStats | null> {
+    return getSeedAdverseEvents(slug);
+  }
+
+  async getDrugLiterature(slug: string): Promise<LiteratureReference[]> {
+    return getSeedLiterature(slug)?.references ?? [];
+  }
+
+  async listReactions(opts?: ListOpts): Promise<List<ReactionSummary>> {
+    return paginate(getReactionIndex().summaries, opts);
+  }
+
+  async getReaction(slug: string): Promise<Reaction | null> {
+    const resolved = resolveReactionSlug(slug);
+    if (!resolved) return null;
+    return getReactionIndex().reactions.get(resolved.canonical) ?? null;
+  }
+
+  async resolveReactionSlug(
+    slug: string,
+  ): Promise<{ canonical: string; matched: string } | null> {
+    return resolveReactionSlug(slug);
+  }
 }
 
 let _repo: PharmacopeiaRepository | null = null;
 export function getRepository(): PharmacopeiaRepository {
   if (!_repo) _repo = new StaticRepository();
   return _repo;
+}
+
+export type RepositoryKind = "static" | "supabase";
+
+/**
+ * Which backend is currently serving requests. Surfaced through the
+ * `/api/v1/health` envelope so monitors can distinguish "API is up on
+ * the real backend" from "API is up on the seed fallback" without
+ * paying the cost of a real query. Mirrors the env switch in
+ * `getRepository()`: when `DATABASE_URL` is set we'll return
+ * `"supabase"`; for now the seed implementation is the only option.
+ */
+export function getRepositoryKind(): RepositoryKind {
+  return process.env.DATABASE_URL ? "supabase" : "static";
 }

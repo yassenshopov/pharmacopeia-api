@@ -5,3 +5,7 @@ export * from "./ingredient";
 export * from "./interaction";
 export * from "./responses";
 export * from "./changelog";
+export * from "./shortage";
+export * from "./adverse-events";
+export * from "./literature";
+export * from "./reaction";

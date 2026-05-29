@@ -26,6 +26,10 @@ export type OperationTag =
   | "Brands"
   | "Search"
   | "Interactions"
+  | "Shortages"
+  | "AdverseEvents"
+  | "Reactions"
+  | "Literature"
   | "Changelog"
   | "System";
 
@@ -91,6 +95,26 @@ export const API_TAGS: ReadonlyArray<{
       "Multi-drug interaction checks. Severity-graded, with mechanism and source.",
   },
   {
+    name: "Shortages",
+    description:
+      "FDA drug-shortage status crosswalk. Reference statistics only — for live status, consult the FDA shortages database directly.",
+  },
+  {
+    name: "AdverseEvents",
+    description:
+      "Aggregate FAERS adverse-event report counts. Counts are reporting volume, NOT incidence rates, signals, or causality. Reference statistics only.",
+  },
+  {
+    name: "Reactions",
+    description:
+      "MedDRA Preferred Terms reported to FAERS, transposed across the dataset. Each reaction lists the drugs that report it most, ranked by share of the drug's matched reports, plus related reactions by Jaccard similarity. Reference statistics only — NOT a symptom checker, NOT diagnostic.",
+  },
+  {
+    name: "Literature",
+    description:
+      "PubMed PMID crosswalks. Link drug records to canonical literature in PubMed.",
+  },
+  {
     name: "Changelog",
     description:
       "Record-level change feed. Typed mirror of `/feed.xml` and `/feed.json`.",
@@ -111,7 +135,17 @@ export const API_TAG_GROUPS: ReadonlyArray<{
   tags: OperationTag[];
 }> = [
   { name: "Catalog", tags: ["Drugs", "Classes", "Ingredients", "Brands"] },
-  { name: "Tools", tags: ["Search", "Interactions"] },
+  {
+    name: "Tools",
+    tags: [
+      "Search",
+      "Interactions",
+      "Shortages",
+      "AdverseEvents",
+      "Reactions",
+      "Literature",
+    ],
+  },
   { name: "Platform", tags: ["Changelog", "System"] },
 ];
 
@@ -146,7 +180,25 @@ export const OPERATIONS: readonly Operation[] = [
     summary: "Fetch a single drug by slug.",
     tag: "Drugs",
     pathParams: ["slug"],
+    queryParams: [
+      {
+        name: "fields",
+        type: "string",
+        description:
+          "Optional comma-separated list of sections to include (mechanism, indications, contraindications, dosing, pharmacokinetics, interactions, labelSections, approvalHistory, chemical, patientSummary). Identity fields are always returned. Omit for the full record.",
+      },
+    ],
     responseSchema: "Drug",
+  },
+  {
+    name: "getDrugsBatch",
+    method: "POST",
+    path: "/drugs/batch",
+    summary:
+      "Fetch up to 100 drug records in a single round-trip. Returns the full records found plus the slugs that did not resolve.",
+    tag: "Drugs",
+    requestSchema: "DrugsBatchRequest",
+    responseSchema: "DrugsBatchResponse",
   },
   {
     name: "getDrugInteractions",
@@ -263,6 +315,72 @@ export const OPERATIONS: readonly Operation[] = [
     tag: "Search",
     requestSchema: "StructureSearchRequest",
     responseSchema: "StructureSearchResponse",
+  },
+  {
+    name: "getDrugShortages",
+    method: "GET",
+    path: "/drug/{slug}/shortages",
+    summary:
+      "FDA shortage entries (active, resolved, discontinuation) for a drug. Reference statistics only.",
+    tag: "Shortages",
+    pathParams: ["slug"],
+    responseSchema: "DrugShortagesResponse",
+  },
+  {
+    name: "listShortages",
+    method: "GET",
+    path: "/shortages",
+    summary:
+      "Every shortage entry across the dataset, sorted by drug then presentation.",
+    tag: "Shortages",
+    responseSchema: "ShortagesResponse",
+  },
+  {
+    name: "getDrugAdverseEvents",
+    method: "GET",
+    path: "/drug/{slug}/adverse-events",
+    summary:
+      "Aggregate FAERS report counts for a drug — top reactions by reporting volume. NOT incidence rates, signals, or causality.",
+    tag: "AdverseEvents",
+    pathParams: ["slug"],
+    responseSchema: "AdverseEventStatsResponse",
+  },
+  {
+    name: "getDrugLiterature",
+    method: "GET",
+    path: "/drug/{slug}/literature",
+    summary:
+      "Curated PubMed references for a drug, pinned to MeSH major topic at ingest time.",
+    tag: "Literature",
+    pathParams: ["slug"],
+    responseSchema: "DrugLiteratureResponse",
+  },
+  {
+    name: "listReactions",
+    method: "GET",
+    path: "/reactions",
+    summary:
+      "Browse MedDRA Preferred Terms reported to FAERS across the dataset, ordered by total reporting volume. Reference statistics only — NOT a symptom checker.",
+    tag: "Reactions",
+    queryParams: [
+      {
+        name: "limit",
+        type: "number",
+        description: "Page size (1–200, default 50).",
+      },
+      { name: "offset", type: "number", description: "Zero-based offset." },
+    ],
+    responseSchema: "ReactionsListResponse",
+  },
+  {
+    name: "getReaction",
+    method: "GET",
+    path: "/reaction/{slug}",
+    summary:
+      "Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical.",
+    tag: "Reactions",
+    pathParams: ["slug"],
+    responseSchema: "ReactionResponse",
   },
   {
     name: "listChangelog",

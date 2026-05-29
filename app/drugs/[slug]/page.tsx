@@ -12,8 +12,14 @@ import { Toc, type TocItem } from "@/components/toc";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getSeedStructure } from "@/lib/data/seed/structures";
+import { slugifyReactionName } from "@/lib/data/reactions-index";
 import { getRepository } from "@/lib/data/repository";
-import type { ChemicalStructure, Drug, Severity } from "@/lib/schemas";
+import type {
+  ChemicalStructure,
+  Drug,
+  Severity,
+  ShortageStatus,
+} from "@/lib/schemas";
 import { drugJsonLd, jsonLdScriptProps } from "@/lib/seo/jsonld";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
@@ -62,6 +68,22 @@ function formatExtractedDate(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return value;
   return EXTRACTED_DATE_FORMATTER.format(date);
+}
+
+/**
+ * Render a FAERS reaction count as a share of `totalReports`. openFDA
+ * counts each reaction across the matched documents, so the value is
+ * "X% of FAERS reports for this drug mentioned this reaction". A single
+ * report can list many reactions, so the rendered shares routinely sum
+ * to >100% — that's expected, not a bug. We collapse very small shares
+ * to `<0.1%` and skip decimals at the high end where they're noise.
+ */
+function formatReactionShare(count: number, totalReports: number): string {
+  if (totalReports <= 0 || count <= 0) return "—";
+  const pct = (count / totalReports) * 100;
+  if (pct < 0.1) return "<0.1%";
+  if (pct >= 10) return `${pct.toFixed(0)}%`;
+  return `${pct.toFixed(1)}%`;
 }
 
 function drugDescription(drug: Drug): string {
@@ -138,6 +160,10 @@ export default async function DrugDetailPage({ params }: PageProps) {
 
   const interactions = await repo.getDrugInteractions(slug);
   const similar = await repo.getSimilarDrugs(slug);
+  const shortages = await repo.getDrugShortages(slug);
+  const activeShortages = shortages.filter((s) => s.status === "active");
+  const adverseEvents = await repo.getAdverseEventStats(slug);
+  const literature = await repo.getDrugLiterature(slug);
   const structure = getSeedStructure(slug);
   const structureSvg = structure
     ? await loadStructureSvg(structure.structureSvgPath)
@@ -167,6 +193,12 @@ export default async function DrugDetailPage({ params }: PageProps) {
   if (ls?.overdosage) tocItems.push({ id: "overdosage", label: "Overdosage" });
   if (drug.approvalHistory.length > 0)
     tocItems.push({ id: "approvals", label: "Approval history" });
+  if (shortages.length > 0)
+    tocItems.push({ id: "shortages", label: "FDA shortages" });
+  if (adverseEvents && adverseEvents.topReactions.length > 0)
+    tocItems.push({ id: "adverse-events", label: "FAERS reports" });
+  if (literature.length > 0)
+    tocItems.push({ id: "literature", label: "Literature" });
   if (similar.length > 0)
     tocItems.push({ id: "analogs", label: "Structural analogs" });
 
@@ -209,6 +241,17 @@ export default async function DrugDetailPage({ params }: PageProps) {
               {drug.jurisdiction}
             </Badge>
             <ProvenanceBadge provenance={drug.provenance} variant="inline" />
+            {activeShortages.length > 0 && (
+              <a
+                href="#shortages"
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-500/40 bg-amber-500/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-amber-700 transition-colors hover:bg-amber-500/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none dark:text-amber-300"
+                aria-label={`${activeShortages.length} active FDA shortage entr${activeShortages.length === 1 ? "y" : "ies"} — jump to details`}
+              >
+                <AlertTriangle aria-hidden="true" className="h-3 w-3" />
+                FDA shortage
+                {activeShortages.length > 1 ? ` ×${activeShortages.length}` : ""}
+              </a>
+            )}
           </div>
         </div>
 
@@ -605,6 +648,229 @@ export default async function DrugDetailPage({ params }: PageProps) {
             </Section>
           )}
 
+          {shortages.length > 0 && (
+            <Section
+              id="shortages"
+              title="FDA shortages"
+              right={
+                <Link
+                  href={`/api/v1/drug/${drug.slug}/shortages`}
+                  aria-label={`View ${drug.name} shortage entries as JSON`}
+                  className="inline-flex items-center gap-1 rounded-sm text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                >
+                  View JSON
+                  <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                </Link>
+              }
+            >
+              <p className="mb-3 text-xs text-muted-foreground">
+                Reference statistics from the openFDA drug-shortage dataset.
+                For a live view, consult the FDA database directly. Not
+                clinical guidance.
+              </p>
+              <ul className="space-y-2">
+                {shortages.map((s, i) => (
+                  <li
+                    key={`${s.presentation}-${i}`}
+                    className="rounded-md border border-border/60 px-3 py-2 text-sm"
+                  >
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                      <span className="font-medium">{s.presentation}</span>
+                      <ShortageStatusBadge status={s.status} />
+                    </div>
+                    {(s.sponsor || s.reason) && (
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {s.sponsor && (
+                          <span>
+                            <span className="font-semibold text-foreground">
+                              Sponsor:{" "}
+                            </span>
+                            {s.sponsor}
+                          </span>
+                        )}
+                        {s.sponsor && s.reason && <span> · </span>}
+                        {s.reason && (
+                          <span>
+                            <span className="font-semibold text-foreground">
+                              Reason:{" "}
+                            </span>
+                            {s.reason}
+                          </span>
+                        )}
+                      </div>
+                    )}
+                    <div className="mt-1 font-mono text-[10px] text-muted-foreground">
+                      Updated{" "}
+                      <time dateTime={s.fdaUpdatedAt} className="tabular-nums">
+                        {formatExtractedDate(s.fdaUpdatedAt)}
+                      </time>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
+          {adverseEvents && adverseEvents.topReactions.length > 0 && (
+            <Section
+              id="adverse-events"
+              title="FAERS reports"
+              right={
+                <Link
+                  href={`/api/v1/drug/${drug.slug}/adverse-events`}
+                  aria-label={`View ${drug.name} FAERS aggregate counts as JSON`}
+                  className="inline-flex items-center gap-1 rounded-sm text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                >
+                  View JSON
+                  <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                </Link>
+              }
+            >
+              <div className="mb-3 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-xs leading-relaxed text-amber-800 dark:text-amber-200">
+                <span className="font-semibold">Reference statistics only. </span>
+                FAERS reports are <em>voluntarily submitted</em> and are{" "}
+                <strong>not</strong> incidence rates, safety signals, or
+                causal evidence. Counts reflect reporting volume — how often
+                a reaction was reported, not how often it occurs. For
+                decision-grade use, consult openFDA and the FAERS Public
+                Dashboard directly.
+              </div>
+              <div className="mb-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span>
+                  <span className="font-semibold text-foreground tabular-nums">
+                    {adverseEvents.totalReports.toLocaleString()}
+                  </span>{" "}
+                  total reports matched
+                </span>
+                {adverseEvents.windowEnd && (
+                  <span>
+                    Latest report{" "}
+                    <time
+                      dateTime={adverseEvents.windowEnd}
+                      className="tabular-nums"
+                    >
+                      {formatExtractedDate(adverseEvents.windowEnd)}
+                    </time>
+                  </span>
+                )}
+                <span className="basis-full text-[11px] italic">
+                  Share = reports listing the reaction ÷ total matched reports.
+                  Rows can sum to &gt;100% because a single report often
+                  lists multiple reactions.
+                </span>
+              </div>
+              <ol className="space-y-1">
+                {adverseEvents.topReactions.slice(0, 15).map((r, i) => {
+                  const share = formatReactionShare(
+                    r.count,
+                    adverseEvents.totalReports,
+                  );
+                  const reactionSlug = slugifyReactionName(r.reaction);
+                  return (
+                    <li
+                      key={`${r.reaction}-${i}`}
+                      className="flex items-baseline justify-between gap-3 rounded-sm border-b border-border/40 px-1 py-1 text-sm last:border-b-0"
+                    >
+                      <span className="flex items-baseline gap-3 min-w-0">
+                        <span className="w-5 shrink-0 font-mono text-[10px] text-muted-foreground tabular-nums">
+                          {i + 1}
+                        </span>
+                        {reactionSlug ? (
+                          <Link
+                            href={`/reactions/${reactionSlug}`}
+                            className="truncate rounded-sm transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                            aria-label={`Browse drugs reporting ${r.reaction}`}
+                          >
+                            {r.reaction}
+                          </Link>
+                        ) : (
+                          <span className="truncate">{r.reaction}</span>
+                        )}
+                      </span>
+                      <span className="flex shrink-0 items-baseline gap-3 font-mono text-xs tabular-nums text-muted-foreground">
+                        <span aria-label={`${r.count.toLocaleString()} reports`}>
+                          {r.count.toLocaleString()}
+                        </span>
+                        <span
+                          className="w-12 text-right text-foreground/80"
+                          aria-label={`${share} of matched reports`}
+                        >
+                          {share}
+                        </span>
+                      </span>
+                    </li>
+                  );
+                })}
+              </ol>
+            </Section>
+          )}
+
+          {literature.length > 0 && (
+            <Section
+              id="literature"
+              title="Literature"
+              right={
+                <Link
+                  href={`/api/v1/drug/${drug.slug}/literature`}
+                  aria-label={`View ${drug.name} PubMed references as JSON`}
+                  className="inline-flex items-center gap-1 rounded-sm text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                >
+                  View JSON
+                  <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                </Link>
+              }
+            >
+              <p className="mb-3 text-xs text-muted-foreground">
+                Recent PubMed references pinned to {drug.name} as a MeSH
+                major topic. Citations link to pubmed.ncbi.nlm.nih.gov.
+              </p>
+              <ul className="space-y-3">
+                {literature.map((ref) => (
+                  <li
+                    key={ref.pmid}
+                    className="rounded-md border border-border/60 px-3 py-2 text-sm"
+                  >
+                    <a
+                      href={ref.pubmedUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-sm font-medium text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    >
+                      {ref.title}
+                    </a>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      <em>{ref.journal}</em>
+                      <span className="tabular-nums"> · {ref.year}</span>
+                      {ref.authors.length > 0 && (
+                        <>
+                          <span> · </span>
+                          <span>
+                            {ref.authors.join(", ")}
+                            {ref.authors.length >= 3 ? ", et al." : ""}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 font-mono text-[10px] text-muted-foreground">
+                      <span translate="no">PMID {ref.pmid}</span>
+                      {ref.doi && (
+                        <a
+                          href={`https://doi.org/${ref.doi}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-sm transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                          translate="no"
+                        >
+                          DOI {ref.doi}
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
           {similar.length > 0 && (
             <Section
               id="analogs"
@@ -892,6 +1158,34 @@ function SeverityBadge({ severity }: { severity: Severity }) {
       className={`rounded-sm border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider ${SEVERITY_COLOR[severity]}`}
     >
       {severity}
+    </span>
+  );
+}
+
+const SHORTAGE_STATUS_COLOR: Record<ShortageStatus, string> = {
+  active:
+    "border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  resolved:
+    "border-emerald-500/40 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  discontinuation:
+    "border-red-500/40 bg-red-500/10 text-red-700 dark:text-red-300",
+  "to-be-discontinued":
+    "border-orange-500/40 bg-orange-500/10 text-orange-700 dark:text-orange-300",
+};
+
+const SHORTAGE_STATUS_LABEL: Record<ShortageStatus, string> = {
+  active: "Active",
+  resolved: "Resolved",
+  discontinuation: "Discontinued",
+  "to-be-discontinued": "To be discontinued",
+};
+
+function ShortageStatusBadge({ status }: { status: ShortageStatus }) {
+  return (
+    <span
+      className={`rounded-sm border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wider ${SHORTAGE_STATUS_COLOR[status]}`}
+    >
+      {SHORTAGE_STATUS_LABEL[status]}
     </span>
   );
 }
