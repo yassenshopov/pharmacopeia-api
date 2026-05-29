@@ -1,16 +1,19 @@
 name: Release SDKs
 
-# Publish @pharmacopeia/client to npm and pharmacopeia to PyPI on release.
+# Publish @pharmacopeia/client and pharmacopeia-mcp to npm, and
+# pharmacopeia to PyPI, on release.
 #
 # Trigger options:
 #   1. Create a GitHub Release whose tag matches `sdk-v<semver>`
 #      (e.g. `sdk-v0.2.0`). The tag drives the package version, so
-#      `npm i @pharmacopeia/client@0.2.0` and `pip install pharmacopeia==0.2.0`
-#      both resolve to the same generated contract.
+#      `npm i @pharmacopeia/client@0.2.0`, `npm i pharmacopeia-mcp@0.2.0`,
+#      and `pip install pharmacopeia==0.2.0` all resolve to the same
+#      generated contract.
 #   2. Manual `workflow_dispatch` with a version input.
 #
 # Secrets required:
-#   - NPM_TOKEN — automation token with publish access to `@pharmacopeia/client`.
+#   - NPM_TOKEN — automation token with publish access to
+#     `@pharmacopeia/client` and `pharmacopeia-mcp`.
 #
 # PyPI publishing uses OIDC (trusted publishing). Configure the project on
 # PyPI under https://pypi.org/manage/account/publishing/ with:
@@ -121,6 +124,70 @@ jobs:
       - name: Publish to npm
         if: ${{ github.event.inputs.dry_run != 'true' }}
         working-directory: sdk/typescript
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
+
+  # ────────────────────────────────────────────────────────────────────
+  publish-mcp:
+    name: Publish pharmacopeia-mcp to npm
+    needs: [resolve-version, publish-npm]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/pharmacopeia-mcp
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+          cache: "npm"
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Regenerate SDK from Zod schemas
+        run: npm run codegen
+
+      - name: Stamp SDK manifests with release version
+        run: npm run sdk:set-version -- ${{ needs.resolve-version.outputs.version }}
+
+      # The MCP package depends on @pharmacopeia/client at the same
+      # version we just published in the previous job. Install from the
+      # real registry, not the local `file:` link, so the published
+      # tarball references npm and not a path that won't exist for
+      # consumers.
+      - name: Rewrite client dep to registry version
+        working-directory: sdk/mcp
+        run: |
+          set -euo pipefail
+          tmp=$(mktemp)
+          jq --arg v "^${{ needs.resolve-version.outputs.version }}" \
+            '.dependencies["@pharmacopeia/client"] = $v' package.json > "$tmp"
+          mv "$tmp" package.json
+
+      - name: Install MCP package dependencies
+        working-directory: sdk/mcp
+        run: npm install --no-audit --no-fund
+
+      - name: Build MCP package
+        working-directory: sdk/mcp
+        run: npm run build
+
+      - name: Publish to npm (dry run)
+        if: ${{ github.event.inputs.dry_run == 'true' }}
+        working-directory: sdk/mcp
+        run: npm publish --dry-run --access public
+
+      - name: Publish to npm
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        working-directory: sdk/mcp
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --provenance --access public

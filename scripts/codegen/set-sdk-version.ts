@@ -29,6 +29,26 @@ function setTsVersion(version: string): void {
   console.log(`  set ${path} version = ${version}`);
 }
 
+/**
+ * Stamp the MCP server package, and bump its `@pharmacopeia/client`
+ * dependency in lockstep. The two packages are released together so a
+ * given `sdk-vX.Y.Z` tag always means the MCP tools were built against
+ * exactly that version of the client.
+ */
+function setMcpVersion(version: string): void {
+  const path = join(ROOT, "sdk/mcp/package.json");
+  const pkg = JSON.parse(readFileSync(path, "utf8")) as {
+    version: string;
+    dependencies?: Record<string, string>;
+  };
+  pkg.version = version;
+  if (pkg.dependencies && pkg.dependencies["@pharmacopeia/client"]) {
+    pkg.dependencies["@pharmacopeia/client"] = `^${version}`;
+  }
+  writeFileSync(path, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");
+  console.log(`  set ${path} version = ${version}`);
+}
+
 function setPyVersion(version: string): void {
   const path = join(ROOT, "sdk/python/pyproject.toml");
   const text = readFileSync(path, "utf8");
@@ -56,6 +76,7 @@ function main(): void {
   }
 
   setTsVersion(version);
+  setMcpVersion(version);
   setPyVersion(version);
   console.log(`Done. Stamped SDK manifests with ${version}.`);
 }
