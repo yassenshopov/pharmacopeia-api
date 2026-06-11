@@ -102,6 +102,31 @@ export function invalid(
   });
 }
 
+export function unauthorized(
+  message = "A valid API key is required. Pass it as 'Authorization: Bearer <key>'.",
+): NextResponse {
+  const body: ApiError = {
+    error: { code: "unauthorized", message },
+  };
+  return NextResponse.json(body, {
+    status: 401,
+    headers: {
+      "WWW-Authenticate": 'Bearer realm="pharmacopeia"',
+      "X-Robots-Tag": NOINDEX,
+    },
+  });
+}
+
+export function notConfigured(message: string): NextResponse {
+  const body: ApiError = {
+    error: { code: "not_configured", message },
+  };
+  return NextResponse.json(body, {
+    status: 503,
+    headers: { "X-Robots-Tag": NOINDEX },
+  });
+}
+
 export function serverError(message = "Internal error"): NextResponse {
   const body: ApiError = {
     error: { code: "internal_error", message },

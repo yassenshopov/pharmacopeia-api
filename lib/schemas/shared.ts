@@ -70,7 +70,10 @@ export const ApiErrorSchema = z.object({
     code: z.enum([
       "not_found",
       "invalid_request",
+      "unauthorized",
+      "forbidden",
       "rate_limited",
+      "not_configured",
       "internal_error",
     ]),
     message: z.string(),

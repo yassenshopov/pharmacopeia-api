@@ -7,7 +7,7 @@ import type { SchemaName } from "./registry";
  * `npm run codegen`.
  */
 
-export type HttpMethod = "GET" | "POST";
+export type HttpMethod = "GET" | "POST" | "DELETE";
 
 export interface QueryParam {
   /** Wire name as it appears in the query string. */
@@ -30,7 +30,9 @@ export type OperationTag =
   | "AdverseEvents"
   | "Reactions"
   | "Literature"
+  | "Retrieval"
   | "Changelog"
+  | "Webhooks"
   | "System";
 
 export interface Operation {
@@ -52,6 +54,8 @@ export interface Operation {
   requestSchema?: SchemaName;
   /** Registry name of the success (200) response body. */
   responseSchema: SchemaName;
+  /** Requires an API key (`Authorization: Bearer <key>`). */
+  auth?: boolean;
 }
 
 export const API_BASE_PATH = "/api/v1";
@@ -115,9 +119,19 @@ export const API_TAGS: ReadonlyArray<{
       "PubMed PMID crosswalks. Link drug records to canonical literature in PubMed.",
   },
   {
+    name: "Retrieval",
+    description:
+      "Meaning-based retrieval over drug-record passages. `/semantic-search` is free; `/grounded` is the key-gated tier that adds per-span citations with full provenance for LLM consumers.",
+  },
+  {
     name: "Changelog",
     description:
       "Record-level change feed. Typed mirror of `/feed.xml` and `/feed.json`.",
+  },
+  {
+    name: "Webhooks",
+    description:
+      "Outbound webhooks on dataset changes. Deliveries are HMAC-SHA256 signed (`X-Pharmacopeia-Signature: t=<ts>,v1=<hex>` over `<ts>.<body>`). Requires an API key.",
   },
   {
     name: "System",
@@ -144,9 +158,10 @@ export const API_TAG_GROUPS: ReadonlyArray<{
       "AdverseEvents",
       "Reactions",
       "Literature",
+      "Retrieval",
     ],
   },
-  { name: "Platform", tags: ["Changelog", "System"] },
+  { name: "Platform", tags: ["Changelog", "Webhooks", "System"] },
 ];
 
 export const OPERATIONS: readonly Operation[] = [
@@ -381,6 +396,75 @@ export const OPERATIONS: readonly Operation[] = [
     tag: "Reactions",
     pathParams: ["slug"],
     responseSchema: "ReactionResponse",
+  },
+  {
+    name: "semanticSearch",
+    method: "GET",
+    path: "/semantic-search",
+    summary:
+      "Meaning-based retrieval over drug-record passages. Embedding-backed when available; lexical fallback otherwise — `method` in the response reports which.",
+    tag: "Retrieval",
+    queryParams: [
+      {
+        name: "q",
+        type: "string",
+        required: true,
+        description: "Natural-language query (3–500 characters).",
+      },
+      {
+        name: "limit",
+        type: "number",
+        description: "Max passages (1–20, default 8).",
+      },
+      {
+        name: "sections",
+        type: "string",
+        description:
+          "Optional comma-separated list of drug-record sections to search (e.g. mechanism,dosing,boxed-warning).",
+      },
+    ],
+    responseSchema: "SemanticSearchResponse",
+  },
+  {
+    name: "groundedRetrieval",
+    method: "POST",
+    path: "/grounded",
+    summary:
+      "Key-gated retrieval tier for LLM consumers: same passages as /semantic-search plus per-span citations carrying full provenance (source URL, content hash, extraction timestamp, confidence).",
+    tag: "Retrieval",
+    requestSchema: "GroundedRequest",
+    responseSchema: "GroundedResponse",
+    auth: true,
+  },
+  {
+    name: "listWebhooks",
+    method: "GET",
+    path: "/webhooks",
+    summary: "List the webhook endpoints registered by the calling API key.",
+    tag: "Webhooks",
+    responseSchema: "WebhooksListResponse",
+    auth: true,
+  },
+  {
+    name: "createWebhook",
+    method: "POST",
+    path: "/webhooks",
+    summary:
+      "Register a webhook endpoint. The response includes the HMAC signing secret exactly once — store it.",
+    tag: "Webhooks",
+    requestSchema: "WebhookCreateRequest",
+    responseSchema: "WebhookEndpointCreated",
+    auth: true,
+  },
+  {
+    name: "deleteWebhook",
+    method: "DELETE",
+    path: "/webhooks/{id}",
+    summary: "Delete a webhook endpoint owned by the calling API key.",
+    tag: "Webhooks",
+    pathParams: ["id"],
+    responseSchema: "WebhookDeleteResponse",
+    auth: true,
   },
   {
     name: "listChangelog",

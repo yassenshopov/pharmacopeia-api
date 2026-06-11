@@ -13,9 +13,19 @@ import {
  * per-record provenance so every field is auditable back to a source.
  */
 
+/**
+ * One labeled indication. `icd10` and `snomed` carry standard clinical
+ * codes — reference cross-links for joining against EHR/research
+ * datasets, never diagnostic guidance. Both are empty until the
+ * crosswalk ingest lands (roadmap: icd10-snomed-crosswalks). ICD-10-CM
+ * is public domain in the US; SNOMED CT codes are included only where
+ * licensable (IHTSDO member countries — the v0 dataset is US-FDA only)
+ * and may stay empty where no confident concept mapping exists.
+ */
 export const IndicationSchema = z.object({
   text: z.string(),
   icd10: z.array(z.string()).default([]),
+  snomed: z.array(z.string()).default([]),
 });
 
 export const ContraindicationSchema = z.object({

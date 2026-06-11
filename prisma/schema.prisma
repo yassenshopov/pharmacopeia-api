@@ -1,0 +1,219 @@
+// pharmacopeia-api — Stage 1 Supabase Postgres schema.
+//
+// Document-style storage: the Zod schemas in `lib/schemas/` stay the
+// single source of truth for record shapes, so each entity is persisted
+// as a `payload` jsonb column (validated against its Zod schema at
+// write time by `scripts/db/seed.ts`) plus a handful of extracted
+// columns used for keys, filtering, and search. Relational explosion of
+// the deeply-nested Drug record is deliberately avoided — the API
+// serves whole records, never partial joins.
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../lib/generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  // pgvector, for Passage.embedding. `prisma db push` creates it.
+  extensions = [vector]
+}
+
+model Drug {
+  slug            String   @id
+  name            String
+  /// Class slugs extracted from payload.classes for ?class= filtering.
+  classSlugs      String[] @map("class_slugs")
+  /// Ingredient slugs extracted from payload.ingredients for ?ingredient= filtering.
+  ingredientSlugs String[] @map("ingredient_slugs")
+  /// Lowercased haystack (name, slug, synonyms, brands, ingredients) for search.
+  searchText      String   @map("search_text")
+  /// payload.indications.length, denormalised so /stats can sum without loading payloads.
+  indicationCount Int      @map("indication_count")
+  /// Whether payload.interactionsNarrative is present (openFDA label narrative).
+  hasInteractionsNarrative Boolean @map("has_interactions_narrative")
+  sourceHash      String   @map("source_hash")
+  payload         Json
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([classSlugs], type: Gin)
+  @@index([ingredientSlugs], type: Gin)
+  @@map("drugs")
+}
+
+model DrugClass {
+  slug       String   @id
+  name       String
+  kind       String
+  code       String?
+  searchText String   @map("search_text")
+  sourceHash String   @map("source_hash")
+  payload    Json
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([kind])
+  @@map("classes")
+}
+
+model Ingredient {
+  slug       String   @id
+  name       String
+  searchText String   @map("search_text")
+  sourceHash String   @map("source_hash")
+  payload    Json
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("ingredients")
+}
+
+model Interaction {
+  /// Canonical pair id: "drugA|drugB" with drugA < drugB lexicographically.
+  id      String @id
+  drugA   String @map("drug_a")
+  drugB   String @map("drug_b")
+  payload Json
+
+  @@index([drugA])
+  @@index([drugB])
+  @@map("interactions")
+}
+
+model ChangelogEntry {
+  id        String   @id
+  timestamp DateTime
+  payload   Json
+
+  @@index([timestamp])
+  @@map("changelog_entries")
+}
+
+model Shortage {
+  id       Int    @id @default(autoincrement())
+  drugSlug String @map("drug_slug")
+  payload  Json
+
+  @@index([drugSlug])
+  @@map("shortages")
+}
+
+model AdverseEvents {
+  drugSlug String @id @map("drug_slug")
+  payload  Json
+
+  @@map("adverse_events")
+}
+
+model Literature {
+  drugSlug String @id @map("drug_slug")
+  payload  Json
+
+  @@map("literature")
+}
+
+model Structure {
+  drugSlug String @id @map("drug_slug")
+  smiles   String
+  payload  Json
+
+  @@map("structures")
+}
+
+model Similarity {
+  drugSlug  String @id @map("drug_slug")
+  /// Precomputed [{ slug, score }] analog list (Tanimoto, offline).
+  neighbors Json
+
+  @@map("similarity")
+}
+
+model ReactionMeta {
+  slug    String @id
+  payload Json
+
+  @@map("reaction_meta")
+}
+
+/// Retrieval passages: one chunk of one section of one drug record,
+/// extracted by lib/data/passages.ts. `embedding` is filled by
+/// scripts/db/embed.ts (pgvector, 512-dim text-embedding-3-small) and
+/// reset to NULL whenever `text_hash` changes so re-embedding is
+/// delta-based. ~5k rows at current dataset size — sequential scan is
+/// fine, no ANN index needed until the dataset grows ~100x.
+model Passage {
+  id         String                       @id
+  drugSlug   String                       @map("drug_slug")
+  drugName   String                       @map("drug_name")
+  section    String
+  chunk      Int
+  text       String
+  textHash   String                       @map("text_hash")
+  provenance Json
+  embedding  Unsupported("vector(512)")?
+  updatedAt  DateTime                     @updatedAt @map("updated_at")
+
+  @@index([drugSlug])
+  @@map("passages")
+}
+
+/// API keys for the paid/grounded tier. Only the sha256 of the key is
+/// stored; the plaintext (`pk_live_...`) is shown once at mint time by
+/// scripts/keys/create-key.ts.
+model ApiKey {
+  id           String            @id @default(cuid())
+  keyHash      String            @unique @map("key_hash")
+  name         String
+  tier         String            @default("grounded")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  revokedAt    DateTime?         @map("revoked_at")
+  lastUsedAt   DateTime?         @map("last_used_at")
+  requestCount Int               @default(0) @map("request_count")
+  webhooks     WebhookEndpoint[]
+
+  @@map("api_keys")
+}
+
+model WebhookEndpoint {
+  id             String            @id @default(cuid())
+  /// Owning API key; NULL groups endpoints registered with env-var keys.
+  apiKeyId       String?           @map("api_key_id")
+  apiKey         ApiKey?           @relation(fields: [apiKeyId], references: [id])
+  url            String
+  /// HMAC-SHA256 signing secret (whsec_...). Returned once at creation.
+  secret         String
+  events         String[]
+  active         Boolean           @default(true)
+  createdAt      DateTime          @default(now()) @map("created_at")
+  /// Consecutive failures; dispatch auto-disables the endpoint at 25.
+  failureCount   Int               @default(0) @map("failure_count")
+  lastStatus     Int?              @map("last_status")
+  lastDeliveryAt DateTime?         @map("last_delivery_at")
+  deliveries     WebhookDelivery[]
+
+  @@index([apiKeyId])
+  @@map("webhook_endpoints")
+}
+
+model WebhookDelivery {
+  id         Int             @id @default(autoincrement())
+  endpointId String          @map("endpoint_id")
+  endpoint   WebhookEndpoint @relation(fields: [endpointId], references: [id], onDelete: Cascade)
+  event      String
+  payload    Json
+  ok         Boolean
+  status     Int?
+  attempts   Int
+  createdAt  DateTime        @default(now()) @map("created_at")
+
+  @@index([endpointId])
+  @@map("webhook_deliveries")
+}
+
+/// Single-row table describing the dataset snapshot currently being served.
+model DatasetMeta {
+  id        Int      @id @default(1)
+  version   String
+  updatedAt DateTime @map("updated_at")
+
+  @@map("dataset_meta")
+}

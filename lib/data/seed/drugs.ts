@@ -98,6 +98,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses temporarily relieves minor aches and pains due to: headache the common cold backache minor pain of arthritis toothache muscular aches premenstrual and menstrual cramps temporarily reduces fever",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -245,6 +246,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Herpes Zoster Infections : Acyclovir is indicated for the acute treatment of herpes zoster (shingles). Genital Herpes : Acyclovir is indicated for the treatment of initial episodes and the management of recurrent episodes of genital herpes.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -385,6 +387,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Albuterol Sulfate HFA is a beta 2 -adrenergic agonist indicated for: Treatment or prevention of bronchospasm in adult and pediatric patients aged 4 years and older with reversible obstructive airway disease. ( 1.1 ) Prevention of exercise-induced bronchospasm in adult and pediatric patients aged 4 years and older.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -507,6 +510,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "BINOSTO is a bisphosphonate indicated for: Treatment of osteoporosis in postmenopausal women ( 1.1 ) Treatment to increase bone mass in men with osteoporosis ( 1.2 ) Limitation of use: Optimal duration of use has not been determined. For patients at low-risk for fracture, consider drug discontinuation after 3 to 5 years of use ( 1.3 ) 1.1 Treatment of Osteoporosis in Postmenopausal Women BINOSTO effervescent tablet 70 mg is indicated for the treatment of osteoporosis in postmenopausal women.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -666,6 +670,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Alfuzosin hydrochloride extended-release tablets, USP are indicated for the treatment of signs and symptoms of benign prostatic hyperplasia. Alfuzosin hydrochloride extended-release tablet is an alpha adrenergic antagonist, indicated for the treatment of signs and symptoms of benign prostatic hyperplasia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -792,6 +797,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Allopurinol tablets are indicated for: The management of adults with signs and symptoms of primary or secondary gout (acute attacks, tophi, joint destruction, uric acid lithiasis, and/or nephropathy) The management of adult and pediatric patients with leukemia, lymphoma and solid tumor malignancies who are receiving cancer therapy which causes elevations of serum and urinary uric acid levels The management of adult patients with recurrent calcium oxalate calculi whose daily uric acid excretion exceeds 800 mg/day in male patients and 750 mg/day in female patients, despite lifestyle changes (such as reduction of dietary sodium, non-dairy animal protein, oxylate rich foods, refined sugars and increases in oral fluids and fruits and vegetables) Limitations of Use Allopurinol tablets are not recommended for the treatment of asymptomatic hyperuricemia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -937,6 +943,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Alprazolam tablets are indicated for the: acute treatment of generalized anxiety disorder (GAD) in adults. treatment of panic disorder (PD), with or without agoraphobia in adults.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -1094,6 +1101,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Amantadine hydrochloride capsules, USP are indicated for the prophylaxis and treatment of signs and symptoms of infection caused by various strains of influenza A virus. Amantadine hydrochloride capsules, USP are also indicated in the treatment of parkinsonism and drug-induced extrapyramidal reactions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -1304,6 +1312,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Pacerone is indicated for the treatment of documented, life-threatening recurrent ventricular fibrillation and life-threatening recurrent hemodynamically unstable tachycardia in adults who have not responded to adequate doses of other available antiarrhythmics or when alternative agents cannot be tolerated. Pacerone is an antiarrhythmic indicated for: Recurrent ventricular fibrillation.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -1462,6 +1471,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "For the relief of symptoms of depression. Endogenous depression is more likely to be alleviated than are other depressive states.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -1633,6 +1643,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Amlodipine besylate tablets are calcium channel blocker and may be used alone or in combination with other antihypertensive and antianginal agents for the treatment of: •Hypertension ( 1.1 ) о Amlodipine besylate tablets are indicated for the treatment of hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -1779,6 +1790,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Adults and Pediatric Patients Upper Respiratory Tract Infections of the Ear, Nose, and Throat: Amoxicillin tablets are indicated in the treatment of infections due to susceptible (ONLY β-lactamase-negative) isolates of Streptococcus species. (α- and β-hemolytic isolates only), Streptococcus pneumoniae , Staphylococcus spp., or Haemophilus influenzae .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -1923,6 +1935,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ampicillin for Injection, USP is indicated in the treatment of infections caused by susceptible strains of the designated organisms in the following conditions: Respiratory Tract Infections caused by Streptococcus pneumoniae, Staphylococcus aureus (penicillinase and nonpenicillinase-producing), H. influenzae, and Group A beta-hemolytic streptococci.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -2065,6 +2078,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Anastrozole is an aromatase inhibitor indicated for: Adjuvant treatment of postmenopausal women with hormone receptor-positive early breast cancer ( 1.1 ) First-line treatment of postmenopausal women with hormone receptor-positive or hormone receptor unknown locally advanced or metastatic breast cancer ( 1.2 ) Treatment of advanced breast cancer in postmenopausal women with disease progression following tamoxifen therapy. Patients with ER-negative disease and patients who did not respond to previous tamoxifen therapy rarely responded to anastrozole ( 1.3 ) 1.1 Adjuvant Treatment Anastrozole tablets are indicated for adjuvant treatment of postmenopausal women with hormone receptor-positive early breast cancer.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -2202,6 +2216,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Apixaban is a factor Xa inhibitor indicated: to reduce the risk of stroke and systemic embolism in patients with nonvalvular atrial fibrillation. ( 1.1 ) for the prophylaxis of deep vein thrombosis (DVT), which may lead to pulmonary embolism (PE), in patients who have undergone hip or knee replacement surgery.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -2344,6 +2359,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Aprepitant is a substance P/neurokinin 1 (NK1) receptor antagonist. Aprepitant capsules are indicated • in combination with other antiemetic agents, in patients 12 years of age and older for prevention of: o acute and delayed nausea and vomiting associated with initial and repeat courses of highly emetogenic cancer chemotherapy (HEC) including high-dose cisplatin ( 1.1 ) o nausea and vomiting associated with initial and repeat courses of moderately emetogenic cancer chemotherapy (MEC) ( 1.1 ) • for prevention of postoperative nausea and vomiting (PONV) in adults ( 1.2 ) Limitations of Use : ( 1.3 ) • Aprepitant has not been studied for treatment of established nausea and vomiting.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -2489,6 +2505,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Aripiprazole is indicated for the treatment of: • Schizophrenia • Irritability Associated with Autistic Disorder • Treatment of Tourette’s Disorder Aripiprazole is an atypical antipsychotic.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -2674,6 +2691,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses for the temporary relief of minor aches and pains or as recommended by your doctor. Because of its delayed action, this product will not provide fast relief of headaches or other symptoms needing immediate relief.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -2819,6 +2837,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hypertension Atenolol tablets are indicated for the treatment of hypertension, to lower blood pressure. Lowering blood pressure lowers the risk of fatal and non-fatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -2961,6 +2980,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Atomoxetine capsule is a selective norepinephrine reuptake inhibitor indicated for the treatment of Attention-Deficit/Hyperactivity Disorder (ADHD). ( 1.1 ) 1.1 Attention-Deficit/Hyperactivity Disorder (ADHD) Atomoxetine capsule is indicated for the treatment of Attention-Deficit/Hyperactivity Disorder (ADHD).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -3101,6 +3121,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Atorvastatin calcium tablets are indicated: To reduce the risk of: Myocardial infarction (MI), stroke, revascularization procedures, and angina in adults with multiple risk factors for coronary heart disease (CHD) but without clinically evident CHD MI and stroke in adults with type 2 diabetes mellitus with multiple risk factors for CHD but without clinically evident CHD Non-fatal MI, fatal and non-fatal stroke, revascularization procedures, hospitalization for congestive heart failure, and angina in adults with clinically evident CHD As an adjunct to diet to reduce low-density lipoprotein cholesterol (LDL-C) in: Adults with primary hyperlipidemia. Adults and pediatric patients aged 10 years and older with heterozygous familial hypercholesterolemia (HeFH).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -3263,6 +3284,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Azathioprine tablets, USP are indicated as an adjunct for the prevention of rejection in renal homotransplantation. It is also indicated for the management of active rheumatoid arthritis to reduce signs and symptoms.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -3399,6 +3421,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Azithromycin is a macrolide antibacterial drug indicated for the treatment of patients with mild to moderate infections caused by susceptible strains of the designated microorganisms in the specific conditions listed below. Recommended dosages and durations of therapy in adult and pediatric patient populations vary in these indications.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -3566,6 +3589,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Baclofen tablets, USP are useful for the alleviation of signs and symptoms of spasticity resulting from multiple sclerosis, particularly for the relief of flexor spasms and concomitant pain, clonus, and muscular rigidity. Patients should have reversible spasticity so that baclofen treatment will aid in restoring residual function.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -3750,6 +3774,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "QVAR REDIHALER is indicated in the maintenance treatment of asthma as prophylactic therapy in adults and pediatric patients 4 years of age and older. Limitations of Use: QVAR REDIHALER is not indicated for the relief of acute bronchospasm.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -3902,6 +3927,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Benazepril hydrochloride tablets are indicated for the treatment of hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -4065,6 +4091,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "BETOPTIC S ® (betaxolol hydrochloride ophthalmic suspension) 0.25% is indicated for the treatment of elevated intraocular pressure (IOP) in patients with chronic open-angle glaucoma or ocular hypertension. BETOPTIC S is a beta-adrenergic receptor inhibitor indicated for the treatment of elevated intraocular pressure (IOP) in patients with chronic open-angle glaucoma or ocular hypertension.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -4176,6 +4203,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Bicalutamide tablets, USP 50 mg daily are indicated for use in combination therapy with a luteinizing hormone-releasing hormone (LHRH) analog for the treatment of Stage D 2 metastatic carcinoma of the prostate. Bicalutamide tablets, USP 150 mg daily are not approved for use alone or with other treatments [see Clinical Studies (14.2)].",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -4305,6 +4333,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Bisoprolol fumarate tablets are indicated in the management of hypertension. It may be used alone or in combination with other antihypertensive agents.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -4461,6 +4490,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Use relieves redness of the eye due to minor eye irritations",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -4642,6 +4672,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Use s Temporarily relieves these symptoms of hay fever or other upper respiratory allergies: • nasal congestion • runny nose • itchy nose • sneezing",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -4814,6 +4845,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Bumetanide tablets, USP are indicated for the treatment of edema associated with congestive heart failure, hepatic and renal disease, including the nephrotic syndrome. Almost equal diuretic response occurs after oral and parenteral administration of bumetanide.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -4970,6 +5002,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Buprenorphine sublingual tablet is indicated for the treatment of opioid dependence and is preferred for induction. Buprenorphine sublingual tablet should be used as part of a complete treatment plan to include counseling and psychosocial support.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -5152,6 +5185,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Bupropion hydrochloride extended-release tablets (XL) are an aminoketone antidepressant, indicated for: treatment of major depressive disorder (MDD) (1.1) prevention of seasonal affective disorder (SAD) ( 1.2) 1.1 Major Depressive Disorder (MDD) Bupropion hydrochloride extended-release tablets (XL) are indicated for the treatment of major depressive disorder (MDD), as defined by the Diagnostic and Statistical Manual (DSM). The efficacy of the immediate-release formulation of bupropion was established in two 4-week controlled inpatient trials and one 6-week controlled outpatient trial of adult patients with MDD.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -5292,6 +5326,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Buspirone hydrochloride tablets are indicated for the management of anxiety disorders or the short-term relief of the symptoms of anxiety. Anxiety or tension associated with the stress of everyday life usually does not require treatment with an anxiolytic.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -5431,6 +5466,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "INVOKANA (canagliflozin) is indicated: as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus. to reduce the risk of major adverse cardiovascular events (cardiovascular death, nonfatal myocardial infarction and nonfatal stroke) in adults with type 2 diabetes mellitus and established cardiovascular disease (CVD).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -5569,6 +5605,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Candesartan cilexetil tablets are an angiotensin II receptor blocker (ARB) indicated for: · Treatment of hypertension in adults and children 1 to < 17 years of age, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and non-fatal cardiovascular events, primarily strokes and myocardial infarctions ( 1.1 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -5741,6 +5778,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hypertension Captopril tablets are indicated for the treatment of hypertension. In using captopril tablets, consideration should be given to the risk of neutropenia/agranulocytosis (see WARNINGS).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -5933,6 +5971,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Epilepsy Carbamazepine is indicated for use as an anticonvulsant drug. Evidence supporting efficacy of carbamazepine as an anticonvulsant was derived from active drug-controlled studies that enrolled patients with the following seizure types: 1.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -6081,6 +6120,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Carisoprodol is indicated for the relief of discomfort associated with acute, painful musculoskeletal conditions in adults. Limitation of Use Carisoprodol should only be used for short periods (up to two or three weeks) because adequate evidence of effectiveness for more prolonged use has not been established and because acute, painful musculoskeletal conditions are generally of short duration.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -6252,6 +6292,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Carvedilol tablets are an alpha/beta-adrenergic blocking agent indicated for the treatment of: mild to severe chronic heart failure ( 1.1 ) left ventricular dysfunction following myocardial infarction in clinically stable patients( 1.2 ) hypertension( 1.3 ) 1.1 Heart Failure Carvedilol tablets are indicated for the treatment of mild-to-severe chronic heart failure of ischemic or cardiomyopathic origin, usually in addition to diuretics, ACE inhibitors, and digitalis, to increase survival and, also, to reduce the risk of hospitalization [see Drug Interactions ( 7.4 ), Clinical Studies ( 14.1 )] . 1.2 Left Ventricular Dysfunction following Myocardial Infarction Carvedilol tablets are indicated to reduce cardiovascular mortality in clinically stable patients who have survived the acute phase of a myocardial infarction and have a left ventricular ejection fraction of less than or equal to 40% (with or without symptomatic heart failure) [see Clinical Studies ( 14.2 )] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -6387,6 +6428,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "To reduce the development of drug-resistant bacteria and maintain the effectiveness of cefdinir and other antibacterial drugs, cefdinir should be used only to treat or prevent infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be considered in selecting or modifying antibacterial therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -6520,6 +6562,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Before instituting treatment with ceftriaxone, appropriate specimens should be obtained for isolation of the causative organism and for determination of its susceptibility to the drug. Therapy may be instituted prior to obtaining results of susceptibility testing.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -6668,6 +6711,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Cefuroxime for Injection, USP is indicated for the treatment of patients with infections caused by susceptible strains of the designated organisms in the following diseases: Lower Respiratory Tract Infections , including pneumonia, caused by Streptococcus pneumoniae, Haemophilus influenzae (including ampicillin-resistant strains), Klebsiella spp., Staphylococcus aureus (penicillinase- and non-penicillinase- producing strains), Streptococcus pyogenes , and Escherichia coli . Urinary Tract Infections caused by Escherichia coli and Klebsiella spp.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -6809,6 +6853,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "1. INDICATIONS AND USAGE Celecoxib is indicated Celecoxib is a nonsteroidal anti-inflammatory drug indicated for: Osteoarthritis (OA) ( 1.1 ) Rheumatoid Arthritis (RA) ( 1.2 ) Juvenile Rheumatoid Arthritis (JRA) in patients 2 years and older ( 1.3 ) Ankylosing Spondylitis (AS) ( 1.4 ) Acute Pain (AP) ( 1.5 ) Primary Dysmenorrhea (PD) ( 1.6 ) 1.1 Osteoarthritis For the management of the signs and symptoms of OA [ see Clinical Studies (14.1) ].",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -6945,6 +6990,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Cephalexin capsules are a cephalosporin antibacterial drug indicated for the treatment of the following infections caused by susceptible isolates of designated bacteria: Respiratory tract infection ( 1.1 ) Otitis media ( 1.2 ) Skin and skin structure infections ( 1.3 ) Bone infections ( 1.4 ) Genitourinary tract infections ( 1.5 ) To reduce the development of drug-resistant bacteria and maintain the effectiveness of cephalexin capsules and other antibacterial drugs, cephalexin capsules should be used only to treat infections that are proven or strongly suspected to be caused by bacteria. ( 1.6 ) 1.1 Respiratory Tract Infections Cephalexin capsules are indicated for the treatment of respiratory tract infections caused by susceptible isolates of Streptococcus pneumoniae and Streptococcus pyogenes.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -7097,6 +7143,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses temporarily relieves these symptoms due to hay fever or other upper respiratory allergies: runny nose sneezing itchy, watery eyes itching of the nose or throat",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -7231,6 +7278,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Chlordiazepoxide HCl capsules are indicated for the management of anxiety disorders or for the short term relief of symptoms of anxiety, withdrawal symptoms of acute alcoholism, and preoperative apprehension and anxiety. Anxiety or tension associated with the stress of everyday life usually does not require treatment with an anxiolytic.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -7376,6 +7424,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses temporarily relieves these symptoms due to hay fever (allergic rhinitis) or other upper respiratory allergies: sneezing runny nose itching of the nose or throat itchy, watery eyes",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -7524,6 +7573,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "For the management of manifestations of psychotic disorders. For the treatment of schizophrenia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -7700,6 +7750,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Diuretics such as chlorthalidone are indicated in the management of hypertension either as the sole therapeutic agent or to enhance the effect of other antihypertensive drugs in the more severe forms of hypertension. Chlorthalidone is indicated as adjunctive therapy in edema associated with congestive heart failure, hepatic cirrhosis, and corticosteroid and estrogen therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -7857,6 +7908,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Cilostazol tablets are indicated for the reduction of symptoms of intermittent claudication, as demonstrated by an increased walking distance.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -8018,6 +8070,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ciprofloxacin Ophthalmic Solution is indicated for the treatment of infections caused by susceptible strains of the designated microorganisms in the conditions listed below: Corneal Ulcers: Pseudomonas aeruginosa Serratia marcescens * Staphylococcus aureus Staphylococcus epidermidis Streptococcus pneumoniae Streptococcus (Viridans Group) * Conjunctivitis: Haemophilus influenzae Staphylococcus aureus Staphylococcus epidermidis Streptococcus pneumoniae *Efficacy for this organism was studied in fewer than 10 infections.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -8159,6 +8212,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Citalopram tablets are indicated for the treatment of major depressive disorder (MDD) in adults [see Clinical Studies ( 14 )] . Citalopram is a selective serotonin reuptake inhibitor (SSRI) indicated for the treatment of major depressive disorder (MDD) in adults ( 1 ) .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -8324,6 +8378,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Clarithromycin is a macrolide antimicrobial indicated for mild to moderate infections caused by designated, susceptible bacteria in the following: Acute Bacterial Exacerbation of Chronic Bronchitis in Adults ( 1.1 ) Acute Maxillary Sinusitis ( 1.2 ) Community-Acquired Pneumonia ( 1.3 ) Pharyngitis/Tonsillitis ( 1.4 ) Uncomplicated Skin and Skin Structure Infections ( 1.5 ) Acute Otitis Media in Pediatric Patients ( 1.6 ) Treatment and Prophylaxis of Disseminated Mycobacterial Infections ( 1.7 ) Helicobacter pylori Infection and Duodenal Ulcer Disease in Adults ( 1.8 ) Limitations of Use To reduce the development of drug-resistant bacteria and maintain the effectiveness of clarithromycin tablets and other antibacterial drugs, clarithromycin tablets should be used only to treat or prevent infections that are proven or strongly suspected to be caused by bacteria.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -8496,6 +8551,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Clindamycin phosphate topical lotion is indicated in the treatment of acne vulgaris. In view of the potential for diarrhea, bloody diarrhea and pseudomembranous colitis, the physician should consider whether other agents are more appropriate (see CONTRAINDICATIONS , WARNINGS and ADVERSE REACTIONS ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -8635,6 +8691,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Seizure Disorders: Clonazepam tablets are useful alone or as an adjunct in the treatment of the Lennox-Gastaut syndrome (petit mal variant), akinetic, and myoclonic seizures. In patients with absence seizures (petit mal) who have failed to respond to succinimides, clonazepam tablets may be useful.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -8824,6 +8881,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Clonidine hydrochloride tablets are indicated in the treatment of hypertension. Clonidine hydrochloride tablets may be employed alone or concomitantly with other antihypertensive agents.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -8976,6 +9034,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Clopidogrel is a P2Y 12 platelet inhibitor indicated for: • Acute coronary syndrome -For patients with non-ST-segment elevation ACS (unstable angina [UA]/non-ST-elevation myocardial infarction [NSTEMI]), clopidogrel has been shown to reduce the rate of myocardial infarction (MI) and stroke. ( 1.1 ) - For patients with ST-elevation myocardial infarction (STEMI), clopidogrel has been shown to reduce the rate of MI and stroke.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -9172,6 +9231,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Clozapine orally disintegrating tablets (Clozapine ODT) is an atypical antipsychotic indicated for: Treatment of severely ill patients with schizophrenia who fail to respond adequately to standard antipsychotic treatment. Because of the risks of severe neutropenia and of seizure associated with its use, Clozapine ODT should be used only in patients who have failed to respond adequately to standard antipsychotic treatment ( 1.1 ) Reducing the risk of recurrent suicidal behavior in patients with schizophrenia or schizoaffective disorder who are judged to be at chronic risk for re-experiencing suicidal behavior ( 1.2 ) 1.1 Treatment-resistant Schizophrenia Clozapine Orally Disintegrating Tablets (Clozapine ODT) are indicated for the treatment of severely ill patients with schizophrenia who fail to respond adequately to standard antipsychotic treatment.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -9334,6 +9394,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Codeine Sulfate Tablets are indicated for the management of mild to moderate pain, where treatment with an opioid is appropriate and for which alternative treatments are inadequate. Limitations of Use: • Because of the risks of addiction, abuse, misuse, overdose, and death, which can occur at any dosage or duration and persist over the course of therapy [see Warnings and Precautions ( 5.1 )] , reserve opioid analgesics, including Codeine Sulfate Tablets, for use in patients for whom alternative treatment options are ineffective, not tolerated, or would be otherwise inadequate to provide sufficient management of pain.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -9502,6 +9563,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Colchicine tablets are an alkaloid indicated for: • Prophylaxis and treatment of gout flares in adults ( 1.1 ). • Familial Mediterranean fever (FMF) in adults and children 4 years or older ( Error!",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -9648,6 +9710,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Cyanocobalamin is indicated for vitamin B 12 deficiencies due to malabsorption which may be associated with the following conditions: Addisonian (pernicious) anemia Gastrointestinal pathology, dysfunction, or surgery, including gluten enteropathy or sprue, small bowel bacteria overgrowth, total or partial gastrectomy Fish tapeworm infestation Malignancy of pancreas or bowel Folic acid deficiency It may be possible to treat the underlying disease by surgical correction of anatomic lesions leading to small bowel bacterial overgrowth, expulsion of fish tapeworm, discontinuation of drugs leading to vitamin malabsorption (see Drug/Laboratory Test Interactions ), use of a gluten-free diet in nontropical sprue, or administration of antibiotics in tropical sprue. Such measures remove the need for long-term administration of cyanocobalamin.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -9802,6 +9865,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Cyclobenzaprine hydrochloride tablets, USP are indicated as an adjunct to rest and physical therapy for relief of muscle spasm associated with acute, painful musculoskeletal conditions. Improvement is manifested by relief of muscle spasm and its associated signs and symptoms, namely, pain, tenderness, limitation of motion, and restriction in activities of daily living.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -9921,6 +9985,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Dabigatran etexilate capsules are a direct thrombin inhibitor indicated: • To reduce the risk of stroke and systemic embolism in adult patients with non-valvular atrial fibrillation ( 1.1 ) • For the treatment of deep venous thrombosis (DVT) and pulmonary embolism (PE) in adult patients who have been treated with a parenteral anticoagulant for 5 to 10 days ( 1.2 ) • To reduce the risk of recurrence of DVT and PE in adult patients who have been previously treated ( 1.3 ) • For the prophylaxis of DVT and PE in adult patients who have undergone hip replacement surgery ( 1.4 ) • For the treatment of venous thromboembolic events (VTE) in pediatric patients 8 to less than 18 years of age who have been treated with a parenteral anticoagulant for at least 5 days ( 1.5 ) • To reduce the risk of recurrence of VTE in pediatric patients 8 to less than 18 years of age who have been previously treated ( 1.6 ) 1.1 Reduction of Risk of Stroke and Systemic Embolism in Non-valvular Atrial Fibrillation in Adult Patients Dabigatran etexilate capsules are indicated to reduce the risk of stroke and systemic embolism in adult patients with non-valvular atrial fibrillation.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -10067,6 +10132,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "FARXIGA (dapagliflozin) is indicated: • To reduce the risk of sustained eGFR decline, end-stage kidney disease, cardiovascular death, and hospitalization for heart failure in adults with chronic kidney disease at risk of progression. • To reduce the risk of cardiovascular death, hospitalization for heart failure, and urgent heart failure visit in adults with heart failure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -10206,6 +10272,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Desloratadine Tablets are a histamine-1 (H1) receptor antagonist indicated for: • Seasonal Allergic Rhinitis: relief of nasal and non-nasal symptoms in patients 12 years of age and older. ( 1.1 ) • Perennial Allergic Rhinitis: relief of nasal and non-nasal symptoms in patients 12 years of age and older.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -10376,6 +10443,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Central Diabetes Insipidus Desmopressin acetate tablets are indicated as antidiuretic replacement therapy in the management of central diabetes insipidus and for the management of the temporary polyuria and polydipsia following head trauma or surgery in the pituitary region. Desmopressin acetate is ineffective for the treatment of nephrogenic diabetes insipidus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -10541,6 +10609,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "PRISTIQ is indicated for the treatment of adults with major depressive disorder (MDD) [see Clinical Studies (14) ] . PRISTIQ is a serotonin and norepinephrine reuptake inhibitor (SNRI) indicated for the treatment of adults with major depressive disorder (MDD) ( 1 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -10844,6 +10913,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "A l l ergic States: Control of severe or incapacitating a llergic conditions intractable to adequate trials of conventional treatment in asthma, atopic dermatitis, contact dermatitis, drug hypersensitivity reactions, perennial or seasonal allergic rhinitis, and serum sickness. Dermatologic Diseases: Bul l ous dermatitis herpetiformis, exfoliative erythroderma, mycosis fungoides, pemphigus, and severe erythema multiforme (Stevens-Johnson syndrome).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -10987,6 +11057,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Diazepam tablets are indicated for the management of anxiety disorders or for the short-term relief of the symptoms of anxiety. Anxiety or tension associated with the stress of everyday life usually does not require treatment with an anxiolytic.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -11154,6 +11225,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses for the temporary relief of arthritis pain ONLY in the following areas: hand, wrist, elbow (upper body areas) foot, ankle, knee (lower body areas) this product may take up to 7 days to work for arthritis pain; it is not for immediate relief. If no pain relief in 7 days, stop use.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -11298,6 +11370,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Dicyclomine hydrochloride capsules, USP are indicated for the treatment of patients with functional bowel/irritable bowel syndrome.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -11461,6 +11534,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Digoxin is a cardiac glycoside indicated for: Treatment of mild to moderate heart failure in adults. ( 1.1 ) Increasing myocardial contractility in pediatric patients with heart failure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -11634,6 +11708,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Diltiazem hydrochloride extended-release capsules are indicated for the treatment of hypertension. It may be used alone or in combination with other antihypertensive medications.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -11780,6 +11855,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses temporarily relieves these symptoms due to hay fever or other respiratory allergies: ■ sneezing ■ itching of the nose or throat ■ runny nose ■ itchy watery eyes ■temporarily relieves these symptoms due to the common cold: ■ sneezing ■ runny nose",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -11924,6 +12000,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "TIVICAY and TIVICAY PD are indicated in combination with other antiretroviral agents for the treatment of HIV‑1 infection in adults (treatment-naïve or -experienced) and in pediatric patients (treatment-naïve or -experienced but integrase strand transfer inhibitor [INSTI]-naïve) aged at least 4 weeks and weighing at least 3 kg [see Microbiology ( 12.4 )]. TIVICAY is indicated in combination with rilpivirine as a complete regimen for the treatment of HIV-1 infection in adults to replace the current antiretroviral regimen in those who are virologically suppressed (HIV-1 RNA less than 50 copies/ mL) on a stable antiretroviral regimen for at least 6 months with no history of treatment failure or known substitutions associated with resistance to either antiretroviral agent.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -12051,6 +12128,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Donepezil hydrochloride tablet is an acetylcholinesterase inhibitor indicated for the treatment of dementia of the Alzheimer's type. Efficacy has been demonstrated in patients with mild, moderate, and severe Alzheimer's Disease ( 1 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -12188,6 +12266,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Dorzolamide Hydrochloride Ophthalmic Solution is indicated in the treatment of elevated intraocular pressure in patients with ocular hypertension or open-angle glaucoma. Dorzolamide Hydrochloride Ophthalmic Solution is a carbonic anhydrase inhibitor indicated for the treatment of elevated intraocular pressure in patients with ocular hypertension or open-angle glaucoma.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -12347,6 +12426,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Doxazosin tablets are an alpha 1 adrenergic antagonist indicated for: • Signs and symptoms of Benign Prostatic Hyperplasia (BPH) • Treatment of HypertensionTreatment of Hypertension 1.1 Benign Prostatic Hyperplasia (BPH) Doxazosin tablets are indicated for the treatment of the signs and symptoms of BPH. 1.2 Hypertension Doxazosin tablets are indicated for the treatment of hypertension, to lower blood pressure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -12509,6 +12589,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Doxepin tablets are indicated for the treatment of insomnia characterized by difficulty with sleep maintenance. The clinical trials performed in support of efficacy were up to 3 months in duration.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -12677,6 +12758,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "To reduce the development of drug-resistant bacteria and maintain effectiveness of doxycycline and other antibacterial drugs, doxycycline should be used only to treat or prevent infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be considered in selecting or modifying antibacterial therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -12818,6 +12900,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "TRULICITY ® is indicated: As an adjunct to diet and exercise to improve glycemic control in adults and pediatric patients 10 years of age and older with type 2 diabetes mellitus. To reduce the risk of major adverse cardiovascular events (cardiovascular death, non-fatal myocardial infarction, or non-fatal stroke) in adults with type 2 diabetes mellitus who have established cardiovascular disease or multiple cardiovascular risk factors.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -12936,6 +13019,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Duloxetine delayed-release capsules is indicated for the treatment of: Major depressive disorder in adults Generalized anxiety disorder in adults and pediatric patients 7 years of age and older Diabetic peripheral neuropathic pain in adults Fibromyalgia in adults and pediatric patients 13 years of age and older Chronic musculoskeletal pain in adults Duloxetine delayed-release capsules are a serotonin and norepinephrine reuptake inhibitor (SNRI) indicated for the treatment of the following conditions: Major depressive disorder (MDD) in adults ( 1 ) Generalized anxiety disorder (GAD) in adults and pediatric patients 7 years of age and older ( 1 ) Diabetic peripheral neuropathic pain (DPNP) in adults ( 1 ) Fibromyalgia (FM) in adults and pediatric patients 13 years of age and older ( 1 ) Chronic musculoskeletal pain in adults ( 1 )",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -13083,6 +13167,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Dutasteride is a 5 alpha-reductase inhibitor indicated for the treatment of symptomatic benign prostatic hyperplasia (BPH) in men with an enlarged prostate to: (1.1) improve symptoms, reduce the risk of acute urinary retention, and reduce the risk of the need for BPH-related surgery. Dutasteride in combination with the alpha-adrenergic antagonist, tamsulosin, is indicated for the treatment of symptomatic BPH in men with an enlarged prostate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -13217,6 +13302,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "SAVAYSA is a factor Xa inhibitor indicated: To reduce the risk of stroke and systemic embolism (SE) in patients with nonvalvular atrial fibrillation (NVAF) ( 1.1 ) Limitation of Use for NVAF SAVAYSA should not be used in patients with creatinine clearance (CrCL) > 95 mL/min because of increased risk of ischemic stroke compared to warfarin at the highest dose studied (60 mg) ( 1.1 ) SAVAYSA is indicated for the treatment of deep vein thrombosis (DVT) and pulmonary embolism (PE) following 5 to 10 days of initial therapy with a parenteral anticoagulant ( 1.2 ) 1.1 Reduction in the Risk of Stroke and Systemic Embolism in Nonvalvular Atrial Fibrillation SAVAYSA is indicated to reduce the risk of stroke and systemic embolism (SE) in patients with nonvalvular atrial fibrillation (NVAF). Limitation of Use for NVAF SAVAYSA should not be used in patients with CrCL > 95 mL/min because of an increased risk of ischemic stroke compared to warfarin [see Dosage and Administration (2.1) , Warnings and Precautions (5.1) and Clinical Studies (14.1) ] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -13324,6 +13410,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "JARDIANCE is indicated: to reduce the risk of cardiovascular death and hospitalization for heart failure in adults with heart failure. to reduce the risk of cardiovascular death in adults with type 2 diabetes mellitus and established cardiovascular disease.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -13488,6 +13575,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hypertension Enalapril maleate is indicated for the treatment of hypertension. Enalapril maleate is effective alone or in combination with other antihypertensive agents, especially thiazide-type diuretics.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -13646,6 +13734,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Enoxaparin sodium injection is a low molecular weight heparin (LMWH) indicated for: Prophylaxis of deep vein thrombosis (DVT) in abdominal surgery, hip replacement surgery, knee replacement surgery, or medical patients with severely restricted mobility during acute illness ( 1.1 ) Inpatient treatment of acute DVT with or without pulmonary embolism ( 1.2 ) Outpatient treatment of acute DVT without pulmonary embolism ( 1.2 ) Prophylaxis of ischemic complications of unstable angina and non−Q-wave myocardial infarction (MI) ( 1.3 ) Treatment of acute ST-segment elevation myocardial infarction (STEMI) managed medically or with subsequent percutaneous coronary intervention (PCI) ( 1.4 ) 1.1 Prophylaxis of Deep Vein Thrombosis Enoxaparin sodium injection is indicated for the prophylaxis of deep vein thrombosis (DVT), which may lead to pulmonary embolism (PE): in patients undergoing abdominal surgery who are at risk for thromboembolic complications [see Clinical Studies (14.1) ] in patients undergoing hip replacement surgery, during and following hospitalization in patients undergoing knee replacement surgery in medical patients who are at risk for thromboembolic complications due to sever…",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -13825,6 +13914,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Erythromycin Topical Solution USP, 2% is indicated for the topical treatment of acne vulgaris.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -13967,6 +14057,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Escitalopram is a selective serotonin reuptake inhibitor (SSRI) indicated for the: • treatment of major depressive disorder (MDD) in adults and pediatric patients 12 years of age and older ( 1 ) • treatment of generalized anxiety disorder (GAD) in adults ( 1 ) Escitalopram tablets are indicated for the treatment of: • major depressive disorder (MDD) in adults and pediatric patients 12 years of age and older. • generalized anxiety disorder (GAD) in adults.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -14115,6 +14206,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses • treats frequent heartburn (occurs 2 or more days a week) • not intended for immediate relief of heartburn; this drug may take 1 to 4 days for full effect",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -14270,6 +14362,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Estradiol Vaginal Cream, 0.01% is indicated in the treatment of moderate to severe symptoms of vulvar and vaginal atrophy due to menopause.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -14394,6 +14487,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Eszopiclone tablets are indicated for the treatment of insomnia. In controlled outpatient and sleep laboratory studies, eszopiclone tablets administered at bedtime decreased sleep latency and improved sleep maintenance.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -14546,6 +14640,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Zarontin is indicated for the control of absence (petit mal) epilepsy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -14674,6 +14769,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Carefully consider the potential benefits and risks of etodolac tablets and other treatment options before deciding to use etodolac tablets. Use the lowest effective dose for the shortest duration consistent with individual patient treatment goals (see WARNINGS ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -14819,6 +14915,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Exemestane tablets are an aromatase inhibitor indicated for: adjuvant treatment of postmenopausal women with estrogen-receptor positive early breast cancer who have received two to three years of tamoxifen and are switched to exemestane tablets for completion of a total of five consecutive years of adjuvant hormonal therapy ( 14.1 ). treatment of advanced breast cancer in postmenopausal women whose disease has progressed following tamoxifen therapy ( 14.2 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -14951,6 +15048,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ezetimibe tablets are indicated: • In combination with a statin, or alone when additional low-density lipoprotein cholesterol (LDL-C) lowering therapy is not possible, as an adjunct to diet to reduce elevated LDL-C in adults with primary hyperlipidemia, including heterozygous familial hypercholesterolemia (HeFH). • In combination with a statin as an adjunct to diet to reduce elevated LDL-C in pediatric patients 10 years of age and older with HeFH.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -15100,6 +15198,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Famotidine tablets are indicated in adult and pediatric patients 40 kg and greater for the treatment of: • active duodenal ulcer (DU). • active gastric ulcer (GU).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -15237,6 +15336,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Febuxostat is a xanthine oxidase (XO) inhibitor indicated for the chronic management of hyperuricemia in adult patients with gout who have an inadequate response to a maximally titrated dose of allopurinol, who are intolerant to allopurinol, or for whom treatment with allopurinol is not advisable. Limitations of Use : Febuxostat tablets are not recommended for the treatment of asymptomatic hyperuricemia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -15387,6 +15487,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Felodipine extended-release tablets, USP are indicated for the treatment of hypertension, to lower blood pressure. Lowering blood pressure lowers the risk of fatal and non-fatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -15522,6 +15623,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Fenofibrate tablet USP is a peroxisome proliferator-activated receptor (PPAR) alpha agonist indicated as an adjunct to diet: To reduce elevated LDL-C, Total-C, TG and Apo B, and to increase HDL-C in adult patients with primary hypercholesterolemia or mixed dyslipidemia ( 1.1 ). For treatment of adult patients with severe hypertriglyceridemia ( 1.2 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -15675,6 +15777,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Fentanyl Citrate Injection is indicated for: • analgesic action of short duration during the anesthetic periods, premedication, induction and maintenance, and in the immediate postoperative period (recovery room) as the need arises. • use as a narcotic analgesic supplement in general or regional anesthesia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -15811,6 +15914,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses: See symptoms on front panel.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -15890,6 +15994,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses reduces hives and relieves itching due to hives (urticaria). This product will not prevent hives or an allergic skin reaction from occurring.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -16024,6 +16129,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Finasteride tablets USP are indicated for the treatment of male pattern hair loss (androgenetic alopecia) in MEN ONLY. Efficacy in bitemporal recession has not been established.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -16164,6 +16270,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "In patients without structural heart disease, flecainide acetate tablets, USP are indicated for the prevention of — paroxysmal supraventricular tachycardias (PSVT), including atrioventricular nodal reentrant tachycardia, atrioventricular reentrant tachycardia and other supraventricular tachycardias of unspecified mechanism associated with disabling symptoms — paroxysmal atrial fibrillation/flutter (PAF) associated with disabling symptoms Flecainide acetate tablets, USP are also indicated for the prevention of — documented ventricular arrhythmias, such as sustained ventricular tachycardia ( sustained VT), that in the judgment of the physician are life-threatening. Use of flecainide acetate tablets, USP for the treatment of sustained VT, like other antiarrhythmics, should be initiated in the hospital.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -16327,6 +16434,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Fluconazole tablets are indicated for the treatment of: Vaginal candidiasis (vaginal yeast infections due to Candida ). Oropharyngeal and esophageal candidiasis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -16471,6 +16579,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Fluoxetine is indicated for the treatment of: Acute and maintenance treatment of Major Depressive Disorder [see Clinical Studies (14.1) ] . Acute and maintenance treatment of obsessions and compulsions in patients with Obsessive Compulsive Disorder (OCD) [see Clinical Studies (14.2) ] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -16671,6 +16780,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses Temporarily relieves these symptoms of hay fever or other upper respiratory allergies: nasal congestion itchy, watery eyes itchy nose runny nose sneezing",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -16799,6 +16909,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Therapy with lipid-altering agents should be only one component of multiple risk factor intervention in individuals at significantly increased risk for atherosclerotic vascular disease due to hypercholesterolemia. Drug therapy is indicated as an adjunct to diet when the response to a diet restricted in saturated fat and cholesterol and other non-pharmacologic measures alone has been inadequate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -16923,6 +17034,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Fluvoxamine maleate extended-release capsules is a selective serotonin reuptake inhibitor (SSRI) indicated for the treatment of obsessive compulsive disorder (OCD) ( 1 ). Efficacy was demonstrated in: One 12-week study fluvoxamine maleate extended-release capsules in adults ( 14.1 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -17071,6 +17183,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Folic acid is effective in the treatment of megaloblastic anemias due to a deficiency of folic acid (as may be seen in tropical or nontropical sprue) and in anemias of nutritional origin, pregnancy, infancy, or childhood.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -17217,6 +17330,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Formoterol fumarate inhalation solution is a long-acting beta 2 -adrenergic agonist (beta 2 -agonist) indicated for: Long-term, twice daily (morning and evening) administration in the maintenance treatment of bronchoconstriction in patients with chronic obstructive pulmonary disease (COPD), including chronic bronchitis and emphysema. ( 1.1 ) Important limitations of use: Formoterol fumarate inhalation solution is not indicated to treat acute deteriorations of chronic obstructive pulmonary disease.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -17388,6 +17502,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Fosinopril sodium tablets are indicated for the treatment of hypertension. They may be used alone or in combination with thiazide diuretics.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -17558,6 +17673,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Edema Furosemide tablets are indicated in adults and pediatric patients for the treatment of edema associated with congestive heart failure, cirrhosis of the liver, and renal disease, including the nephrotic syndrome. Furosemide tablets are particularly useful when an agent with greater diuretic potential is desired.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -17700,6 +17816,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Gabapentin Capsules, USP are indicated for: Management of postherpetic neuralgia in adults Adjunctive therapy in the treatment of partial onset seizures, with and without secondary generalization, in adults and pediatric patients 3 years and older with epilepsy Gabapentin Capsules, USP are indicated for Postherpetic neuralgia in adults (1) Adjunctive therapy in the treatment of partial onset seizures, with and without secondary generalization, in adults and pediatric patients 3 years and older with epilepsy (1)",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -17849,6 +17966,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Galantamine tablets are indicated for the treatment of mild to moderate dementia of the Alzheimer’s type.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -17970,6 +18088,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Gemfibrozil Tablets are indicated as adjunctive therapy to diet for: 1. Treatment of adult patients with very high elevations of serum triglyceride levels (Types IV and V hyperlipidemia) who present a risk of pancreatitis and who do not respond adequately to a determined dietary effort to control them.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -18116,6 +18235,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Glimepiride tablets are indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus [see Clinical Studies (14.1) ]. Limitations of Use Glimepiride tablets should not be used for the treatment of type 1 diabetes mellitus or diabetic ketoacidosis, as it would not be effective in these settings.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -18267,6 +18387,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Glipizide Tablets USP are indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -18430,6 +18551,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Glyburide tablets, USP is indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -18577,6 +18699,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Granisetron is indicated for the prevention of: Nausea and vomiting associated with initial and repeat courses of emetogenic cancer therapy, including high-dose cisplatin. Nausea and vomiting associated with radiation, including total body irradiation and fractionated abdominal radiation.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -18732,6 +18855,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Haloperidol tablets are indicated for use in the management of manifestations of psychotic disorders. Haloperidol tablets are indicated for the control of tics and vocal utterances of Tourette's Disorder in children and adults.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -18930,6 +19054,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hydrochlorothiazide tablets are indicated as adjunctive therapy in edema associated with congestive heart failure, hepatic cirrhosis, and corticosteroid and estrogen therapy. Hydrochlorothiazide has also been found useful in edema due to various forms of renal dysfunction such as nephrotic syndrome, acute glomerulonephritis, and chronic renal failure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -19100,6 +19225,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hydrocodone Bitartrate and Acetaminophen Tablets, USP are indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatments are inadequate. Limitations of Use Because of the risks of addiction, abuse, and misuse with opioids, which can occur at any dosage or duration [see WARNINGS ] , reserve hydrocodone bitartrate and acetaminophen tablets for use in patients for whom alternative treatment options (e.g., non-opioid analgesics or opioid combination products): Have not been tolerated or are not expected to be tolerated, Have not provided adequate analgesia or are not expected to provide adequate analgesia Hydrocodone bitartrate and acetaminophen tablets should not be used for an extended period of time unless the pain remains severe enough to require an opioid analgesic and for which alternative treatment options continue to be inadequate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -19365,6 +19491,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses • temporarily relieves itching associated with minor skin irritations, inflammation, and rashes due to: • eczema • psoriasis • poison ivy, oak, sumac • insect bites • detergents • jewelry • cosmetics • soaps • seborrheic dermatitis • temporarily relieves external anal and genital itching • other uses of this product should only be under the advice and supervision of a doctor",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -19518,6 +19645,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hydromorphone hydrochloride oral solution and hydromorphone hydrochloride tablets are indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatments are inadequate. Hydromorphone hydrochloride oral solution and hydromorphone hydrochloride tablets contain hydromorphone, an opioid agonist, and are indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatments are inadequate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -19677,6 +19805,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hydroxychloroquine sulfate tablets are an antimalarial and antirheumatic indicated for the: Treatment of uncomplicated malaria due to Plasmodium falciparum, Plasmodium malariae, Plasmodium ovale, and Plasmodium vivax in adult and pediatric patients. ( 1.1 ) Prophylaxis of malaria in geographic areas where chloroquine resistance is not reported in adult and pediatric patients.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -19821,6 +19950,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "For symptomatic relief of anxiety and tension associated with psychoneurosis and as an adjunct in organic disease states in which anxiety is manifested. Useful in the management of pruritus due to allergic conditions such as chronic urticaria and atopic and contact dermatoses and in histamine-mediated pruritus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -19940,6 +20070,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ibandronate sodium tablet is a bisphosphonate indicated for the treatment and prevention of postmenopausal osteoporosis. ( 1.1 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -20122,6 +20253,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses temporarily relieves minor aches and pains due to: headache toothache backache menstrual cramps the common cold muscular aches minor pain of arthritis temporarily reduces fever",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -20288,6 +20420,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Indapamide tablets are indicated for the treatment of hypertension, alone or in combination with other antihypertensive drugs. Indapamide tablets are also indicated for the treatment of salt and fluid retention associated with congestive heart failure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -20420,6 +20553,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Indomethacin capsules are indicated for: Moderate to severe rheumatoid arthritis including acute flares of chronic disease Moderate to severe ankylosing spondylitis Moderate to severe osteoarthritis Acute painful shoulder (bursitis and/or tendinitis) Acute gouty arthritis Indomethacin capsules are nonsteroidal anti-inflammatory drug indicated for: Moderate to severe rheumatoid arthritis including acute flares of chronic disease Moderate to severe ankylosing spondylitis Moderate to severe osteoarthritis Acute painful shoulder (bursitis and/or tendinitis) Acute gouty arthritis ( 1 )",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -20596,6 +20730,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "BASAGLAR ® is indicated to improve glycemic control in adults and pediatric patients with type 1 diabetes mellitus and in adults with type 2 diabetes mellitus. BASAGLAR ® is a long-acting human insulin analog indicated to improve glycemic control in adults and pediatric patients with type 1 diabetes mellitus and in adults with type 2 diabetes mellitus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -20767,6 +20902,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "ADMELOG is indicated to improve glycemic control in adult and pediatric patients with diabetes mellitus. ADMELOG is a rapid-acting human insulin analog indicated to improve glycemic control in adult and pediatric patients with diabetes mellitus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -21050,6 +21186,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Irbesartan tablets are an angiotensin II receptor blocker (ARB) indicated for: Treatment of hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -21226,6 +21363,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Isosorbide Mononitrate Tablets USP are indicated for the prevention and treatment of angina pectoris due to coronary artery disease. The onset of action of oral isosorbide mononitrate is not sufficiently rapid for this product to be useful in aborting an acute anginal episode.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -21380,6 +21518,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Severe Recalcitrant Nodular Acne Isotretinoin capsules are indicated for the treatment of severe recalcitrant nodular acne. Nodules are inflammatory lesions with a diameter of 5 mm or greater.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -21551,6 +21690,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Itraconazole capsules are indicated for the treatment of the following fungal infections in immunocompromised and non-immunocompromised patients: 1. Blastomycosis, pulmonary and extrapulmonary 2.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -21743,6 +21883,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Ketoconazole shampoo, 2% is indicated for the treatment of tinea (pityriasis) versicolor caused by or presumed to be caused by Pityrosporum orbiculare (also known as Malassezia furfur or M. orbiculare ) .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -21888,6 +22029,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Carefully consider the potential benefits and risks of ketoprofen extended-release capsules before deciding to use ketoprofen extended-release capsules. Use the lowest effective dose for the shortest duration consistent with individual patient treatment goals (see WARNINGS ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -22006,6 +22148,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Carefully consider the potential benefits and risks of ketorolac tromethamine and other treatment options before deciding to use ketorolac. Use the lowest effective dose for the shortest duration consistent with individual patient treatment goals (see WARNINGS ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -22175,6 +22318,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Labetalol hydrochloride tablets USP are indicated in the management of hypertension. Labetalol hydrochloride tablets USP may be used alone or in combination with other antihypertensive agents, especially thiazide and loop diuretics.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -22301,6 +22445,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Lacosamide injection is indicated for: Treatment of partial-onset seizures in patients 4 years of age and older (1.1) Adjunctive therapy in the treatment of primary generalized tonic-clonic seizures in patients 4 years of age and older (1.2) 1.1 Partial-Onset Seizures Lacosamide injection is indicated for the treatment of partial-onset seizures in patients 4 years of age and older. Pediatric use information is approved for UCB, Inc.'s VIMPAT® (lacosamide) injection.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -22465,6 +22610,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Lamotrigine orally disintegrating tablets are indicated for: Epilepsy—adjunctive therapy in patients aged 2 years and older : partial-onset seizures. primary generalized tonic-clonic (PGTC) seizures.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -22609,6 +22755,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Lansoprazole delayed-release capsules are a proton pump inhibitor (PPI) indicated for the: Treatment of active duodenal ulcer in adults ( 1.1 ) Eradication of H. pylori to reduce the risk of duodenal ulcer recurrence in adults ( 1.2 ) Maintenance of healed duodenal ulcers in adults ( 1.3 ) Treatment of active benign gastric ulcer in adults ( 1.4 ) Healing of nonsteroidal anti-inflammatory drugs (NSAID)-associated gastric ulcer in adults ( 1.5 ) Risk reduction of NSAID-associated gastric ulcer in adults ( 1.6 ) Treatment of symptomatic gastroesophageal reflux disease (GERD) in adults and pediatric patients 1 year of age and older.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -22750,6 +22897,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Latanoprost ophthalmic solution is indicated for the reduction of elevated intraocular pressure (IOP) in patients with open-angle glaucoma or ocular hypertension. Latanoprost ophthalmic solution is a prostaglandin F 2α analogue indicated for the reduction of elevated intraocular pressure in patients with open-angle glaucoma or ocular hypertension.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -22887,6 +23035,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Leflunomide Tablets, USP are indicated for the treatment of adults with active rheumatoid arthritis (RA). Leflunomide tablets are a pyrimidine synthesis inhibitor indicated for the treatment of adults with active rheumatoid arthritis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -23033,6 +23182,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Letrozole tablet is an aromatase inhibitor indicated for: Adjuvant treatment of postmenopausal women with hormone receptor positive early breast cancer ( 1.1 ) Extended adjuvant treatment of postmenopausal women with early breast cancer who have received prior standard adjuvant tamoxifen therapy ( 1.2 ) First and second-line treatment of postmenopausal women with hormone receptor positive or unknown advanced breast cancer ( 1.3 ) 1.1 Adjuvant Treatment of Early Breast Cancer Letrozole tablets are indicated for the adjuvant treatment of postmenopausal women with hormone receptor positive early breast cancer. 1.2 Extended Adjuvant Treatment of Early Breast Cancer Letrozole tablets are indicated for the extended adjuvant treatment of early breast cancer in postmenopausal women, who have received 5 years of adjuvant tamoxifen therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -23171,6 +23321,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Levetiracetam is indicated for the treatment of partial-onset seizures in patients 1 month of age and older (1.1) Levetiracetam is indicated for adjunctive therapy for the treatment of: Myoclonic seizures in patients 12 years of age and older with juvenile myoclonic epilepsy (1.2) Primary generalized tonic-clonic seizures in patients 6 years of age and older with idiopathic generalized epilepsy (1.3) 1.1 Partial-Onset Seizures Levetiracetam tablets are indicated for the treatment of partial-onset seizures in patients 1 month of age and older. 1.2 Myoclonic Seizures in Patients with Juvenile Myoclonic Epilepsy Levetiracetam tablets are indicated as adjunctive therapy for the treatment of myoclonic seizures in patients 12 years of age and older with juvenile myoclonic epilepsy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -23308,6 +23459,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses temporarily relieves these symptoms due to hay fever or other respiratory allergies: runny nose sneezing itchy, watery eyes itching of the nose or throat",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -23447,6 +23599,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "INBRIJA is indicated for the intermittent treatment of OFF episodes in patients with Parkinson's disease treated with carbidopa/levodopa.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -23615,6 +23768,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Levofloxacin is a fluoroquinolone antibacterial indicated in adults (18 years of age and older) with infections caused by designated, susceptible bacteria and in pediatric patients where indicated (1, 12.4). • Pneumonia: Nosocomial (1.1) and Community Acquired (1.2, 1.3) • Skin and Skin Structure Infections (SSSI): Complicated (1.4) and Uncomplicated (1.5) • Chronic bacterial prostatitis (1.6) • Inhalational Anthrax, Post-Exposure in adult and pediatric patients (1.7) • Plague in adult and pediatric patients (1.8) • Urinary Tract Infections (UTI): Complicated (1.9, 1.10) and Uncomplicated (1.12) • Acute Pyelonephritis (1.11) • Acute Bacterial Exacerbation of Chronic Bronchitis (1.13) • Acute Bacterial Sinusitis (1.14) Usage To reduce the development of drug-resistant bacteria and maintain the effectiveness of levofloxacin and other antibacterial drugs, levofloxacin should be used only to treat or prevent infections that are proven or strongly suspected to be caused by bacteria (1.15).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -23770,6 +23924,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hypothyroidism Levothyroxine sodium tablets are indicated in adult and pediatric patients, including neonates, as a replacement therapy in primary (thyroidal), secondary (pituitary), and tertiary (hypothalamic) congenital or acquired hypothyroidism. Pituitary Thyrotropin (Thyroid‑Stimulating Hormone, TSH) Suppression Levothyroxine sodium tablets are indicated in adult and pediatric patients, including neonates, as an adjunct to surgery and radioiodine therapy in the management of thyrotropin-dependent well-differentiated thyroid cancer.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -23925,6 +24080,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "LINZESS is indicated for the treatment of: • irritable bowel syndrome with constipation (IBS-C) in adults and pediatric patients 7 years of age and older • chronic idiopathic constipation (CIC) in adults • functional constipation (FC) in pediatric patients 6 years of age and older LINZESS is a guanylate cyclase-C agonist indicated for treatment of: Irritable bowel syndrome with constipation (IBS-C) in adults and pediatric patients 7 years of age and older. ( 1 ) Chronic idiopathic constipation (CIC) in adults.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -24032,6 +24188,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "TRADJENTA is indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus . TRADJENTA is a dipeptidyl peptidase-4 (DPP-4) inhibitor indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus ( 1 ) Limitations of Use Not recommended in patients with type 1 diabetes mellitus as it would not be effective ( 1 ) Has not been studied in patients with a history of pancreatitis ( 1 ) Limitations of Use TRADJENTA is not recommended in patients with type 1 diabetes mellitus as it would not be effective.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -24164,6 +24321,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Linezolid for Oral Suspension is an oxazolidinone-class antibacterial indicated in adults and children for the treatment of the following infections caused by susceptible Gram-positive bacteria: Nosocomial pneumonia ( 1.1 ); Community-acquired pneumonia ( 1. 2); Complicated skin and skin structure infections, including diabetic foot infections, without concomitant osteomyelitis ( 1.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -24309,6 +24467,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Liothyronine sodium tablets are an L-triiodothyronine (T3) indicated for: Hypothyroidism: As replacement in primary (thyroidal), secondary (pituitary), and tertiary (hypothalamic) congenital or acquired hypothyroidism ( 1.1 ) Pituitary Thyrotropin (Thyroid-Stimulating Hormone, TSH) Suppression: As an adjunct to surgery and radioiodine therapy in the management of well-differentiated thyroid cancer ( 1.2 ) Thyroid Suppression Test: As a diagnostic agent in suppression tests to differentiate suspected mild hyperthyroidism or thyroid gland autonomy ( 1.3 ) Limitations of Use : - Not indicated for suppression of benign thyroid nodules and nontoxic diffuse goiter in iodine-sufficient patients. ( 1 ) - Not indicated for treatment of hypothyroidism during the recovery phase of subacute thyroiditis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -24449,6 +24608,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Liraglutide injection is indicated: as an adjunct to diet and exercise to improve glycemic control in adults and pediatric patients aged 10 years and older with type 2 diabetes mellitus Limitations of Use: Liraglutide injection contains liraglutide. Coadministration with other liraglutide-containing products is not recommended.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -24588,6 +24748,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Lisdexamfetamine dimesylate capsules are indicated for the treatment of: Attention Deficit Hyperactivity Disorder (ADHD) in adults and pediatric patients 6 years and older [see Clinical Studies (14.1) ] Moderate to severe binge eating disorder (BED) in adults [see Clinical Studies (14.2) ] . Limitations of Use: Pediatric patients with ADHD younger than 6 years of age experienced more long-term weight loss than patients 6 years and older [see Use in Specific Populations (8.4) ] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -24761,6 +24922,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Lisinopril tablet USP is an angiotensin converting enzyme (ACE) inhibitor indicated for: Treatment of hypertension in adults and pediatric patients 6 years of age and older ( 1.1 ) Adjunct therapy for heart failure ( 1.2 ) Treatment of Acute Myocardial Infarction ( 1.3 ) 1.1 Hypertension Lisinopril tablet USP is indicated for the treatment of hypertension in adult patients and pediatric patients 6 years of age and older to lower blood pressure. Lowering blood pressure lowers the risk of fatal and non-fatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -24901,6 +25063,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses: Use the leaflet enclosed for detail.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -25042,6 +25205,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Use controls symptoms of diarrhea, including Travelers’ Diarrhea",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -25172,6 +25336,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses temporarily relieves these symptoms due to hay fever or other upper respiratory allergies: • runny nose • itchy, watery eyes • sneezing • itching of the nose or throat",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -25299,6 +25464,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Lorazepam tablets are indicated for the management of anxiety disorders or for the short-term relief of the symptoms of anxiety or anxiety associated with depressive symptoms. Anxiety or tension associated with the stress of everyday life usually does not require treatment with an anxiolytic.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -25472,6 +25638,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Losartan potassium tablets are an angiotensin II receptor blocker (ARB) indicated for: • Treatment of hypertension, to lower blood pressure in adults and children greater than 6 years old. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -25626,6 +25793,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Therapy with Lovastatin Tablets USP should be a component of multiple risk factor intervention in those individuals with dyslipidemia at risk for atherosclerotic vascular disease. Lovastatin Tablets USP should be used in addition to a diet restricted in saturated fat and cholesterol as part of a treatment strategy to lower total-C and LDL-C to target levels when the response to diet and other nonpharmacological measures alone has been inadequate to reduce risk.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -25736,6 +25904,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Lurasidone hydrochloride tablets are indicated for: • Treatment of adult and adolescent patients (13 to 17 years) with schizophrenia [see Clinical Studies ( 14.1 )] . • Monotherapy treatment of adult and pediatric patients (10 to 17 years) with major depressive episode associated with bipolar I disorder (bipolar depression) [see Clinical Studies ( 14.2 )].",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -25900,6 +26069,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Uses prevents and treats nausea, vomiting or dizziness associated with motion sickness",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -26031,6 +26201,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Meloxicam tablet USP is a non-steroidal anti-inflammatory drug indicated for: Osteoarthritis (OA) ( 1.1 ) Rheumatoid Arthritis (RA) ( 1.2 ) Juvenile Rheumatoid Arthritis (JRA) in patients who weigh ≥60 kg ( 1.3 ) 1.1 Osteoarthritis (OA Meloxicam tablets USP are indicated for relief of the signs and symptoms of osteoarthritis [see Clinical Studies ( 14.1 )] . 1.2 Rheumatoid Arthritis (RA) Meloxicam tablets USP are indicated for relief of the signs and symptoms of rheumatoid arthritis [see Clinical Studies ( 14.1 )] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -26168,6 +26339,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Memantine hydrochloride tablets are indicated for the treatment of moderate to severe dementia of the Alzheimer’s type. Memantine hydrochloride tablets are an N-methyl-D-aspartate (NMDA) receptor antagonist indicated for the treatment of moderate to severe dementia of the Alzheimer’s type.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -26338,6 +26510,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Mesalamine delayed-release tablets are indicated for the treatment of moderately active ulcerative colitis in adults. Limitations of Use : Safety and effectiveness of mesalamine delayed-release tablets beyond 6 weeks have not been established.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -26479,6 +26652,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Metaxalone is indicated as an adjunct to rest, physical therapy, and other measures for the relief of discomforts associated with acute, painful musculoskeletal conditions. The mode of action of this drug has not been clearly identified, but may be related to its sedative properties.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -26625,6 +26799,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Metformin hydrochloride tablets are indicated as an adjunct to diet and exercise to improve glycemic control in adults and pediatric patients 10 years of age and older with type 2 diabetes mellitus. Metformin hydrochloride tablets are biguanide indicated as an adjunct to diet and exercise to improve glycemic control in adults and pediatric patients 10 years of age and older with type 2 diabetes mellitus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -26785,6 +26960,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "1. Methadone Hydrochloride Injection is indicated for the management of severe and persistent pain that requires an opioid analgesic and that cannot be adequately treated with alternative options, including immediate-release opioids.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -26964,6 +27140,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "AND USAGE",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -27113,6 +27290,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Methocarbamol tablets, USP are indicated as an adjunct to rest, physical therapy, and other measures for the relief of discomfort associated with acute, painful musculoskeletal conditions. The mode of action of methocarbamol has not been clearly identified, but may be related to its sedative properties.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -27287,6 +27465,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Methotrexate tablets are a diydrofolate reductase inhibitor indicated for the: • Treatment of adults and pediatric patients with acute lymphoblastic leukemia (ALL) as part of a combination chemotherapy maintenance regimen (1.1) • Treatment of adults with mycosis fungoides (1.1) • Treatment of adults with relapsed or refractory non-Hodgkin lymphoma as part of a metronomic combination regimen (1.1) • Treatment of adults with rheumatoid arthritis (1.2) • Treatment of pediatric patients with polyarticular juvenile idiopathic arthritis (pJIA) (1.3) • Treatment of adults with severe psoriasis (1.4) 1.1 Neoplastic Diseases Methotrexate tablets are indicated for the: • treatment of adults and pediatric patients with acute lymphoblastic leukemia (ALL) as part of a combination chemotherapy maintenance regimen • treatment of adults with mycosis fungoides (cutaneous T-cell lymphoma) as a single agent or as part of a combination chemotherapy regimen • treatment of adults with relapsed or refractory non-Hodgkin lymphomas as part of a metronomic combination chemotherapy regimen 1.2 Rheumatoid Arthritis Methotrexate tablets are indicated for the treatment of adults with rheumatoid arthritis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -27468,6 +27647,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Methylphenidate hydrochloride extended-release capsules are indicated for the treatment of Attention Deficit Hyperactivity Disorder (ADHD), in pediatric patients 6 to 12 years of age [see Clinical Studies ( 14 )] . Methylphenidate hydrochloride extended-release capsules are a central nervous system (CNS) stimulant indicated for the treatment of Attention Deficit Hyperactivity Disorder (ADHD) in pediatric patients 6 to 12 years of age.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -27697,6 +27877,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Methylprednisolone tablets are indicated in the following conditions: 1. Endocrine Disorders Primary or secondary adrenocortical insufficiency (hydrocortisone or cortisone is the first choice; synthetic analogs may be used in conjunction with mineralocorticoids where applicable; in infancy mineralocorticoid supplementation is of particular importance).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -27841,6 +28022,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "The use of Metoclopramide Oral Solution is recommended for adults only. Therapy should not exceed 12 weeks in duration.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -28009,6 +28191,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Metoprolol tartrate tablets are a beta-adrenergic blocker indicated for the treatment of: Hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and non-fatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -28184,6 +28367,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Symptomatic Trichomoniasis. Metronidazole tablets are indicated for the treatment of T.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -28354,6 +28538,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Minocycline hydrochloride capsules USP are indicated in the treatment of the following infections due to susceptible strains of the designated microorganisms: Rocky Mountain spotted fever, typhus fever and the typhus group, Q fever, rickettsialpox and tick fevers caused by rickettsiae. Respiratory tract infections caused by Mycoplasma pneumoniae .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -28510,6 +28695,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Mirabegron extended-release tablets are beta-3 adrenergic agonist indicated for the treatment of: Overactive bladder (OAB) in adult patients with symptoms of urge urinary incontinence, urgency, and urinary frequency. ( 1.1 ) 1.1 Adult Overactive Bladder (OAB) Mirabegron Extended-Release Tablets Monotherapy Mirabegron extended-release tablets are indicated for the treatment of OAB in adult patients with symptoms of urge urinary incontinence, urgency, and urinary frequency.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -28669,6 +28855,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Mirtazapine tablets are indicated for the treatment of major depressive disorder (MDD) in adults [see Clinical Studies (14) ]. Mirtazapine tablets are indicated for the treatment of major depressive disorder (MDD) in adults.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -28819,6 +29006,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Modafinil tablets are indicated to improve wakefulness in adult patients with excessive sleepiness associated with narcolepsy, obstructive sleep apnea (OSA), or shift work disorder (SWD). Limitations of Use In OSA, modafinil tablets are indicated to treat excessive sleepiness and not as treatment for the underlying obstruction.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -29017,6 +29205,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Mometasone furoate cream, 0.1% is a corticosteroid indicated for the relief of the inflammatory and pruritic manifestations of corticosteroid-responsive dermatoses in patients 2 years of age or older. Mometasone furoate cream, 0.1% is a corticosteroid indicated for the relief of the inflammatory and pruritic manifestations of corticosteroid-responsive dermatoses in patients ≥ 2 years of age.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -29163,6 +29352,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Montelukast sodium chewable tablets are a leukotriene receptor antagonist indicated for: • Prophylaxis and chronic treatment of asthma in patients 2 years of age and older ( 1.1 ). • Acute prevention of exercise-induced bronchoconstriction (EIB) in patients 6 years of age and older ( 1.2 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -29349,6 +29539,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Morphine sulfate tablets are indicated for the management of: adult and pediatric patients weighing at least 50 kg and above with acute pain severe enough to require an opioid analgesic and for which alternative treatments are inadequate. adults with chronic pain severe enough to require an opioid analgesic and for which alternative treatments are inadequate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -29514,6 +29705,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Moxifloxacin tablets are a fluoroquinolone antibacterial indicated for treating infections in adults 18 years of age and older caused by designated susceptible bacteria, in the conditions listed below: Community Acquired Pneumonia ( 1.1 ) Skin and Skin Structure Infections: Uncomplicated ( 1.2 ) and Complicated ( 1.3 ) Complicated Intra-Abdominal Infections ( 1.4 ) Plague ( 1.5 ) Acute Bacterial Sinusitis ( 1.6 ) Acute Bacterial Exacerbation of Chronic Bronchitis ( 1.7 ) To reduce the development of drug-resistant bacteria and maintain the effectiveness of moxifloxacin tablets and other antibacterial drugs. Moxifloxacin tablets should be used only to treat or prevent infections that are proven or strongly suspected to be caused by susceptible bacteria.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -29673,6 +29865,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Mupirocin cream is indicated for the treatment of secondarily infected traumatic skin lesions (up to 10 cm in length or 100 cm 2 in area) due to susceptible isolates of Staphylococcus aureus (S. aureus) and Streptococcus pyogenes (S.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -29802,6 +29995,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Mycophenolate mofetil (MMF) is indicated for the prophylaxis of organ rejection, in adult and pediatric recipients 3 months of age and older of allogeneic kidney [see Clinical Studies (14.1) ] , heart [see Clinical Studies (14.2) ] or liver transplants [see Clinical Studies (14.3) ], in combination with other immunosuppressants.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -29962,6 +30156,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Carefully consider the potential benefits and risks of nabumetone tablets and other treatment options before deciding to use nabumetone tablets. Use the lowest effective dose for the shortest duration consistent with individual patient treatment goals (see WARNINGS ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -30116,6 +30311,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Angina Pectoris Nadolol tablets, USP are indicated for the long-term management of patients with angina pectoris. Hypertension Nadolol tablets, USP are indicated for the treatment of hypertension, to lower blood pressure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -30272,6 +30468,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Naloxone HCl Nasal Spray is indicated for the emergency treatment of known or suspected opioid overdose, as manifested by respiratory and/or central nervous system depression. Naloxone HCl Nasal Spray is intended for immediate administration as emergency therapy in settings where opioids may be present.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -30417,6 +30614,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Naltrexone hydrochloride tablets USP 50 mg is indicated in the treatment of alcohol dependence and for the blockade of the effects of exogenously administered opioids. Naltrexone hydrochloride tablets USP 50 mg has not been shown to provide any therapeutic benefit except as part of an appropriate plan of management for the addictions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -30576,6 +30774,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Naproxen tablets and naproxen sodium tablets are indicated for: the relief of the signs and symptoms of: • rheumatoid arthritis • osteoarthritis • ankylosing spondylitis • Polyarticular Juvenile Idiopathic Arthritis Naproxen tablets and naproxen sodium tablets are also indicated for: the relief of signs and symptoms of: • tendonitis • bursitis • acute gout the management of: • pain • primary dysmenorrhea Naproxen tablets and naproxen sodium tablets are non-steroidal anti-inflammatory drugs indicated for: the relief of the signs and symptoms of: • rheumatoid arthritis • osteoarthritis • ankylosing spondylitis • polyarticular juvenile idiopathic arthritis Naproxen tablets and naproxen sodium tablets are also indicated for: the relief of signs and symptoms of: • tendonitis • bursitis • acute gout the management of: • pain • primary dysmenorrhea",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -30715,6 +30914,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Nebivolol is a beta-adrenergic blocking agent indicated for the treatment of hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.( 1.1 ) 1.1 Hypertension Nebivolol tablets are indicated for the treatment of hypertension, to lower blood pressure [ see Clinical Studies ( 14.1 ) ].",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -30873,6 +31073,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Therapy with lipid-altering agents should be only one component of multiple risk factor intervention in individuals at significantly increased risk for atherosclerotic vascular disease due to hyperlipidemia. Niacin therapy is indicated as an adjunct to diet when the response to a diet restricted in saturated fat and cholesterol and other nonpharmacologic measures alone has been inadequate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -31053,6 +31254,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "I. Stable Angina Nicardipine hydrochloride capsules are indicated for the management of patients with chronic stable angina (effort-associated angina).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -31202,6 +31404,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE I. Vasospastic Angina Nifedipine extended-release tablets are indicated for the management of vasospastic angina confirmed by any of the following criteria: 1) classical pattern of angina at rest accompanied by ST segment elevation, 2) angina or coronary artery spasm provoked by ergonovine, or 3) angiographically demonstrated coronary artery spasm.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -31361,6 +31564,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Nitrofurantoin is indicated in adults and pediatric patients 1 month of age and older for the treatment of urinary tract infections due to susceptible strains of Escherichia coli , Enterococcus species, Staphylococcus aureus , Klebsiella species and Enterobacter species. Limitations of Use Nitrofurantoin is not indicated for the treatment of pyelonephritis or perinephric abscesses [see Warnings and Precautions (5.7)].",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -31518,6 +31722,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Nortriptyline hydrochloride capsules are indicated for the relief of symptoms of depression. Endogenous depressions are more likely to be alleviated than are other depressive states.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -31719,6 +31924,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Olanzapine is an atypical antipsychotic indicated: As oral formulation for the: Treatment of schizophrenia. ( 1.1 ) Adults: Efficacy was established in three clinical trials in patients with schizophrenia: two 6-week trials and one maintenance trial.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -31893,6 +32099,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Olmesartan medoxomil and hydrochlorothiazide is indicated for the treatment of hypertension, to lower blood pressure. Olmesartan medoxomil and hydrochlorothiazide is not indicated for the initial therapy of hypertension [see Dosage and Administration (2) ] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -32045,6 +32252,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Use(s) treats frequent heartburn (occurs 2 or more days a week) not intended for immediate relief of heartburn; this drug may take 1 to 4 days for full effect",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -32190,6 +32398,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ondansetron tablets are indicated for the prevention of nausea and vomiting associated with: highly emetogenic cancer chemotherapy, including cisplatin greater than or equal to 50 mg/m 2 . initial and repeat courses of moderately emetogenic cancer chemotherapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -32338,6 +32547,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Orphenadrine citrate extended-release tablets are indicated as an adjunct to rest, physical therapy, and other measures for the relief of discomfort associated with acute painful musculoskeletal conditions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -32458,6 +32668,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Oseltamivir phosphate for oral suspension is an influenza neuraminidase inhibitor (NAI) indicated for: Treatment of acute, uncomplicated influenza A and B in patients 2 weeks of age and older who have been symptomatic for no more than 48 hours. ( 1.1 ) Prophylaxis of influenza A and B in patients 1 year and older.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -32593,6 +32804,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Oxazepam capsules are indicated for the management of anxiety disorders or for the short-term relief of the symptoms of anxiety. Anxiety or tension associated with the stress of everyday life usually does not require treatment with an anxiolytic.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -32710,6 +32922,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Oxcarbazepine tablets are indicated for use as monotherapy or adjunctive therapy in the treatment of partial-onset seizures in adults and as monotherapy in the treatment of partial-onset seizures in pediatric patients aged 4 years and above, and as adjunctive therapy in pediatric patients aged 2 years and above with partial-onset seizures.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -32861,6 +33074,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Oxybutynin chloride extended-release tablets are a muscarinic antagonist indicated for the treatment of overactive bladder with symptoms of urge urinary incontinence, urgency, and frequency. Oxybutynin chloride extended-release tablets are also indicated for the treatment of pediatric patients aged 6 years and older with symptoms of detrusor overactivity associated with a neurological condition (e.g., spina bifida).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -33033,6 +33247,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Oxycodone hydrochloride tablets are indicated for the management of pain severe enough to require an opioid analgesic and for which alternative treatments are inadequate. Limitations of Use Because of the risks of addiction, abuse, misuse, overdose, and death, which can occur at any dosage or duration and persist over the course of therapy [see Warnings and Precautions (5.1)] , reserve opioid analgesics, including oxycodone hydrochloride tablets for use in patients for whom alternative treatment options are ineffective, not tolerated, or would be otherwise inadequate to provide sufficient management of pain.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -33189,6 +33404,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Oxymorphone hydrochloride tablets are indicated for the management of acute pain severe enough to require an opioid analgesic and for which alternative treatments are inadequate. Limitations of Use: Because of the risks of addiction, abuse, misuse, overdose, and death, which can occur at any dosage or duration [see Warnings and Precautions (5.1)] , and persist over the course of therapy, reserve opioid analgesics, including oxymorphone hydrochloride tablets for use in patients for whom alternative treatment options are ineffective, not tolerated, or would be otherwise inadequate to provide sufficient management of pain.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -33306,6 +33522,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Paliperidone extended-release tablets are an atypical antipsychotic agent indicated for Treatment of schizophrenia (1.1) Adults: Efficacy was established in three 6-week trials and one maintenance trial. (14.1) Adolescents (ages 12 to 17): Efficacy was established in one 6-week trial.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -33447,6 +33664,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Pantoprazole Sodium for Injection is indicated for treatment of: gastroesophageal reflux disease (GERD) and a history of erosive esophagitis (EE) for up to 10 days in adults. pathological hypersecretory conditions including Zollinger-Ellison (ZE) Syndrome in adults.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -33593,6 +33811,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Paroxetine tablets are indicated in adults for the treatment of: Major depressive disorder (MDD) Obsessive compulsive disorder (OCD) Panic disorder (PD) Social anxiety disorder (SAD) Generalized anxiety disorder (GAD) Posttraumatic stress disorder (PTSD) Paroxetine is a selective serotonin reuptake inhibitor (SSRI) indicated in adults for the treatment of ( 1 ): Major Depressive Disorder (MDD) Obsessive Compulsive Disorder (OCD) Panic Disorder (PD) Social Anxiety Disorder (SAD) Generalized Anxiety Disorder (GAD) Posttraumatic Stress Disorder (PTSD)",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -33726,6 +33945,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Sedative Anticonvulsant- For the treatment of generalized and partial seizures.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -33876,6 +34096,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Parenteral Phenytoin Sodium Injection is indicated for the treatment of generalized tonic-clonic status epilepticus, and prevention and treatment of seizures occurring during neurosurgery. Intravenous phenytoin can also be substituted, as short-term use, for oral phenytoin.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -34050,6 +34271,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Monotherapy and Combination Therapy Pioglitazone tablets are indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus in multiple clinical settings [see Clinical Studies (14) ] . Important Limitations of Use Pioglitazone tablets exert its antihyperglycemic effect only in the presence of endogenous insulin.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -34202,6 +34424,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Piroxicam capsules are indicated: • For relief of the signs and symptoms of osteoarthritis. • For relief of the signs and symptoms of rheumatoid arthritis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -34314,6 +34537,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Pitavastatin tablets are indicated as an adjunct to diet to reduce low-density lipoprotein cholesterol (LDL-C) in: Adult with primary hyperlipidemia. Adults with heterozygous familial hypercholesterolemia (HeFH).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -34450,6 +34674,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE PRAMIPEXOLE DIHYDROCHLORIDE tablets is a non-ergot dopamine agonist indicated for the treatment of • the signs and symptoms of idiopathic Parkinson's disease (PD) ( 1.1 ) 1.1 Parkinson's Disease Pramipexole dihydrochloride tablets are indicated for the treatment of the signs and symptoms of idiopathic Parkinson's disease.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -34592,6 +34817,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Prasugrel tablets are a P2Y 12 platelet inhibitor indicated for the reduction of thrombotic cardiovascular events (including stent thrombosis) in patients with acute coronary syndrome who are to be managed with percutaneous coronary intervention (PCI) as follows: Patients with unstable angina or non-ST-elevation myocardial infarction (NSTEMI) (1.1) . Patients with ST-elevation myocardial infarction (STEMI) when managed with either primary or delayed PCI (1.1) .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -34724,6 +34950,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Therapy with lipid-altering agents should be only one component of multiple risk factor intervention in individuals at significantly increased risk for atherosclerotic vascular disease due to hypercholesterolemia. Drug therapy is indicated as an adjunct to diet when the response to a diet restricted in saturated fat and cholesterol and other nonpharmacologic measures alone has been inadequate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -34877,6 +35104,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Prazosin hydrochloride capsules are indicated for the treatment of hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -35140,6 +35368,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "PRED FORTE ® is indicated for the treatment of steroid-responsive inflammation of the palpebral and bulbar conjunctiva, cornea, and anterior segment of the globe.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -35362,6 +35591,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Prednisone tablets are indicated in the following conditions: 1. Endocrine Disorders Primary or secondary adrenocortical insufficiency (hydrocortisone or cortisone is the first choice; synthetic analogs may be used in conjunction with mineralocorticoids where applicable; in infancy mineralocorticoid supplementation is of particular importance) Congenital adrenal hyperplasia Hypercalcemia associated with cancer Nonsuppurative thyroiditis 2.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -35482,6 +35712,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Pregabalin capsules are indicated for: Management of neuropathic pain associated with diabetic peripheral neuropathy Management of postherpetic neuralgia Adjunctive therapy for the treatment of partial-onset seizures in patients 1 month of age and older Management of fibromyalgia Management of neuropathic pain associated with spinal cord injury Pregabalin capsules are indicated for: Neuropathic pain associated with diabetic peripheral neuropathy (DPN) (1 ) Postherpetic neuralgia (PHN) (1) Adjunctive therapy for the treatment of partial-onset seizures in patients 1 month of age and older ( 1) Fibromyalgia ( 1) Neuropathic pain associated with spinal cord injury (1 )",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -35641,6 +35872,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "For control of severe nausea and vomiting. For the treatment of schizophrenia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -35819,6 +36051,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Promethazine HCl Suppositories are useful for: Perennial and seasonal allergic rhinitis. Vasomotor rhinitis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -35972,6 +36205,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Propafenone hydrochloride tablets are indicated to: prolong the time to recurrence of paroxysmal atrial fibrillation/flutter (PAF) associated with disabling symptoms in patients without structural heart disease. prolong the time to recurrence of paroxysmal supraventricular tachycardia (PSVT) associated with disabling symptoms in patients without structural heart disease.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -36154,6 +36388,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hypertension Propranolol hydrochloride tablets are indicated in the management of hypertension. It may be used alone or used in combination with other antihypertensive agents, particularly a thiazide diuretic.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -36324,6 +36559,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Propylthiouracil is indicated: in patients with Graves’ disease with hyperthyroidism or toxic multinodular goiter who are intolerant of methimazole and for whom surgery or radioactive iodine therapy is not an appropriate treatment option to ameliorate symptoms of hyperthyroidism in preparation for thyroidectomy or radioactive iodine therapy in patients who are intolerant of methimazole.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -36484,6 +36720,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Quetiapine is an atypical antipsychotic indicated for the treatment of: Schizophrenia ( 1.1 ) Bipolar I disorder manic episodes ( 1.2 ) Bipolar disorder, depressive episodes ( 1.2 ) 1.1 Schizophrenia Quetiapine is indicated for the treatment of schizophrenia. The efficacy of quetiapine in schizophrenia was established in three 6-week trials in adults and one 6-week trial in adolescents (13 to 17 years).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -36666,6 +36903,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Hypertension Quinapril tablets are indicated for the treatment of hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -36805,6 +37043,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Raloxifene hydrochloride is an estrogen agonist/antagonist indicated for: Treatment and prevention of osteoporosis in postmenopausal women. ( 1.1 ) Reduction in risk of invasive breast cancer in postmenopausal women with osteoporosis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -36943,6 +37182,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ramelteon Tablets are indicated for the treatment of insomnia characterized by difficulty with sleep onset. The clinical trials performed in support of efficacy were up to six months in duration.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -37117,6 +37357,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "1. INDICATIONS AND USAGE • Ramipril capsules USP are indicated for the treatment of hypertension.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -37266,6 +37507,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ranolazine extended-release tablet is indicated for the treatment of chronic angina. Ranolazine extended-release tablet may be used with beta-blockers, nitrates, calcium channel blockers, anti-platelet therapy, lipid-lowering therapy, ACE inhibitors, and angiotensin receptor blockers.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -37409,6 +37651,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Repaglinide tablets are indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus. Limitation of Use: Repaglinide tablets should not be used in patients with type 1 diabetes mellitus or for the treatment of diabetic ketoacidosis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -37540,6 +37783,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "To reduce the development of drug-resistant bacteria and maintain the effectiveness of XIFAXAN and other antibacterial drugs, XIFAXAN when used to treat infection should be used only to treat or prevent infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be considered in selecting or modifying antibacterial therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -37622,6 +37866,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Risedronate sodium delayed-release tablets are bisphosphonate in a delayed-release formulation and is indicated for treatment of postmenopausal osteoporosis (1.1) Limitations of Use Optimal duration of use has not been determined. For patients at low-risk for fracture, consider drug discontinuation after 3 to 5 years of use (1.2).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -37800,6 +38045,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Risperidone tablets are an atypical antipsychotic indicated for: Treatment of schizophrenia ( 1.1 ) As monotherapy or adjunctive therapy with lithium or valproate, for the treatment of acute manic or mixed episodes associated with Bipolar I Disorder ( 1.2 ) Treatment of irritability associated with autistic disorder ( 1.3 ) 1.1 Schizophrenia Risperidone tablets are indicated for the treatment of schizophrenia. Efficacy was established in 4 short-term trials in adults, 2 short-term trials in adolescents (ages 13 to 17 years), and one long-term maintenance trial in adults [see Clinical Studies (14.1) ] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -37938,6 +38184,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "XARELTO is a factor Xa inhibitor indicated: to reduce risk of stroke and systemic embolism in nonvalvular atrial fibrillation ( 1.1 ) for treatment of deep vein thrombosis (DVT) ( 1.2 ) for treatment of pulmonary embolism (PE) ( 1.3 ) for reduction in the risk of recurrence of DVT or PE ( 1.4 ) for the prophylaxis of DVT, which may lead to PE in patients undergoing knee or hip replacement surgery ( 1.5 ) for prophylaxis of venous thromboembolism (VTE) in acutely ill medical patients ( 1.6 ) to reduce the risk of major cardiovascular events in patients with coronary artery disease (CAD) ( 1.7 ) to reduce the risk of major thrombotic vascular events in patients with peripheral artery disease (PAD), including patients after recent lower extremity revascularization due to symptomatic PAD ( 1.8 ) for treatment of VTE and reduction in the risk of recurrent VTE in pediatric patients from birth to less than 18 years ( 1.9 ) for thromboprophylaxis in pediatric patients 2 years and older with congenital heart disease after the Fontan procedure ( 1.10 ) 1.1 Reduction of Risk of Stroke and Systemic Embolism in Nonvalvular Atrial Fibrillation XARELTO is indicated to reduce the risk of stroke an…",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -38081,6 +38328,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Rivastigmine tartrate capsules are an acetylcholinesterase inhibitor indicated for treatment of: Mild-to-moderate dementia of the Alzheimer’s type (AD) (1.1) Mild-to-moderate dementia associated with Parkinson’s disease (PD) (1.2) 1.1 Alzheimer’s Disease Rivastigmine tartrate capsules are indicated for the treatment of mild-to-moderate dementia of the Alzheimer's type (AD). 1.2 Parkinson’s Disease Dementia Rivastigmine tartrate capsules are indicated for the treatment of mild-to-moderate dementia associated with Parkinson’s disease (PD).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -38250,6 +38498,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Ri zatriptan benzoate tablets are indicated for the acute treatment of migraine with or without aura in adults and in pediatric patients 6 to 17 years old. Limitations of Use • Rizatriptan benzoate tablets should only be used where a clear diagnosis of migraine has been established.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -38395,6 +38644,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Roflumilast tablets is indicated as a treatment to reduce the risk of COPD exacerbations in patients with severe COPD associated with chronic bronchitis and a history of exacerbations. Limitations of Use Roflumilast tablets is not a bronchodilator and is not indicated for the relief of acute bronchospasm.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -38531,6 +38781,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ropinirole Tablets are a non-ergoline dopamine agonist indicated for the treatment of Parkinson’s disease (PD) and moderate-to-severe primary Restless Legs Syndrome (RLS). (1.1, 1.2).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -38670,6 +38921,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Rosuvastatin tablets is indicated: To reduce the risk major adverse cardiovascular (CV) events (CV death, nonfatal myocardial infarction, nonfatal stroke, or an arterial revascularization procedure) in adults without established coronary heart disease who are at increased risk of CV disease based on age, high-sensitivity C-reactive protein (hsCRP) ≥2 mg/L, and at least one additional CV risk factor. As an adjunct to diet to: Reduce low-density lipoprotein cholesterol (LDL-C) in adults with primary hyperlipidemia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -38819,6 +39071,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Fluticasone Propionate/Salmeterol Multidose Dry Powder Inhaler (FS MDPI) is indicated for the treatment of asthma in adult and pediatric patients aged 12 years and older. Fluticasone Propionate/Salmeterol MDPI should be used for patients not adequately controlled on a long term asthma control medication such as an inhaled corticosteroid or whose disease warrants initiation of treatment with both an inhaled corticosteroid and long acting beta 2 -adrenergic agonist (LABA).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -38958,6 +39211,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Saxagliptin tablets are a dipeptidyl peptidase-4 (DPP-4) inhibitor indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus. ( 1.1 ) Limitations of use: • Not recommended for the treatment of type 1 diabetes mellitus or diabetic ketoacidosis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -39099,6 +39353,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Selegiline Hydrochloride Tablets USP are indicated as an adjunct in the management of Parkinsonian patients being treated with levodopa/carbidopa who exhibit deterioration in the quality of their response to this therapy. There is no evidence from controlled studies that selegiline has any beneficial effect in the absence of concurrent levodopa therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -39247,6 +39502,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "OZEMPIC is indicated: • as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus. • to reduce the risk of major adverse cardiovascular events (cardiovascular death, non-fatal myocardial infarction or non-fatal stroke) in adults with type 2 diabetes mellitus and established cardiovascular disease.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -39375,6 +39631,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Major Depressive Disorder – Sertraline hydrochloride is indicated for the treatment of major depressive disorder in adults. The efficacy of Sertraline hydrochloride in the treatment of a major depressive episode was established in six to eight week controlled trials of adult outpatients whose diagnoses corresponded most closely to the DSM-III category of major depressive disorder (see Clinical Trials under CLINICAL PHARMACOLOGY ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -39521,6 +39778,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Sildenafil tablets are indicated for the treatment of erectile dysfunction.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -39668,6 +39926,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Simvastatin tablets USP are indicated: To reduce the risk of total mortality by reducing risk of coronary heart disease death, non-fatal myocardial infarction and stroke, and the need for coronary and non-coronary revascularization procedures in adults with established coronary heart disease, cerebrovascular disease, peripheral vascular disease, and/or diabetes, who are at high risk of coronary heart disease events. As an adjunct to diet to reduce low-density lipoprotein cholesterol (LDL-C): In adults with primary hyperlipidemia.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -39816,6 +40075,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "JANUVIA ® is indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus. JANUVIA is a dipeptidyl peptidase-4 (DPP-4) inhibitor indicated as an adjunct to diet and exercise to improve glycemic control in adults with type 2 diabetes mellitus.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -39947,6 +40207,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Solifenacin succinate tablets are indicated for the treatment of adults with overactive bladder with symptoms of urge urinary incontinence, urgency, and urinary frequency. Solifenacin succinate tablets are a muscarinic antagonist indicated for the treatment of adults with overactive bladder with symptoms of urge urinary incontinence, urgency, and urinary frequency ( 1 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -40115,6 +40376,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Sotalol hydrochloride tablets are an antiarrhythmic indicated for: the treatment of life-threatening ventricular arrhythmias ( 1.1 ) the maintenance of normal sinus rhythm in patients with atrial fibrillation or flutter (AFIB/AFL) ( 1.2 ) Limitations of Use Sotalol hydrochloride tablets have not been shown to enhance survival in patients with life-threatening ventricular arrhythmias ( 1.1 ) Avoid use in patients with minimally symptomatic or easily reversible AFIB/AFL ( 1.2 ) 1.1 Life-Threatening Ventricular Arrhythmias Sotalol hydrochloride tablets are indicated for the treatment of documented, life-threatening ventricular arrhythmias, such as sustained ventricular tachycardia (VT) . Limitation of Use Sotalol hydrochloride tablets have not been shown to enhance survival in patients with life-threatening ventricular arrhythmias.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -40280,6 +40542,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Spironolactone is an aldosterone antagonist indicated for: The treatment of NYHA Class III-IV heart failure and reduced ejection fraction to increase survival, manage edema, and to reduce the need for hospitalization for heart failure ( 1.1 ). Use as an add-on therapy for the treatment of hypertension, to lower blood pressure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -40415,6 +40678,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Sucralfate tablets are indicated in: Short-term treatment (up to 8 weeks) of active duodenal ulcer. While healing with sucralfate may occur during the first week or two, treatment should be continued for 4 to 8 weeks unless healing has been demonstrated by x-ray or endoscopic examination.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -40567,6 +40831,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Sulfasalazine Tablets are indicated: a) in the treatment of mild to moderate ulcerative colitis, and as adjunctive therapy in severe ulcerative colitis; and b) for the prolongation of the remission period between acute attacks of ulcerative colitis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -40719,6 +40984,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Sumatriptan Injection, USP is indicated in adults for (1) the acute treatment of migraine, with or without aura, and (2) the acute treatment of cluster headache. Limitations of Use: • Use only if a clear diagnosis of migraine or cluster headache has been established.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -40871,6 +41137,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tacrolimus capsules are calcineurin-inhibitor immunosuppressant indicated for the prophylaxis of organ rejection in adult patients receiving allogeneic liver, kidney or heart transplants and pediatric patients receiving allogeneic liver transplants in combination with other immunosuppressants. ( 1.1 ) 1.1 Prophylaxis of Organ Rejection in Kidney, Liver or Heart Transplant Tacrolimus capsules are indicated for the prophylaxis of organ rejection, in adult patients receiving allogeneic kidney transplant [ see Clinical Studies (14.1) ] , liver transplants [ see Clinical Studies (14.2) ] and heart transplant [ see Clinical Studies (14.3) ] , and pediatric patients receiving allogeneic liver transplants [ see Clinical Studies (14.2) ] in combination with other immunosuppressants.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -41023,6 +41290,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tadalafil is a phosphodiesterase 5 (PDE5) inhibitor indicated for the treatment of: erectile dysfunction (ED) ( 1.1 ) the signs and symptoms of benign prostatic hyperplasia (BPH) ( 1.2 ) ED and the signs and symptoms of BPH (ED/BPH) ( 1.3 ) If tadalafil is used with finasteride to initiate BPH treatment, such use is recommended for up to 26 weeks ( 1.4 ). 1.1 Erectile Dysfunction Tadalafil tablets are indicated for the treatment of erectile dysfunction (ED).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -41172,6 +41440,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "SOLTAMOX is an estrogen agonist/antagonist indicated: For treatment of adult patients with estrogen receptor-positive metastatic breast cancer ( 1.1 ) For adjuvant treatment of adult patients with early stage estrogen receptor- positive breast cancer ( 1.2 ) To reduce risk of invasive breast cancer following breast surgery and radiation in adult women with ductal carcinoma in situ (DCIS) ( 1.3 ) To reduce the incidence of breast cancer in adult women at high risk ( 1.4 ) 1.1 Metastatic Breast Cancer SOLTAMOX is indicated for the treatment of adult patients with estrogen receptor-positive metastatic breast cancer. 1.2 Adjuvant Treatment of Breast Cancer SOLTAMOX is indicated: for the adjuvant treatment of adult patients with early stage estrogen receptor-positive breast cancer to reduce the occurrence of contralateral breast cancer in adult patients when used as adjuvant therapy for the treatment of breast cancer.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -41303,6 +41572,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tamsulosin hydrochloride capsules are indicated for the treatment of the signs and symptoms of benign prostatic hyperplasia (BPH) [see Clinical Studies (14)]. Tamsulosin hydrochloride capsules are not indicated for the treatment of hypertension.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -41465,6 +41735,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tapentadol extended-release tablets are indicated for the management of: Severe and persistent pain in adults that requires an extended treatment period with a daily opioid analgesic and for which alternative treatment options are inadequate. Severe and persistent neuropathic pain associated with diabetic peripheral neuropathy (DPN) in adults that requires an extended treatment period with a daily opioid analgesic and for which alternative treatment options are inadequate.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -41617,6 +41888,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Telmisartan tablets, USP are an angiotensin II receptor blocker (ARB) indicated for: Treatment of hypertension, to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -41755,6 +42027,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Temazepam capsules are indicated for the short-term treatment of insomnia (generally 7 to 10 days). For patients with short-term insomnia, instructions in the prescription should indicate that temazepam capsules should be used for short periods of time (7 to 10 days).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [],
@@ -41870,6 +42143,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "BIKTARVY is indicated as a complete regimen for the treatment of human immunodeficiency virus type 1 (HIV-1) infection in adults and pediatric patients weighing at least 14 kg: who have no antiretroviral treatment history or to replace the current antiretroviral regimen in those who are virologically-suppressed (HIV-1 RNA less than 50 copies per mL) on a stable antiretroviral regimen with no known or suspected substitutions associated with resistance to bictegravir or tenofovir.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -42022,6 +42296,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Terazosin capsules are indicated for the treatment of symptomatic benign prostatic hyperplasia (BPH). There is a rapid response, with approximately 70% of patients experiencing an increase in urinary flow and improvement in symptoms of BPH when treated with terazosin capsules.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -42158,6 +42433,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Terbinafine tablets are indicated for the treatment of onychomycosis of the toenail or fingernail due to dermatophytes (tinea unguium). Prior to initiating treatment, appropriate nail specimens for laboratory testing [potassium hydroxide (KOH) preparation, fungal culture, or nail biopsy] should be obtained to confirm the diagnosis of onychomycosis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -42307,6 +42583,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "MALES Androgens are indicated for replacement therapy in conditions associated with a deficiency or absence of endogenous testosterone. a.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -42447,6 +42724,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Theophylline extended-release tablets are indicated for the treatment of the symptoms and reversible airflow obstruction associated with chronic asthma and other chronic lung diseases, e.g., emphysema and chronic bronchitis.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -42596,6 +42874,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ticagrelor is a P2Y 12 platelet inhibitor indicated to reduce the risk of cardiovascular (CV) death, myocardial infarction (MI), and stroke in patients with acute coronary syndrome (ACS) or a history of myocardial infarction (MI). For at least the first 12 months following ACS, it is superior to clopidogrel.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -42761,6 +43040,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Preservative-free Timolol Maleate Ophthalmic Solution in OCUDOSE is indicated in the treatment of elevated intraocular pressure in patients with ocular hypertension or open-angle glaucoma. Preservative-free Timolol Maleate Ophthalmic Solution in OCUDOSE may be used when a patient is sensitive to the preservative in Timolol Maleate Ophthalmic Solution, benzalkonium chloride, or when use of a preservative-free topical medication is advisable.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -42903,6 +43183,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tiotropium bromide inhalation powder is indicated for the long-term, once-daily, maintenance treatment of bronchospasm associated with chronic obstructive pulmonary disease (COPD), including chronic bronchitis and emphysema. Tiotropium bromide inhalation powder is indicated to reduce exacerbations in COPD patients.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -43033,6 +43314,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tizanidine is indicated for the treatment of spasticity in adults. Tizanidine is a central alpha-2-adrenergic agonist indicated for the treatment of spasticity.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -43168,6 +43450,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tolterodine tartrate extended-release capsules are indicated for the treatment of overactive bladder with symptoms of urge urinary incontinence, urgency, and frequency [see Clinical Studies (14) ] . Tolterodine tartrate extended-release capsules are an antimuscarinic indicated for the treatment of overactive bladder with symptoms of urge urinary incontinence, urgency, and frequency.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -43328,6 +43611,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Topiramate is indicated for: Epilepsy: initial monotherapy for the treatment of partial-onset or primary generalized tonic-clonic seizures in patients 2 years of age and older (1.1); adjunctive therapy for the treatment of partial-onset seizures, primary generalized tonic-clonic seizures, or seizures associated with Lennox- Gastaut syndrome in patients 2 years of age and older (1.2) Preventive treatment of migraine in patients 12 years of age and older (1.3) 1.1 Monotherapy Epilepsy Topiramate tablets are indicated as initial monotherapy for the treatment of partial-onset or primary generalized tonic-clonic seizures in patients 2 years of age and older. 1.2 Adjunctive Therapy Epilepsy Topiramate tablets are indicated as adjunctive therapy for the treatment of partial-onset seizures, primary generalized tonic-clonic seizures, and seizures associated with Lennox-Gastaut syndrome in patients 2 years of age and older.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -43510,6 +43794,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Torsemide is a loop diuretic indicated for: the treatment of edema associated with heart failure, renal disease or hepatic disease. ( 1.1 ) the treatment of hypertension, to lower blood pressure.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -43660,6 +43945,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tramadol hydrochloride extended-release tablets are indicated for the management of severe and persistent pain that requires an opioid analgesic and that cannot be adequately treated with alternative options, including immediate-release opioids. Limitations of Use • Because of the risks of addiction, abuse, misuse, overdose, and death, which can occur at any dosages or duration, and persist over the course of therapy, [see Warnings and Precautions (5.1)], reserve opioid analgesics, including tramadol hydrochloride extended-release tablets, for use in patients for whom alternative treatment options are ineffective, not tolerated or would be otherwise inadequate to provide sufficient management of pain.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -43801,6 +44087,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "TRAVATAN Z ® (travoprost ophthalmic solution) 0.004% is indicated for the reduction of elevated intraocular pressure (IOP) in patients with open-angle glaucoma or ocular hypertension.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -43964,6 +44251,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Trazodone is a selective serotonin reuptake inhibitor indicated for the treatment of major depressive disorder (MDD) ( 1 ). Trazodone hydrochloride tablets are indicated for the treatment of major depressive disorder (MDD) in adults.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -44134,6 +44422,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Tretinoin capsules are indicated for the induction of remission in adults and pediatric patients 1 year of age and older with acute promyelocytic leukemia (APL) characterized by the presence of the t(15;17) translocation or PML/RARα gene expression, and who are refractory to or who have relapsed from anthracycline chemotherapy or for whom anthracycline-based chemotherapy is contraindicated. Tretinoin capsules are a retinoid indicated for induction of remission in adults and pediatric patients 1 year of age and older with acute promyelocytic leukemia (APL), characterized by presence of t(15;17) translocation or presence of PML/RARα gene expression, and who are refractory to or who have relapsed from anthracycline chemotherapy or for whom anthracycline-based chemotherapy is contraindicated.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -44394,6 +44683,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE Topical corticosteroids are indicated for the relief of the inflammatory and pruritic manifestations of corticosteroid-responsive dermatoses.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -44579,6 +44869,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Triamterene capsules are indicated in the treatment of edema associated with congestive heart failure, cirrhosis of the liver and the nephrotic syndrome; steroid-induced edema, idiopathic edema and edema due to secondary hyperaldosteronism. Triamterene capsules may be used alone or with other diuretics, either for its added diuretic effect or its potassium-sparing potential.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -44740,6 +45031,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "& USAGE To reduce the development of drug-resistant bacteria and maintain the effectiveness of trimethoprim tablets, USP and other antibacterial drugs, trimethoprim tablets, USP should be used only to treat or prevent infections that are proven or strongly suspected to be caused by susceptible bacteria. When culture and susceptibility information are available, they should be considered in selecting or modifying antibacterial therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -44886,6 +45178,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Valacyclovir tablets are a deoxynucleoside analogue DNA polymerase inhibitor indicated for: Adult Patients ( 1.1 ) Cold Sores (Herpes Labialis) Genital Herpes Treatment in immunocompetent patients (initial or recurrent episode) Suppression in immunocompetent or HIV-1–infected patients Reduction of transmission Herpes Zoster Pediatric Patients ( 1.2 ) Cold Sores (Herpes Labialis) Chickenpox Limitations of Use ( 1.3 ) The efficacy and safety of valacyclovir tablets have not been established in immunocompromised patients other than for the suppression of genital herpes in HIV-1–infected patients. 1.1 Adult Patients Cold Sores (Herpes Labialis) Valacyclovir tablets are indicated for treatment of cold sores (herpes labialis).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -45036,6 +45329,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Valganciclovir for oral solution is a deoxynucleoside analogue cytomegalovirus (CMV) DNA polymerase inhibitor indicated for: Pediatric Patients ( 1.2 ) Prevention of CMV disease in kidney and heart transplant patients at high risk. 1.2 Pediatric Patients Prevention of CMV Disease: Valganciclovir is indicated for the prevention of CMV disease in kidney transplant patients (4 months to 16 years of age) and heart transplant patients (1 month to 16 years of age) at high risk [see Clinical Studies ( 14.2 )] .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -45188,6 +45482,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Valproic acid oral solution is indicated for: Monotherapy and adjunctive therapy of complex partial seizures; sole and adjunctive therapy of simple and complex absence seizures; adjunctive therapy in patients with multiple seizure types that include absence seizures ( 1 ) 1.1 Epilepsy Valproic acid oral solution is indicated as monotherapy and adjunctive therapy in the treatment of patients with complex partial seizures that occur either in isolation or in association with other types of seizures. Valproic acid oral solution is indicated for use as sole and adjunctive therapy in the treatment of simple and complex absence seizures, and adjunctively in patients with multiple seizure types which include absence seizures.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -45361,6 +45656,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Valsartan tablets are an angiotensin II receptor blocker (ARB) indicated for: Hypertension ,to lower blood pressure. Lowering blood pressure reduces the risk of fatal and nonfatal cardiovascular events, primarily strokes and myocardial infarctions ( 1.1 ) Heart failure (NYHA class II-IV); valsartan tablets significantly reduced hospitalization for heart failure ( 1.2 ) Post-myocardial infarction ; for the reduction of cardiovascular mortality in clinically stable patients with left ventricular failure or left ventricular dysfunction following myocardial infarction ( 1.3 ) 1.1 Hypertension Valsartan tablets are indicated for the treatment of hypertension, to lower blood pressure in adults and pediatric patients six years of age and older.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -45510,6 +45806,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Vancomycin Hydrochloride for Injection, USP is indicated for the treatment of serious or severe infections caused by susceptible strains of methicillin-resistant (β-lactam-resistant) staphylococci. It is indicated for penicillin-allergic patients, for patients who cannot receive or who have failed to respond to other drugs, including the penicillins or cephalosporins, and for infections caused by vancomycin-susceptible organisms that are resistant to other antimicrobial drugs.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -45653,6 +45950,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Vardenafil hydrochloride tablets are indicated for the treatment of erectile dysfunction. Vardenafil hydrochloride tablets are a phosphodiesterase 5 (PDE5) inhibitor indicated for the treatment of erectile dysfunction.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -45804,6 +46102,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Varenicline tablets are indicated for use as an aid to smoking cessation treatment. Varenicline tablets are a nicotinic receptor partial agonist indicated for use as an aid to smoking cessation treatment.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -45964,6 +46263,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Venlafaxine tablets, USP are indicated for the treatment of major depressive disorder. The efficacy of venlafaxine tablets, USP in the treatment of major depressive disorder was established in 6 week controlled trials of adult outpatients whose diagnoses corresponded most closely to the DSM-III or DSM-III-R category of major depression and in a 4 week controlled trial of inpatients meeting diagnostic criteria for major depression with melancholia (see CLINICAL TRIALS ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -46150,6 +46450,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Verapamil Hydrochloride Tablets are indicated for the treatment of the following: Angina 1. Angina at rest including: – Vasospastic (Prinzmetal’s variant) angina – Unstable (crescendo, pre-infarction) angina 2.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -46311,6 +46612,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "VFEND is an azole antifungal indicated for the treatment of adults and pediatric patients 2 years of age and older with: • Invasive aspergillosis ( 1.1 ) • Candidemia in non-neutropenics and other deep tissue Candida infections ( 1.2 ) • Esophageal candidiasis ( 1.3 ) • Serious fungal infections caused by Scedosporium apiospermum and Fusarium species including Fusarium solani , in patients intolerant of, or refractory to, other therapy ( 1.4 ) 1.1 Invasive Aspergillosis VFEND is indicated in adults and pediatric patients (2 years of age and older) for the treatment of invasive aspergillosis (IA). In clinical trials, the majority of isolates recovered were Aspergillus fumigatus .",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -46456,6 +46758,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "TRINTELLIX is indicated for the treatment of major depressive disorder (MDD) in adults. TRINTELLIX is indicated for the treatment of major depressive disorder (MDD) in adults ( 1 , 14 ).",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -46568,6 +46871,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Warfarin sodium tablets are indicated for: Prophylaxis and treatment of venous thrombosis and its extension, pulmonary embolism (PE). Prophylaxis and treatment of thromboembolic complications associated with atrial fibrillation (AF) and/or cardiac valve replacement.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -46733,6 +47037,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Ziprasidone capsules are indicated for the treatment of schizophrenia, as monotherapy for the acute treatment of bipolar manic or mixed episodes, and as an adjunct to lithium or valproate for the maintenance treatment of bipolar disorder. When deciding among the alternative treatments available for the condition needing treatment, the prescriber should consider the finding of ziprasidone’s greater capacity to prolong the QT/QTc interval compared to several other antipsychotic drugs [see Warnings and Precautions ( 5.3 ) ].",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -46866,6 +47171,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Zoledronic acid injection is a bisphosphonate indicated for the treatment of: Hypercalcemia of malignancy. (1.1) Patients with multiple myeloma and patients with documented bone metastases from solid tumors, in conjunction with standard antineoplastic therapy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -47030,6 +47336,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "ZOLMITRIPTAN NASAL SPRAY is indicated for the acute treatment of migraine with or without aura in adults and pediatric patients 12 years of age and older. Limitations of Use Only use ZOLMITRIPTAN NASAL SPRAY if a clear diagnosis of migraine has been established.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -47189,6 +47496,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Zolpidem Tartrate Tablets is indicated for the short-term treatment of insomnia characterized by difficulties with sleep initiation. Zolpidem Tartrate Tablets has been shown to decrease sleep latency for up to 35 days in controlled clinical studies [see Clinical Studies ( 14 )].",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [
@@ -47348,6 +47656,7 @@ export const SEED_DRUGS: Drug[] = [
       {
         text: "Zonisamide capsules are indicated as adjunctive therapy in the treatment of partial seizures in adults with epilepsy.",
         icd10: [],
+        snomed: [],
       },
     ],
     contraindications: [

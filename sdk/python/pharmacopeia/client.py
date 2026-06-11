@@ -18,6 +18,8 @@ from .models import (
     DrugShortagesResponse,
     DrugsBatchRequest,
     DrugsBatchResponse,
+    GroundedRequest,
+    GroundedResponse,
     HealthResponse,
     Ingredient,
     IngredientListResponse,
@@ -26,11 +28,16 @@ from .models import (
     ReactionResponse,
     ReactionsListResponse,
     SearchResponse,
+    SemanticSearchResponse,
     ShortagesResponse,
     SimilarDrugsResponse,
     Stats,
     StructureSearchRequest,
     StructureSearchResponse,
+    WebhookCreateRequest,
+    WebhookDeleteResponse,
+    WebhookEndpointCreated,
+    WebhooksListResponse,
 )
 
 DEFAULT_BASE_URL = "https://pharmacopeia.dev/api/v1"
@@ -236,6 +243,32 @@ class PharmacopeiaClient:
         """Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical."""
         data = self._request("GET", f"/reaction/{quote(str(slug), safe='')}")
         return ReactionResponse.model_validate(data)
+
+    def semantic_search(self, *, q: str, limit: Optional[int] = None, sections: Optional[str] = None) -> SemanticSearchResponse:
+        """Meaning-based retrieval over drug-record passages. Embedding-backed when available; lexical fallback otherwise — `method` in the response reports which."""
+        params = _drop_none({"q": q, "limit": limit, "sections": sections})
+        data = self._request("GET", "/semantic-search", params=params)
+        return SemanticSearchResponse.model_validate(data)
+
+    def grounded_retrieval(self, body: GroundedRequest) -> GroundedResponse:
+        """Key-gated retrieval tier for LLM consumers: same passages as /semantic-search plus per-span citations carrying full provenance (source URL, content hash, extraction timestamp, confidence)."""
+        data = self._request("POST", "/grounded", json_body=body.model_dump(by_alias=True, exclude_none=True))
+        return GroundedResponse.model_validate(data)
+
+    def list_webhooks(self) -> WebhooksListResponse:
+        """List the webhook endpoints registered by the calling API key."""
+        data = self._request("GET", "/webhooks")
+        return WebhooksListResponse.model_validate(data)
+
+    def create_webhook(self, body: WebhookCreateRequest) -> WebhookEndpointCreated:
+        """Register a webhook endpoint. The response includes the HMAC signing secret exactly once — store it."""
+        data = self._request("POST", "/webhooks", json_body=body.model_dump(by_alias=True, exclude_none=True))
+        return WebhookEndpointCreated.model_validate(data)
+
+    def delete_webhook(self, id: str) -> WebhookDeleteResponse:
+        """Delete a webhook endpoint owned by the calling API key."""
+        data = self._request("DELETE", f"/webhooks/{quote(str(id), safe='')}")
+        return WebhookDeleteResponse.model_validate(data)
 
     def list_changelog(self, *, limit: Optional[int] = None, since: Optional[str] = None) -> ChangelogResponse:
         """Recent record-level changes (typed mirror of /feed.xml and /feed.json)."""

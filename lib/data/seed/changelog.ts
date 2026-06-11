@@ -20,6 +20,30 @@ import type { ChangelogEntry } from "@/lib/schemas";
  */
 export const SEED_CHANGELOG: ChangelogEntry[] = [
   {
+    id: "2026-06-10-semantic-grounded-webhooks",
+    kind: "endpoint",
+    action: "added",
+    title: "Semantic retrieval, grounded tier, and webhooks",
+    summary:
+      "Three new API surfaces: GET /api/v1/semantic-search retrieves drug-record passages by meaning (pgvector embeddings with a lexical fallback — the response reports which path answered); POST /api/v1/grounded is the first key-gated tier, returning the same passages with per-span citations that carry full provenance for LLM consumers; and /api/v1/webhooks registers HMAC-signed outbound webhooks on dataset changes so caches can invalidate instead of polling this feed.",
+    timestamp: "2026-06-10T13:00:00.000Z",
+    url: "/docs",
+    sources: [],
+    tags: ["semantic-search", "grounded", "webhooks", "api-keys"],
+  },
+  {
+    id: "2026-06-10-postgres-backend",
+    kind: "dataset",
+    action: "released",
+    title: "Supabase Postgres backend behind the same repository contract",
+    summary:
+      "The API now serves from Supabase Postgres through Prisma when DATABASE_URL is configured, with the static seed dataset remaining as the zero-config fallback. Document-style rows keep the Zod schemas as the single source of truth, and /api/v1/health reports which backend answered. No contract changes — both backends are behaviourally identical.",
+    timestamp: "2026-06-10T12:00:00.000Z",
+    url: "/roadmap",
+    sources: [],
+    tags: ["postgres", "prisma", "supabase"],
+  },
+  {
     id: "2026-05-28-compare-and-feed",
     kind: "endpoint",
     action: "added",

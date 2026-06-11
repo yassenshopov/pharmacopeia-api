@@ -51,6 +51,7 @@ class Indication(BaseModel):
 
     text: str
     icd10: List[str]
+    snomed: List[str]
 
 
 class Contraindication(BaseModel):
@@ -610,3 +611,155 @@ class ReactionResponse(BaseModel):
     related_reactions: List[RelatedReaction] = Field(alias="relatedReactions")
     meta: Optional[ReactionMeta]
     disclaimer: str
+
+
+PassageSection = Literal["overview", "mechanism", "indications", "contraindications", "dosing", "pharmacokinetics", "interactions", "boxed-warning", "dosage-and-administration", "warnings-and-precautions", "adverse-reactions", "use-in-specific-populations", "overdosage", "patient-summary"]
+
+
+RetrievalMethod = Literal["embedding", "lexical"]
+
+
+class SemanticPassage(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    drug: Dict[str, Any]
+    section: PassageSection
+    chunk: int
+    text: str
+    score: float
+    provenance: Provenance
+
+
+class SemanticSearchResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    query: str
+    method: RetrievalMethod
+    model: Optional[str] = None
+    results: List[SemanticPassage]
+    total: int
+    disclaimer: str
+
+
+class GroundedRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    query: str
+    limit: int
+    sections: Optional[List[PassageSection]] = None
+
+
+class GroundedCitation(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    drug: Dict[str, Any]
+    section: PassageSection
+    passage_id: str = Field(alias="passageId")
+    url: str
+    provenance: Provenance
+
+
+class GroundingSpan(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    start: int
+    end: int
+    citation_id: str = Field(alias="citationId")
+
+
+class GroundedPassage(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    citation_id: str = Field(alias="citationId")
+    drug: Dict[str, Any]
+    section: PassageSection
+    chunk: int
+    text: str
+    score: float
+    grounding: List[GroundingSpan]
+
+
+class GroundedResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    query: str
+    method: RetrievalMethod
+    model: Optional[str] = None
+    passages: List[GroundedPassage]
+    citations: List[GroundedCitation]
+    usage: Dict[str, Any]
+    disclaimer: str
+
+
+WebhookEventName = Literal["drug.created", "drug.updated", "drug.deleted", "dataset.refreshed"]
+
+
+class WebhookDrugChange(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: Optional[str] = None
+    source_hash: Optional[str] = Field(default=None, alias="sourceHash")
+    changed_sections: Optional[List[str]] = Field(default=None, alias="changedSections")
+
+
+class WebhookEventPayload(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    event: WebhookEventName
+    timestamp: str
+    dataset_version: Optional[str] = Field(default=None, alias="datasetVersion")
+    drugs: Optional[List[WebhookDrugChange]] = None
+    summary: Optional[Dict[str, Any]] = None
+
+
+class WebhookEndpoint(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    url: str
+    events: List[WebhookEventName]
+    active: bool
+    created_at: str = Field(alias="createdAt")
+    failure_count: int = Field(alias="failureCount")
+    last_status: Optional[int] = Field(default=None, alias="lastStatus")
+    last_delivery_at: Optional[str] = Field(default=None, alias="lastDeliveryAt")
+
+
+class WebhookCreateRequest(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    url: str
+    events: List[WebhookEventName]
+
+
+class WebhookEndpointCreated(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    id: str
+    url: str
+    events: List[WebhookEventName]
+    active: bool
+    created_at: str = Field(alias="createdAt")
+    failure_count: int = Field(alias="failureCount")
+    last_status: Optional[int] = Field(default=None, alias="lastStatus")
+    last_delivery_at: Optional[str] = Field(default=None, alias="lastDeliveryAt")
+    secret: str
+
+
+class WebhooksListResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    endpoints: List[WebhookEndpoint]
+    total: int
+
+
+class WebhookDeleteResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    deleted: Literal[true]
+    id: str

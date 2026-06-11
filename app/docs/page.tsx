@@ -83,6 +83,44 @@ const res = await fetch(
 );
 const { results } = await res.json();`;
 
+const SEMANTIC_SEARCH_SAMPLE = `// Ask what you mean, not what you can spell
+const res = await fetch(
+  "https://pharmacopeia.dev/api/v1/semantic-search?" +
+    new URLSearchParams({
+      q: "beta blocker safe in asthma",
+      sections: "mechanism,warnings-and-precautions",
+    }),
+);
+const { method, results } = await res.json();
+// method: "embedding" | "lexical" — same shape either way`;
+
+const GROUNDED_SAMPLE = `// Key-gated tier: passages + per-span citations with provenance
+const res = await fetch("https://pharmacopeia.dev/api/v1/grounded", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: \`Bearer \${process.env.PHARMACOPEIA_API_KEY}\`,
+  },
+  body: JSON.stringify({ query: "metformin renal dosing", limit: 8 }),
+});
+const { passages, citations } = await res.json();
+// every passage.grounding span maps to a citation with
+// sourceUrl, sourceHash, extractedAt, and confidence`;
+
+const WEBHOOK_SAMPLE = `// Register an endpoint; verify deliveries with the whsec_... secret
+const res = await fetch("https://pharmacopeia.dev/api/v1/webhooks", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: \`Bearer \${process.env.PHARMACOPEIA_API_KEY}\`,
+  },
+  body: JSON.stringify({
+    url: "https://example.com/hooks/pharmacopeia",
+    events: ["drug.updated", "dataset.refreshed"],
+  }),
+});
+const { id, secret } = await res.json(); // secret shown exactly once`;
+
 const GRAPHQL_SAMPLE = `// Field-selected query — one round-trip, exactly the shape you want
 const res = await fetch("https://pharmacopeia.dev/api/graphql", {
   method: "POST",
@@ -103,7 +141,7 @@ const res = await fetch("https://pharmacopeia.dev/api/graphql", {
 const { data } = await res.json();`;
 
 const ENDPOINTS: {
-  method: "GET" | "POST";
+  method: "GET" | "POST" | "DELETE";
   path: string;
   description: string;
   anchor?: string;
@@ -242,6 +280,35 @@ const ENDPOINTS: {
     anchor: "structure-search",
   },
   {
+    method: "GET",
+    path: "/api/v1/semantic-search",
+    description:
+      "Meaning-based retrieval over drug-record passages. Supports ?q, ?limit, ?sections=<csv>. Embedding-backed when available; lexical fallback otherwise — the response `method` field reports which.",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/grounded",
+    description:
+      "Key-gated retrieval tier for LLM consumers: passages with per-span citations carrying full provenance. Body: { query, limit?, sections? }. Requires Authorization: Bearer <key>.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/webhooks",
+    description:
+      "List webhook endpoints registered by the calling API key. Requires Authorization: Bearer <key>.",
+  },
+  {
+    method: "POST",
+    path: "/api/v1/webhooks",
+    description:
+      "Register an HTTPS webhook endpoint for drug.created / drug.updated / drug.deleted / dataset.refreshed events. Returns the HMAC signing secret exactly once.",
+  },
+  {
+    method: "DELETE",
+    path: "/api/v1/webhooks/{id}",
+    description: "Delete a webhook endpoint owned by the calling API key.",
+  },
+  {
     method: "POST",
     path: "/api/graphql",
     description:
@@ -263,6 +330,8 @@ const DOCS_TOC: TocItem[] = [
   { id: "search", label: "Search" },
   { id: "interactions", label: "Interaction check" },
   { id: "structure-search", label: "Structure search" },
+  { id: "semantic-search", label: "Semantic retrieval" },
+  { id: "webhooks", label: "Webhooks" },
   { id: "graphql", label: "GraphQL" },
   { id: "endpoints", label: "Endpoints" },
   { id: "feed", label: "Change feed (RSS / JSON)" },
@@ -437,6 +506,46 @@ export default async function DocsPage() {
           label="structure-search"
           language="ts"
         />
+      </Section>
+
+      <Section id="semantic-search" title="Semantic retrieval">
+        <p className="mb-4 text-sm text-muted-foreground">
+          Every drug record is chunked into small, citable passages —
+          mechanism, dosing, label sections, and more. <code>q</code> is
+          matched by meaning (cosine similarity over precomputed
+          embeddings) when the embedding store is available, with a
+          lexical fallback over the same passages otherwise. The{" "}
+          <code>method</code> field in the response reports which path
+          answered; the shape never changes.
+        </p>
+        <CodeBlock
+          code={SEMANTIC_SEARCH_SAMPLE}
+          label="semantic-search"
+          language="ts"
+        />
+        <p className="mb-4 mt-6 text-sm text-muted-foreground" id="grounded">
+          <code>POST /api/v1/grounded</code> is the key-gated tier built for
+          LLM consumers: the same retrieval, plus a citation for every
+          passage and a character-span grounding map, so a model can attach
+          a verifiable reference — source URL, content hash, extraction
+          timestamp, confidence — to every token it quotes.
+        </p>
+        <CodeBlock code={GROUNDED_SAMPLE} label="grounded" language="ts" />
+      </Section>
+
+      <Section id="webhooks" title="Webhooks">
+        <p className="mb-4 text-sm text-muted-foreground">
+          Register an HTTPS endpoint and receive signed POSTs when drug
+          records change (<code>drug.created</code>,{" "}
+          <code>drug.updated</code>, <code>drug.deleted</code>,{" "}
+          <code>dataset.refreshed</code>) instead of polling the change
+          feed. Deliveries carry an{" "}
+          <code>X-Pharmacopeia-Signature: t=&lt;ts&gt;,v1=&lt;hex&gt;</code>{" "}
+          header — HMAC-SHA256 of <code>&lt;ts&gt;.&lt;body&gt;</code> with
+          your endpoint&apos;s secret. Endpoints auto-disable after 25
+          consecutive failed deliveries.
+        </p>
+        <CodeBlock code={WEBHOOK_SAMPLE} label="webhooks" language="ts" />
       </Section>
 
       <Section id="graphql" title="GraphQL">

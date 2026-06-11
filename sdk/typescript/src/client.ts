@@ -14,6 +14,8 @@ import type {
   DrugShortagesResponse,
   DrugsBatchRequest,
   DrugsBatchResponse,
+  GroundedRequest,
+  GroundedResponse,
   HealthResponse,
   Ingredient,
   IngredientListResponse,
@@ -22,11 +24,16 @@ import type {
   ReactionResponse,
   ReactionsListResponse,
   SearchResponse,
+  SemanticSearchResponse,
   ShortagesResponse,
   SimilarDrugsResponse,
   Stats,
   StructureSearchRequest,
   StructureSearchResponse,
+  WebhookCreateRequest,
+  WebhookDeleteResponse,
+  WebhookEndpointCreated,
+  WebhooksListResponse,
 } from "./types";
 
 /** Base URL of the pharmacopeia API (origin + `/api/v1`). */
@@ -237,6 +244,31 @@ export class PharmacopeiaClient {
   /** Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical. */
   getReaction(slug: string): Promise<ReactionResponse> {
     return this.request<ReactionResponse>("GET", `/reaction/${encodeURIComponent(slug)}`, {});
+  }
+
+  /** Meaning-based retrieval over drug-record passages. Embedding-backed when available; lexical fallback otherwise — `method` in the response reports which. */
+  semanticSearch(query: { q: string; limit?: number; sections?: string }): Promise<SemanticSearchResponse> {
+    return this.request<SemanticSearchResponse>("GET", `/semantic-search`, { query });
+  }
+
+  /** Key-gated retrieval tier for LLM consumers: same passages as /semantic-search plus per-span citations carrying full provenance (source URL, content hash, extraction timestamp, confidence). */
+  groundedRetrieval(body: GroundedRequest): Promise<GroundedResponse> {
+    return this.request<GroundedResponse>("POST", `/grounded`, { body });
+  }
+
+  /** List the webhook endpoints registered by the calling API key. */
+  listWebhooks(): Promise<WebhooksListResponse> {
+    return this.request<WebhooksListResponse>("GET", `/webhooks`, {});
+  }
+
+  /** Register a webhook endpoint. The response includes the HMAC signing secret exactly once — store it. */
+  createWebhook(body: WebhookCreateRequest): Promise<WebhookEndpointCreated> {
+    return this.request<WebhookEndpointCreated>("POST", `/webhooks`, { body });
+  }
+
+  /** Delete a webhook endpoint owned by the calling API key. */
+  deleteWebhook(id: string): Promise<WebhookDeleteResponse> {
+    return this.request<WebhookDeleteResponse>("DELETE", `/webhooks/${encodeURIComponent(id)}`, {});
   }
 
   /** Recent record-level changes (typed mirror of /feed.xml and /feed.json). */

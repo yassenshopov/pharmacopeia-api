@@ -460,12 +460,13 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "supabase-stage-1",
     title:
-      "Stage 1: Supabase Postgres backend with Drizzle, switching getRepository() based on env",
-    body: "Real database behind the same repository interface. Seed stays as the local fallback; production reads through SupabaseRepository when DATABASE_URL is set.",
-    status: "next",
+      "Stage 1: Supabase Postgres backend with Prisma, switching getRepository() based on env",
+    body: "Real database behind the same repository interface. Document-style tables keep the Zod schemas as the single source of truth (each row is a validated jsonb payload plus extracted filter/search columns), PrismaRepository serves every endpoint when DATABASE_URL is set, and the static seed stays as the zero-config local fallback. /api/v1/health reports which backend answered.",
+    status: "shipped",
     kind: "platform",
     milestone: "stage-1",
-    targetAt: NEXT_TARGET,
+    shippedAt: "2026-06-10",
+    tags: ["prisma", "supabase", "postgres"],
   },
   {
     id: "scheduled-ingest-cron",
@@ -557,18 +558,20 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "embeddings-semantic-search",
     title: "Embeddings + semantic search across drug content",
-    body: "Augment lexical search with embeddings so queries like \"beta blocker safe in asthma\" find what they mean, not what they spell.",
-    status: "later",
+    body: "A /v1/semantic-search endpoint over passage-level retrieval: every drug record is chunked into citable passages (lib/data/passages.ts), embedded offline into pgvector (npm run db:embed, text-embedding-3-small at 512 dims), and queried by cosine similarity with the query embedded at request time. Without an embeddings provider or database the same passages are scored by a lexical TF-IDF fallback — identical response shape, and the `method` field reports which path answered. Re-embedding is delta-based: re-seeding nulls the vector only for passages whose text hash changed.",
+    status: "shipped",
     kind: "api",
-    tags: ["embeddings"],
+    shippedAt: "2026-06-10",
+    tags: ["embeddings", "pgvector"],
   },
   {
     id: "llm-citation-tier",
     title: "LLM citation/grounding API tier (paid)",
-    body: "First paid tier: a /v1/grounded endpoint that returns LLM-friendly retrieval over pharmacopeia content with per-token citations.",
-    status: "later",
+    body: "First key-gated tier: POST /v1/grounded returns the same passage retrieval as /v1/semantic-search, repackaged for LLM consumers — every passage carries a citation id and a full-coverage character-span → citation mapping, and every citation carries the record's provenance (source URL, content hash, extraction timestamp, confidence) plus a permalink. Keys are minted by npm run keys:create (sha256-at-rest, shown once) or supplied via PHARMACOPEIA_API_KEYS for zero-db deployments; db-backed keys track lifetime request counts surfaced in the response usage block.",
+    status: "shipped",
     kind: "api",
-    tags: ["llm", "billing"],
+    shippedAt: "2026-06-10",
+    tags: ["llm", "billing", "api-keys"],
   },
   {
     id: "mcp-server",
@@ -583,9 +586,11 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "webhooks-on-changes",
     title: "Webhooks on entity changes",
-    body: "Outbound webhooks fire when a drug record (or any of its sections) changes, so downstream caches can invalidate instead of polling.",
-    status: "later",
+    body: "Outbound webhooks (drug.created / drug.updated / drug.deleted / dataset.refreshed) fire when the dataset load detects record changes by provenance hash, so downstream caches can invalidate instead of polling /changelog. Consumers register HTTPS endpoints via the key-gated /v1/webhooks API; deliveries are HMAC-SHA256 signed (Stripe-style t=<ts>,v1=<hex> over <ts>.<body>), logged per attempt, and an endpoint auto-disables after 25 consecutive failures.",
+    status: "shipped",
     kind: "api",
+    shippedAt: "2026-06-10",
+    tags: ["webhooks", "hmac"],
   },
   {
     id: "whats-new-feed",
@@ -621,11 +626,11 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   },
   {
     id: "rate-limiting-api-keys",
-    title: "API keys + rate limiting",
-    body: "Optional API keys with per-key quotas and rate limits at the edge. A prerequisite for the paid tier and for fair-use protection once traffic is real.",
+    title: "Per-key rate limiting + quotas",
+    body: "The key infrastructure itself shipped with the grounded tier (sha256-at-rest keys, npm run keys:create, lifetime request counters). What remains is enforcement: per-key quotas and rate limits at the edge for fair-use protection once traffic is real.",
     status: "later",
     kind: "platform",
-    tags: ["billing"],
+    tags: ["billing", "api-keys"],
   },
   {
     id: "batch-lookup-endpoint",

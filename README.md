@@ -26,7 +26,9 @@ to its public source via a `provenance` object.
 - **Tailwind v4** + **shadcn/ui**
 - **Zod** schemas as the single source of truth for the API
 - **OpenChemLib** for 2D structure rendering + similarity fingerprints
-- **Supabase Postgres** (Stage 1+, not wired in v0)
+- **Supabase Postgres** + **Prisma** — serves the whole API when
+  `DATABASE_URL` is set; without it the site falls back to the static
+  seed dataset
 - **Anthropic Claude** for the data extraction + review pipeline (Stage 2+)
 
 ## Getting started
@@ -124,6 +126,23 @@ npm run ingest:structures    # PubChem → public/structures/*.svg + seed
 npm run ingest:interactions  # openFDA → interaction narratives
 npm run ingest:similarity     # OpenChemLib → structural analogs (no network)
 ```
+
+With a Supabase project configured (see `.env.example`), push the
+schema and load the validated dataset into Postgres:
+
+```bash
+npm run db:push              # prisma db push — create/sync tables (incl. pgvector)
+npm run db:seed              # snapshot-load the seed dataset into Postgres
+npm run db:embed             # embed retrieval passages (delta-based; --all to redo)
+npm run keys:create -- --name "my key"   # mint a pk_live_... API key (shown once)
+```
+
+Semantic retrieval (`/api/v1/semantic-search`, key-gated
+`/api/v1/grounded`) runs on passage embeddings in pgvector when an
+embeddings provider is configured, and degrades to a lexical fallback
+over the same passages otherwise — identical response shape either
+way. Webhooks (`/api/v1/webhooks`) fire on dataset changes detected
+during `db:seed`, signed HMAC-SHA256 per delivery.
 
 Structural similarity is precomputed offline with OpenChemLib's 512-bit
 substructure index and the Tanimoto coefficient over the SMILES already

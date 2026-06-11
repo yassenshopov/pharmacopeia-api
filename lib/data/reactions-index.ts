@@ -3,7 +3,9 @@ import { SEED_ADVERSE_EVENTS } from "./seed/adverse-events";
 import { getSeedReactionMeta } from "./seed/reaction-meta";
 import {
   ADVERSE_EVENT_DISCLAIMER,
+  type AdverseEventStats,
   type Reaction,
+  type ReactionMeta,
   type ReactionSummary,
 } from "@/lib/schemas";
 
@@ -112,7 +114,7 @@ function safeShare(count: number, drugTotalReports: number): number | null {
   return Math.min(1, count / drugTotalReports);
 }
 
-interface ReactionIndex {
+export interface ReactionIndex {
   /** Canonical reactions keyed by canonical slug. */
   reactions: Map<string, Reaction>;
   /** Summaries in the API browse order (totalReports desc, then name). */
@@ -125,9 +127,22 @@ interface ReactionIndex {
   aliasMap: Map<string, string>;
 }
 
+/**
+ * Backend-agnostic inputs for the index build. The static repository
+ * feeds the seed files through this; the Postgres repository feeds the
+ * same shapes loaded from the database.
+ */
+export interface ReactionIndexInputs {
+  adverseEvents: AdverseEventStats[];
+  /** Drug slug → display name, for the per-reaction drug rows. */
+  drugNames: ReadonlyMap<string, string>;
+  /** Reference metadata lookup by canonical reaction slug. */
+  getMeta: (slug: string) => ReactionMeta | null;
+}
+
 let _cached: ReactionIndex | null = null;
 
-function build(): ReactionIndex {
+export function buildReactionIndex(inputs: ReactionIndexInputs): ReactionIndex {
   // Phase 1: scan every drug's top reactions, register canonical
   // slugs and aliases, and accumulate per-drug rows under the
   // canonical slug. Two terms that share a canonical slug (e.g.
@@ -137,9 +152,9 @@ function build(): ReactionIndex {
   /** Track aliases discovered for each canonical slug. */
   const aliasMap = new Map<string, string>();
 
-  for (const stats of Object.values(SEED_ADVERSE_EVENTS)) {
-    const drug = SEED_DRUGS_BY_SLUG[stats.drug];
-    if (!drug) continue;
+  for (const stats of inputs.adverseEvents) {
+    const drugName = inputs.drugNames.get(stats.drug);
+    if (!drugName) continue;
     const drugTotalReports = stats.totalReports;
 
     for (const reaction of stats.topReactions) {
@@ -183,20 +198,20 @@ function build(): ReactionIndex {
       // contributes the same reaction twice (e.g. once under each
       // spelling — vanishingly rare in MedDRA-coded data but cheap to
       // handle).
-      const existing = entry.drugRows.get(drug.slug);
+      const existing = entry.drugRows.get(stats.drug);
       if (existing) {
         existing.count += reaction.count;
         existing.share = safeShare(existing.count, drugTotalReports);
       } else {
-        entry.drugRows.set(drug.slug, {
-          drug: drug.slug,
-          name: drug.name,
+        entry.drugRows.set(stats.drug, {
+          drug: stats.drug,
+          name: drugName,
           count: reaction.count,
           share: safeShare(reaction.count, drugTotalReports),
           drugTotalReports,
         });
       }
-      entry.drugSet.add(drug.slug);
+      entry.drugSet.add(stats.drug);
       entry.totalReports += reaction.count;
     }
   }
@@ -311,11 +326,11 @@ function build(): ReactionIndex {
       drugs: drugRows,
       relatedReactions: related,
       // Reference metadata (MeSH scope note + tree position + recent
-      // PubMed papers) is pulled from a separate seed file written by
-      // `scripts/ingest/fetch-reaction-meta.ts`. Many MedDRA terms have
-      // no MeSH counterpart (administrative terms like "Drug
-      // Ineffective"), so `null` is the honest signal — never invent.
-      meta: getSeedReactionMeta(slug),
+      // PubMed papers) is supplied by the backend (seed file or
+      // database). Many MedDRA terms have no MeSH counterpart
+      // (administrative terms like "Drug Ineffective"), so `null` is
+      // the honest signal — never invent.
+      meta: inputs.getMeta(slug),
       disclaimer: ADVERSE_EVENT_DISCLAIMER,
     });
   }
@@ -340,25 +355,42 @@ function build(): ReactionIndex {
   return { reactions, summaries, aliasMap };
 }
 
+/** Seed-backed index, built lazily once per process. */
 export function getReactionIndex(): ReactionIndex {
-  if (!_cached) _cached = build();
+  if (!_cached) {
+    _cached = buildReactionIndex({
+      adverseEvents: Object.values(SEED_ADVERSE_EVENTS),
+      drugNames: new Map(
+        Object.values(SEED_DRUGS_BY_SLUG).map((d) => [d.slug, d.name]),
+      ),
+      getMeta: getSeedReactionMeta,
+    });
+  }
   return _cached;
 }
 
 /**
- * Resolve a slug (canonical or alias) to its canonical form. Returns
- * `null` when neither the canonical map nor the alias map knows the
- * slug. Callers use the return value to decide whether to redirect
- * (`matched !== canonical`) or render straight (`matched === canonical`).
+ * Resolve a slug (canonical or alias) to its canonical form within an
+ * index. Returns `null` when neither the canonical map nor the alias
+ * map knows the slug. Callers use the return value to decide whether to
+ * redirect (`matched !== canonical`) or render straight
+ * (`matched === canonical`).
  */
-export function resolveReactionSlug(
+export function resolveReactionSlugInIndex(
+  idx: ReactionIndex,
   slug: string,
 ): { canonical: string; matched: string } | null {
-  const idx = getReactionIndex();
   if (idx.reactions.has(slug)) return { canonical: slug, matched: slug };
   const canonical = idx.aliasMap.get(slug);
   if (canonical && idx.reactions.has(canonical)) {
     return { canonical, matched: slug };
   }
   return null;
+}
+
+/** Seed-backed variant of {@link resolveReactionSlugInIndex}. */
+export function resolveReactionSlug(
+  slug: string,
+): { canonical: string; matched: string } | null {
+  return resolveReactionSlugInIndex(getReactionIndex(), slug);
 }

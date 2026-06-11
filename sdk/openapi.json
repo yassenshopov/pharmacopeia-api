@@ -52,8 +52,16 @@
       "description": "PubMed PMID crosswalks. Link drug records to canonical literature in PubMed."
     },
     {
+      "name": "Retrieval",
+      "description": "Meaning-based retrieval over drug-record passages. `/semantic-search` is free; `/grounded` is the key-gated tier that adds per-span citations with full provenance for LLM consumers."
+    },
+    {
       "name": "Changelog",
       "description": "Record-level change feed. Typed mirror of `/feed.xml` and `/feed.json`."
+    },
+    {
+      "name": "Webhooks",
+      "description": "Outbound webhooks on dataset changes. Deliveries are HMAC-SHA256 signed (`X-Pharmacopeia-Signature: t=<ts>,v1=<hex>` over `<ts>.<body>`). Requires an API key."
     },
     {
       "name": "System",
@@ -1112,6 +1120,303 @@
         ]
       }
     },
+    "/api/v1/semantic-search": {
+      "get": {
+        "operationId": "semanticSearch",
+        "summary": "Meaning-based retrieval over drug-record passages. Embedding-backed when available; lexical fallback otherwise — `method` in the response reports which.",
+        "tags": [
+          "Retrieval"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SemanticSearchResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified — the resource has not changed since the ETag in `If-None-Match`."
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "Natural-language query (3–500 characters).",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Max passages (1–20, default 8).",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sections",
+            "in": "query",
+            "required": false,
+            "description": "Optional comma-separated list of drug-record sections to search (e.g. mechanism,dosing,boxed-warning).",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/grounded": {
+      "post": {
+        "operationId": "groundedRetrieval",
+        "summary": "Key-gated retrieval tier for LLM consumers: same passages as /semantic-search plus per-span citations carrying full provenance (source URL, content hash, extraction timestamp, confidence).",
+        "tags": [
+          "Retrieval"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GroundedResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified — the resource has not changed since the ETag in `If-None-Match`."
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroundedRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks": {
+      "get": {
+        "operationId": "listWebhooks",
+        "summary": "List the webhook endpoints registered by the calling API key.",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhooksListResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified — the resource has not changed since the ETag in `If-None-Match`."
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createWebhook",
+        "summary": "Register a webhook endpoint. The response includes the HMAC signing secret exactly once — store it.",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookEndpointCreated"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified — the resource has not changed since the ETag in `If-None-Match`."
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookCreateRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/webhooks/{id}": {
+      "delete": {
+        "operationId": "deleteWebhook",
+        "summary": "Delete a webhook endpoint owned by the calling API key.",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookDeleteResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified — the resource has not changed since the ETag in `If-None-Match`."
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/api/v1/changelog": {
       "get": {
         "operationId": "listChangelog",
@@ -1272,7 +1577,10 @@
                 "enum": [
                   "not_found",
                   "invalid_request",
+                  "unauthorized",
+                  "forbidden",
                   "rate_limited",
+                  "not_configured",
                   "internal_error"
                 ]
               },
@@ -1323,11 +1631,19 @@
             "items": {
               "type": "string"
             }
+          },
+          "snomed": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "required": [
           "text",
-          "icd10"
+          "icd10",
+          "snomed"
         ],
         "additionalProperties": false
       },
@@ -3337,6 +3653,588 @@
           "disclaimer"
         ],
         "additionalProperties": false
+      },
+      "PassageSection": {
+        "type": "string",
+        "enum": [
+          "overview",
+          "mechanism",
+          "indications",
+          "contraindications",
+          "dosing",
+          "pharmacokinetics",
+          "interactions",
+          "boxed-warning",
+          "dosage-and-administration",
+          "warnings-and-precautions",
+          "adverse-reactions",
+          "use-in-specific-populations",
+          "overdosage",
+          "patient-summary"
+        ]
+      },
+      "RetrievalMethod": {
+        "type": "string",
+        "enum": [
+          "embedding",
+          "lexical"
+        ]
+      },
+      "SemanticPassage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "drug": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slug",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "section": {
+            "$ref": "#/components/schemas/PassageSection"
+          },
+          "chunk": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "text": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance"
+          }
+        },
+        "required": [
+          "id",
+          "drug",
+          "section",
+          "chunk",
+          "text",
+          "score",
+          "provenance"
+        ],
+        "additionalProperties": false
+      },
+      "SemanticSearchResponse": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "method": {
+            "$ref": "#/components/schemas/RetrievalMethod"
+          },
+          "model": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SemanticPassage"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "disclaimer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query",
+          "method",
+          "results",
+          "total",
+          "disclaimer"
+        ],
+        "additionalProperties": false
+      },
+      "GroundedRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 500
+          },
+          "limit": {
+            "default": 8,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PassageSection"
+            }
+          }
+        },
+        "required": [
+          "query",
+          "limit"
+        ],
+        "additionalProperties": false
+      },
+      "GroundedCitation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "drug": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slug",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "section": {
+            "$ref": "#/components/schemas/PassageSection"
+          },
+          "passageId": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "provenance": {
+            "$ref": "#/components/schemas/Provenance"
+          }
+        },
+        "required": [
+          "id",
+          "drug",
+          "section",
+          "passageId",
+          "url",
+          "provenance"
+        ],
+        "additionalProperties": false
+      },
+      "GroundingSpan": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "citationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "citationId"
+        ],
+        "additionalProperties": false
+      },
+      "GroundedPassage": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "citationId": {
+            "type": "string"
+          },
+          "drug": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slug",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "section": {
+            "$ref": "#/components/schemas/PassageSection"
+          },
+          "chunk": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "text": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number"
+          },
+          "grounding": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroundingSpan"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "citationId",
+          "drug",
+          "section",
+          "chunk",
+          "text",
+          "score",
+          "grounding"
+        ],
+        "additionalProperties": false
+      },
+      "GroundedResponse": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "method": {
+            "$ref": "#/components/schemas/RetrievalMethod"
+          },
+          "model": {
+            "type": "string"
+          },
+          "passages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroundedPassage"
+            }
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroundedCitation"
+            }
+          },
+          "usage": {
+            "type": "object",
+            "properties": {
+              "tier": {
+                "type": "string"
+              },
+              "requestCount": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "tier"
+            ],
+            "additionalProperties": false
+          },
+          "disclaimer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query",
+          "method",
+          "passages",
+          "citations",
+          "usage",
+          "disclaimer"
+        ],
+        "additionalProperties": false
+      },
+      "WebhookEventName": {
+        "type": "string",
+        "enum": [
+          "drug.created",
+          "drug.updated",
+          "drug.deleted",
+          "dataset.refreshed"
+        ]
+      },
+      "WebhookDrugChange": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "sourceHash": {
+            "type": "string"
+          },
+          "changedSections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "slug"
+        ],
+        "additionalProperties": false
+      },
+      "WebhookEventPayload": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "event": {
+            "$ref": "#/components/schemas/WebhookEventName"
+          },
+          "timestamp": {
+            "type": "string"
+          },
+          "datasetVersion": {
+            "type": "string"
+          },
+          "drugs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookDrugChange"
+            }
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "created": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "updated": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "deleted": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "created",
+              "updated",
+              "deleted"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "event",
+          "timestamp"
+        ],
+        "additionalProperties": false
+      },
+      "WebhookEndpoint": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEventName"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "failureCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "lastStatus": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "lastDeliveryAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "events",
+          "active",
+          "createdAt",
+          "failureCount"
+        ],
+        "additionalProperties": false
+      },
+      "WebhookCreateRequest": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "events": {
+            "default": [
+              "drug.created",
+              "drug.updated",
+              "drug.deleted",
+              "dataset.refreshed"
+            ],
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEventName"
+            }
+          }
+        },
+        "required": [
+          "url",
+          "events"
+        ],
+        "additionalProperties": false
+      },
+      "WebhookEndpointCreated": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEventName"
+            }
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "failureCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "lastStatus": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "lastDeliveryAt": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "url",
+          "events",
+          "active",
+          "createdAt",
+          "failureCount",
+          "secret"
+        ],
+        "additionalProperties": false
+      },
+      "WebhooksListResponse": {
+        "type": "object",
+        "properties": {
+          "endpoints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WebhookEndpoint"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "endpoints",
+          "total"
+        ],
+        "additionalProperties": false
+      },
+      "WebhookDeleteResponse": {
+        "type": "object",
+        "properties": {
+          "deleted": {
+            "type": "boolean",
+            "const": true
+          },
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "deleted",
+          "id"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key for the grounded tier and webhook management (`Authorization: Bearer pk_live_...`)."
       }
     }
   },
@@ -3358,13 +4256,15 @@
         "Shortages",
         "AdverseEvents",
         "Reactions",
-        "Literature"
+        "Literature",
+        "Retrieval"
       ]
     },
     {
       "name": "Platform",
       "tags": [
         "Changelog",
+        "Webhooks",
         "System"
       ]
     }

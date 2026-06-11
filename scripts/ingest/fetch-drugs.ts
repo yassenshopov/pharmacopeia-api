@@ -987,7 +987,7 @@ async function ingestOne(name: string, idx: number, total: number): Promise<Inge
         }
       : undefined;
   const indications = indRaw
-    ? [{ text: firstSentences(indRaw, 1200), icd10: [] as string[] }]
+    ? [{ text: firstSentences(indRaw, 1200), icd10: [] as string[], snomed: [] as string[] }]
     : [];
   const contraindications = ciRaw
     ? [{ text: firstSentences(ciRaw, 1200), severity: "contraindicated" as const }]

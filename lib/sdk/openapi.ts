@@ -80,12 +80,20 @@ function operationObject(op: Operation) {
     };
   }
 
+  if (op.auth) {
+    responses["401"] = {
+      description: "Missing or invalid API key",
+      content: { "application/json": { schema: ref("ApiError") } },
+    };
+  }
+
   const obj: Record<string, unknown> = {
     operationId: op.name,
     summary: op.summary,
     tags: [op.tag],
     responses,
   };
+  if (op.auth) obj.security = [{ bearerAuth: [] }];
   if (parameters.length) obj.parameters = parameters;
   if (op.requestSchema) {
     obj.requestBody = {
@@ -102,7 +110,10 @@ export interface OpenApiDocument {
   servers: { url: string }[];
   tags: { name: string; description: string }[];
   paths: Record<string, Record<string, unknown>>;
-  components: { schemas: Record<string, unknown> };
+  components: {
+    schemas: Record<string, unknown>;
+    securitySchemes: Record<string, unknown>;
+  };
   /**
    * Scalar / Redoc extension: groups sidebar tags under higher-level
    * headings. Standards-compliant tooling ignores `x-*` keys, so this
@@ -145,7 +156,17 @@ export function buildOpenApi(
     servers: [{ url: origin }],
     tags: API_TAGS.map((t) => ({ name: t.name, description: t.description })),
     paths,
-    components: { schemas },
+    components: {
+      schemas,
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          description:
+            "API key for the grounded tier and webhook management (`Authorization: Bearer pk_live_...`).",
+        },
+      },
+    },
     "x-tagGroups": API_TAG_GROUPS.map((g) => ({
       name: g.name,
       tags: [...g.tags],

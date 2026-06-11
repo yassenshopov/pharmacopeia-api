@@ -10,9 +10,12 @@ import type {
   InteractionCheckResponse,
   LiteratureReference,
   Pagination,
+  PassageSection,
   Reaction,
   ReactionSummary,
+  RetrievalMethod,
   SearchResult,
+  SemanticPassage,
   ShortageEntry,
   SimilarDrugResult,
   Stats,
@@ -40,7 +43,14 @@ export type {
   Stats,
 } from "@/lib/schemas";
 export { SearchResultSchema } from "@/lib/schemas";
-import { atcLevel2Name, atcLevel3Name } from "./atc-names";
+import {
+  buildAtcGroups,
+  buildAtcTree,
+  buildBrands,
+  buildMechanismGraph,
+  toDrugSummary,
+} from "./dataset-views";
+import { PrismaRepository } from "./prisma-repository";
 import { SEED_CLASSES, SEED_CLASSES_BY_SLUG } from "./seed/classes";
 import { SEED_DRUGS, SEED_DRUGS_BY_SLUG } from "./seed/drugs";
 import {
@@ -63,6 +73,13 @@ import {
 import { getSeedSimilar } from "./seed/similarity";
 import { getReactionIndex, resolveReactionSlug } from "./reactions-index";
 import { searchByStructure } from "./structure-search";
+import {
+  buildLexicalPassageIndex,
+  buildPassages,
+  searchLexicalPassageIndex,
+  type LexicalPassageIndex,
+  type ScoredPassage,
+} from "./passages";
 
 /**
  * Repository interface that hides whether records come from the static
@@ -144,6 +161,18 @@ export interface PharmacopeiaRepository {
 
   search(query: string, limit?: number): Promise<SearchResult[]>;
 
+  /**
+   * Semantic retrieval over drug-record passages. Embedding-backed
+   * (pgvector cosine) on the Postgres backend when an embeddings
+   * provider is configured; otherwise a lexical TF-IDF fallback over
+   * the same passages. `method` in the result reports which path
+   * answered — the response shape never changes.
+   */
+  searchPassages(
+    query: string,
+    opts: { limit: number; sections?: PassageSection[] },
+  ): Promise<PassageSearchResult>;
+
   checkInteractions(slugs: string[]): Promise<InteractionCheckResponse>;
 
   /**
@@ -222,6 +251,28 @@ export interface PharmacopeiaRepository {
   ): Promise<{ canonical: string; matched: string } | null>;
 }
 
+export interface PassageSearchResult {
+  method: RetrievalMethod;
+  /** Embedding model id when `method` is `embedding`. */
+  model?: string;
+  results: SemanticPassage[];
+}
+
+/** Shared scored-passage → API-shape mapping, used by both backends. */
+export function toSemanticPassages(
+  scored: ScoredPassage[],
+): SemanticPassage[] {
+  return scored.map(({ passage, score }) => ({
+    id: passage.id,
+    drug: { slug: passage.drugSlug, name: passage.drugName },
+    section: passage.section,
+    chunk: passage.chunk,
+    text: passage.text,
+    score,
+    provenance: passage.provenance,
+  }));
+}
+
 export interface ListChangelogOpts {
   /** Maximum number of entries to return; defaults to 50. */
   limit?: number;
@@ -290,34 +341,6 @@ export interface MechanismGraph {
   links: MechanismGraphLink[];
 }
 
-/**
- * WHO ATC level-1 anatomical main groups. Static, canonical, and
- * complete (14 groups). RxClass only hands us the deeper subgroups, so
- * we supply the top level ourselves to anchor the hierarchy.
- */
-const ATC_LEVEL1: ReadonlyArray<{ letter: string; name: string }> = [
-  { letter: "A", name: "Alimentary tract and metabolism" },
-  { letter: "B", name: "Blood and blood forming organs" },
-  { letter: "C", name: "Cardiovascular system" },
-  { letter: "D", name: "Dermatologicals" },
-  { letter: "G", name: "Genito-urinary system and sex hormones" },
-  {
-    letter: "H",
-    name: "Systemic hormonal preparations, excluding sex hormones and insulins",
-  },
-  { letter: "J", name: "Antiinfectives for systemic use" },
-  { letter: "L", name: "Antineoplastic and immunomodulating agents" },
-  { letter: "M", name: "Musculo-skeletal system" },
-  { letter: "N", name: "Nervous system" },
-  {
-    letter: "P",
-    name: "Antiparasitic products, insecticides and repellents",
-  },
-  { letter: "R", name: "Respiratory system" },
-  { letter: "S", name: "Sensory organs" },
-  { letter: "V", name: "Various" },
-];
-
 // ────────────────────────────────────────────────────────────────────────
 // Static seed implementation
 // ────────────────────────────────────────────────────────────────────────
@@ -325,25 +348,26 @@ const ATC_LEVEL1: ReadonlyArray<{ letter: string; name: string }> = [
 const VERSION = "v0.1.0-seed";
 const UPDATED_AT = "2026-05-28T00:00:00.000Z";
 
-function paginate<T>(items: T[], opts?: ListOpts): List<T> {
-  const limit = Math.min(Math.max(opts?.limit ?? 50, 1), 200);
-  const offset = Math.max(opts?.offset ?? 0, 0);
+/**
+ * Clamp list options to the shared API limits (limit 1–200, default 50).
+ * Exported for the Postgres repository so both backends paginate
+ * identically.
+ */
+export function clampListOpts(opts?: ListOpts): {
+  limit: number;
+  offset: number;
+} {
   return {
-    items: items.slice(offset, offset + limit),
-    pagination: { total: items.length, limit, offset },
+    limit: Math.min(Math.max(opts?.limit ?? 50, 1), 200),
+    offset: Math.max(opts?.offset ?? 0, 0),
   };
 }
 
-function toSummary(d: Drug): DrugSummary {
+function paginate<T>(items: T[], opts?: ListOpts): List<T> {
+  const { limit, offset } = clampListOpts(opts);
   return {
-    slug: d.slug,
-    name: d.name,
-    synonyms: d.synonyms,
-    jurisdiction: d.jurisdiction,
-    ingredients: d.ingredients,
-    brands: d.brands,
-    classes: d.classes,
-    shortDescription: d.shortDescription,
+    items: items.slice(offset, offset + limit),
+    pagination: { total: items.length, limit, offset },
   };
 }
 
@@ -353,6 +377,8 @@ function toSummary(d: Drug): DrugSummary {
  * when no `DATABASE_URL` is configured.
  */
 class StaticRepository implements PharmacopeiaRepository {
+  private _passageIndex: LexicalPassageIndex | null = null;
+
   constructor() {
     // Fail-fast validation: every seed record must satisfy its schema.
     // This is the only place we re-validate seed data because once it's
@@ -410,7 +436,7 @@ class StaticRepository implements PharmacopeiaRepository {
         d.ingredients.some((i) => i.slug === opts.ingredientSlug),
       );
     }
-    return paginate(drugs.map(toSummary), opts);
+    return paginate(drugs.map(toDrugSummary), opts);
   }
 
   async getDrug(slug: string): Promise<Drug | null> {
@@ -483,209 +509,19 @@ class StaticRepository implements PharmacopeiaRepository {
   }
 
   async listBrands(): Promise<BrandEntry[]> {
-    const map = new Map<string, { brand: string; drugs: Map<string, string> }>();
-    for (const d of SEED_DRUGS) {
-      for (const brand of d.brands) {
-        const key = brand.toLowerCase();
-        let entry = map.get(key);
-        if (!entry) {
-          entry = { brand, drugs: new Map() };
-          map.set(key, entry);
-        }
-        entry.drugs.set(d.slug, d.name);
-      }
-    }
-    return [...map.values()]
-      .map((e) => ({
-        brand: e.brand,
-        drugs: [...e.drugs.entries()]
-          .map(([slug, name]) => ({ slug, name }))
-          .sort((a, b) => a.name.localeCompare(b.name)),
-      }))
-      .sort((a, b) => a.brand.localeCompare(b.brand));
+    return buildBrands(SEED_DRUGS);
   }
 
   async listAtcGroups(): Promise<AtcGroup[]> {
-    const byLetter = new Map<string, DrugClass[]>();
-    for (const c of SEED_CLASSES) {
-      if (c.kind !== "atc" || !c.code) continue;
-      const letter = c.code[0].toUpperCase();
-      const list = byLetter.get(letter) ?? [];
-      list.push(c);
-      byLetter.set(letter, list);
-    }
-    const groups: AtcGroup[] = [];
-    for (const { letter, name } of ATC_LEVEL1) {
-      const classes = byLetter.get(letter);
-      if (!classes || classes.length === 0) continue;
-      classes.sort((a, b) => (a.code ?? "").localeCompare(b.code ?? ""));
-      groups.push({ letter, name, classes });
-    }
-    return groups;
+    return buildAtcGroups(SEED_CLASSES);
   }
 
   async getAtcTree(): Promise<AtcTreeNode[]> {
-    // Level-4 substances first: which drugs carry which level-4 code.
-    const drugsByL4 = new Map<string, { slug: string; name: string }[]>();
-    for (const d of SEED_DRUGS) {
-      const codes = new Set<string>();
-      for (const c of d.classes) {
-        if (c.kind === "atc" && c.code) codes.add(c.code);
-      }
-      for (const code of d.identifiers.atc) codes.add(code);
-      for (const code of codes) {
-        const list = drugsByL4.get(code) ?? [];
-        list.push({ slug: d.slug, name: d.name });
-        drugsByL4.set(code, list);
-      }
-    }
-
-    const l1Name = new Map(ATC_LEVEL1.map((g) => [g.letter, g.name]));
-    const roots = new Map<string, AtcTreeNode>();
-
-    const ensure = (
-      map: Map<string, AtcTreeNode>,
-      code: string,
-      level: 1 | 2 | 3 | 4,
-      name: string,
-      slug?: string,
-    ): AtcTreeNode => {
-      let node = map.get(code);
-      if (!node) {
-        node = { code, level, name, slug, children: [], drugCount: 0 };
-        map.set(code, node);
-      }
-      return node;
-    };
-
-    const childMap = (parent: AtcTreeNode): Map<string, AtcTreeNode> => {
-      // Lazily index this parent's children by code for O(1) lookup.
-      const m = new Map<string, AtcTreeNode>();
-      for (const child of parent.children) m.set(child.code, child);
-      return m;
-    };
-
-    for (const cls of SEED_CLASSES) {
-      if (cls.kind !== "atc" || !cls.code || cls.code.length < 5) continue;
-      const code = cls.code;
-      const l1 = code[0];
-      const l2 = code.slice(0, 3);
-      const l3 = code.slice(0, 4);
-
-      const l1Node = ensure(roots, l1, 1, l1Name.get(l1) ?? l1);
-      const l2Map = childMap(l1Node);
-      const before2 = l2Map.size;
-      const l2Node = ensure(l2Map, l2, 2, atcLevel2Name(l2));
-      if (l2Map.size !== before2) l1Node.children.push(l2Node);
-
-      const l3Map = childMap(l2Node);
-      const before3 = l3Map.size;
-      const l3Node = ensure(l3Map, l3, 3, atcLevel3Name(l3));
-      if (l3Map.size !== before3) l2Node.children.push(l3Node);
-
-      const l4Node: AtcTreeNode = {
-        code,
-        level: 4,
-        name: cls.name,
-        slug: cls.slug,
-        drugCount: 0,
-        children: [],
-      };
-      l3Node.children.push(l4Node);
-
-      const substances = drugsByL4.get(code) ?? [];
-      substances.sort((a, b) => a.name.localeCompare(b.name));
-      for (const s of substances) {
-        l4Node.children.push({
-          code: s.slug,
-          level: 5,
-          name: s.name,
-          slug: s.slug,
-          drugCount: 1,
-          children: [],
-        });
-      }
-      l4Node.drugCount = substances.length;
-    }
-
-    // Roll drug counts up the tree and sort every level by code/name.
-    const finalize = (node: AtcTreeNode): number => {
-      if (node.level === 5) return 1;
-      let total = 0;
-      for (const child of node.children) total += finalize(child);
-      if (node.level === 4) total = node.drugCount;
-      else node.drugCount = total;
-      node.children.sort((a, b) =>
-        node.level >= 4
-          ? a.name.localeCompare(b.name)
-          : a.code.localeCompare(b.code),
-      );
-      return total;
-    };
-
-    const result = [...roots.values()];
-    for (const root of result) finalize(root);
-    result.sort((a, b) => a.code.localeCompare(b.code));
-    return result;
+    return buildAtcTree(SEED_DRUGS, SEED_CLASSES);
   }
 
   async getMechanismGraph(): Promise<MechanismGraph> {
-    const nodes = new Map<string, MechanismGraphNode>();
-    const linkSet = new Set<string>();
-    const links: MechanismGraphLink[] = [];
-
-    const addNode = (
-      id: string,
-      type: MechanismNodeType,
-      label: string,
-      extra?: { slug?: string; group?: string },
-    ) => {
-      let node = nodes.get(id);
-      if (!node) {
-        node = { id, type, label, degree: 0, ...extra };
-        nodes.set(id, node);
-      }
-      return node;
-    };
-
-    const addLink = (
-      source: string,
-      target: string,
-      kind: MechanismGraphLink["kind"],
-    ) => {
-      const key = `${source}|${target}`;
-      if (linkSet.has(key)) return;
-      linkSet.add(key);
-      links.push({ source, target, kind });
-      const s = nodes.get(source);
-      const t = nodes.get(target);
-      if (s) s.degree += 1;
-      if (t) t.degree += 1;
-    };
-
-    for (const d of SEED_DRUGS) {
-      const atcLetter = d.classes.find((c) => c.kind === "atc" && c.code)
-        ?.code?.[0];
-      const drugId = `drug:${d.slug}`;
-      addNode(drugId, "drug", d.name, { slug: d.slug, group: atcLetter });
-
-      for (const c of d.classes) {
-        if (c.kind !== "moa") continue;
-        const moaId = `moa:${c.slug}`;
-        addNode(moaId, "moa", c.name, { slug: c.slug });
-        addLink(drugId, moaId, "member");
-      }
-
-      for (const target of d.mechanism?.targets ?? []) {
-        const clean = target.trim();
-        if (!clean) continue;
-        const targetId = `target:${clean.toLowerCase()}`;
-        addNode(targetId, "target", clean);
-        addLink(drugId, targetId, "target");
-      }
-    }
-
-    return { nodes: [...nodes.values()], links };
+    return buildMechanismGraph(SEED_DRUGS);
   }
 
   async search(query: string, limit = 10): Promise<SearchResult[]> {
@@ -738,6 +574,31 @@ class StaticRepository implements PharmacopeiaRepository {
     }
 
     return matches.slice(0, limit);
+  }
+
+  /**
+   * Lexical passage index over the seed drugs (narratives folded in,
+   * same as getDrug serves them). Built lazily — most processes never
+   * hit semantic search.
+   */
+  private passageIndex(): LexicalPassageIndex {
+    if (!this._passageIndex) {
+      const drugs = SEED_DRUGS.map((d) => {
+        if (d.interactionsNarrative) return d;
+        const narrative = getSeedInteractionsNarrative(d.slug);
+        return narrative ? { ...d, interactionsNarrative: narrative.text } : d;
+      });
+      this._passageIndex = buildLexicalPassageIndex(buildPassages(drugs));
+    }
+    return this._passageIndex;
+  }
+
+  async searchPassages(
+    query: string,
+    opts: { limit: number; sections?: PassageSection[] },
+  ): Promise<PassageSearchResult> {
+    const scored = searchLexicalPassageIndex(this.passageIndex(), query, opts);
+    return { method: "lexical", results: toSemanticPassages(scored) };
   }
 
   async checkInteractions(
@@ -824,7 +685,12 @@ class StaticRepository implements PharmacopeiaRepository {
 
 let _repo: PharmacopeiaRepository | null = null;
 export function getRepository(): PharmacopeiaRepository {
-  if (!_repo) _repo = new StaticRepository();
+  if (!_repo) {
+    _repo =
+      getRepositoryKind() === "supabase"
+        ? new PrismaRepository()
+        : new StaticRepository();
+  }
   return _repo;
 }
 
@@ -835,8 +701,9 @@ export type RepositoryKind = "static" | "supabase";
  * `/api/v1/health` envelope so monitors can distinguish "API is up on
  * the real backend" from "API is up on the seed fallback" without
  * paying the cost of a real query. Mirrors the env switch in
- * `getRepository()`: when `DATABASE_URL` is set we'll return
- * `"supabase"`; for now the seed implementation is the only option.
+ * `getRepository()`: when `DATABASE_URL` is set requests are served by
+ * the Prisma-backed Supabase Postgres repository, otherwise by the
+ * static seed.
  */
 export function getRepositoryKind(): RepositoryKind {
   return process.env.DATABASE_URL ? "supabase" : "static";

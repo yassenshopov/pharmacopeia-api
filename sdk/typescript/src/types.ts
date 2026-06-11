@@ -22,7 +22,7 @@ export interface Pagination {
 }
 
 export interface ApiError {
-  error: { code: "not_found" | "invalid_request" | "rate_limited" | "internal_error"; message: string; details?: unknown };
+  error: { code: "not_found" | "invalid_request" | "unauthorized" | "forbidden" | "rate_limited" | "not_configured" | "internal_error"; message: string; details?: unknown };
 }
 
 export interface DrugRef {
@@ -33,6 +33,7 @@ export interface DrugRef {
 export interface Indication {
   text: string;
   icd10: string[];
+  snomed: string[];
 }
 
 export interface Contraindication {
@@ -479,4 +480,125 @@ export interface ReactionResponse {
   relatedReactions: RelatedReaction[];
   meta: ReactionMeta | null;
   disclaimer: string;
+}
+
+export type PassageSection = "overview" | "mechanism" | "indications" | "contraindications" | "dosing" | "pharmacokinetics" | "interactions" | "boxed-warning" | "dosage-and-administration" | "warnings-and-precautions" | "adverse-reactions" | "use-in-specific-populations" | "overdosage" | "patient-summary";
+
+export type RetrievalMethod = "embedding" | "lexical";
+
+export interface SemanticPassage {
+  id: string;
+  drug: { slug: string; name: string };
+  section: PassageSection;
+  chunk: number;
+  text: string;
+  score: number;
+  provenance: Provenance;
+}
+
+export interface SemanticSearchResponse {
+  query: string;
+  method: RetrievalMethod;
+  model?: string;
+  results: SemanticPassage[];
+  total: number;
+  disclaimer: string;
+}
+
+export interface GroundedRequest {
+  query: string;
+  limit: number;
+  sections?: PassageSection[];
+}
+
+export interface GroundedCitation {
+  id: string;
+  drug: { slug: string; name: string };
+  section: PassageSection;
+  passageId: string;
+  url: string;
+  provenance: Provenance;
+}
+
+export interface GroundingSpan {
+  start: number;
+  end: number;
+  citationId: string;
+}
+
+export interface GroundedPassage {
+  id: string;
+  citationId: string;
+  drug: { slug: string; name: string };
+  section: PassageSection;
+  chunk: number;
+  text: string;
+  score: number;
+  grounding: GroundingSpan[];
+}
+
+export interface GroundedResponse {
+  query: string;
+  method: RetrievalMethod;
+  model?: string;
+  passages: GroundedPassage[];
+  citations: GroundedCitation[];
+  usage: { tier: string; requestCount?: number };
+  disclaimer: string;
+}
+
+export type WebhookEventName = "drug.created" | "drug.updated" | "drug.deleted" | "dataset.refreshed";
+
+export interface WebhookDrugChange {
+  slug: string;
+  name?: string;
+  sourceHash?: string;
+  changedSections?: string[];
+}
+
+export interface WebhookEventPayload {
+  id: string;
+  event: WebhookEventName;
+  timestamp: string;
+  datasetVersion?: string;
+  drugs?: WebhookDrugChange[];
+  summary?: { created: number; updated: number; deleted: number };
+}
+
+export interface WebhookEndpoint {
+  id: string;
+  url: string;
+  events: WebhookEventName[];
+  active: boolean;
+  createdAt: string;
+  failureCount: number;
+  lastStatus?: number;
+  lastDeliveryAt?: string;
+}
+
+export interface WebhookCreateRequest {
+  url: string;
+  events: WebhookEventName[];
+}
+
+export interface WebhookEndpointCreated {
+  id: string;
+  url: string;
+  events: WebhookEventName[];
+  active: boolean;
+  createdAt: string;
+  failureCount: number;
+  lastStatus?: number;
+  lastDeliveryAt?: string;
+  secret: string;
+}
+
+export interface WebhooksListResponse {
+  endpoints: WebhookEndpoint[];
+  total: number;
+}
+
+export interface WebhookDeleteResponse {
+  deleted: true;
+  id: string;
 }

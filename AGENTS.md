@@ -57,22 +57,57 @@ predictable JSON.
    `app/<entity>s/[slug]/page.tsx`. Mirror the drug/class layout.
 7. Update `app/docs/page.tsx` endpoint table.
 
-## Adding a real database (Stage 1)
+## The real database (Stage 1 — shipped)
 
-Plan, do not change the API contract:
+Supabase Postgres behind the same repository interface, via **Prisma**:
 
-1. Add Supabase project, set `DATABASE_URL` + `SUPABASE_*` env vars.
-2. Add Drizzle schema in `lib/db/schema.ts` mirroring the Zod schemas
-   plus provenance columns.
-3. Create `lib/data/supabase-repository.ts` implementing
-   `PharmacopeiaRepository`.
-4. Update `getRepository()` to return `SupabaseRepository` when
-   `DATABASE_URL` is set, else fall back to the static seed repository.
-5. Add a `scripts/ingest/` pipeline that writes through the same
-   schemas (download → parse → upsert).
+1. `prisma/schema.prisma` defines document-style tables: each entity
+   row stores its full Zod-validated record as a jsonb `payload` plus
+   extracted columns for keys, filtering, and search. The Zod schemas
+   in `lib/schemas/` remain the single source of truth for shapes.
+2. `lib/data/prisma-repository.ts` implements `PharmacopeiaRepository`.
+   Point lookups and paginated lists are per-request SQL; derived
+   surfaces (brands, ATC tree, MoA graph, reactions index, structure
+   fingerprints) build once per process from the shared pure functions
+   in `lib/data/dataset-views.ts` and friends.
+3. `getRepository()` returns `PrismaRepository` when `DATABASE_URL` is
+   set, else the static seed repository. `/api/v1/health` reports which.
+4. `scripts/db/seed.ts` (`npm run db:seed`) pushes the validated seed
+   dataset into Postgres — an idempotent snapshot load.
+5. Env vars: `DATABASE_URL` (transaction pooler, runtime) and
+   `DIRECT_URL` (session pooler, CLI/seeding). The Prisma CLI hangs on
+   Supabase's transaction pooler — `prisma.config.ts` prefers
+   `DIRECT_URL` for that reason.
 
 The seed repository (static TypeScript data baked into the bundle)
-stays in the tree as a fallback for local dev without env vars.
+stays in the tree as a fallback for local dev without env vars. Both
+backends must stay behaviourally identical — new derived views belong
+in backend-agnostic modules, never in one repository only.
+
+## Semantic retrieval, grounded tier, webhooks (shipped)
+
+1. **Passages** (`lib/data/passages.ts`) are the retrieval unit: every
+   drug record is chunked into citable passages by pure functions
+   shared by both repositories and `scripts/db/seed.ts`, so backends
+   can never disagree about passage ids or text.
+2. **Embeddings** (`lib/ai/embeddings.ts`) pin the model + dimensions
+   (text-embedding-3-small, 512). Vectors live in pgvector
+   (`passages.embedding`); `npm run db:embed` fills them delta-based —
+   re-seeding nulls the vector only when a passage's text hash changed.
+3. **`searchPassages()`** on the repository serves
+   `/api/v1/semantic-search` and `/api/v1/grounded`. Embedding path on
+   Postgres when a provider is configured, lexical TF-IDF fallback
+   otherwise — same response shape, `method` reports which.
+4. **API keys** (`lib/auth/api-keys.ts`): sha256-at-rest rows minted by
+   `npm run keys:create`, or plaintext via `PHARMACOPEIA_API_KEYS` for
+   zero-db deployments. Gate `/v1/grounded` and `/v1/webhooks`.
+5. **Webhooks** (`lib/webhooks/dispatch.ts`): HMAC-SHA256-signed
+   deliveries (`t=<ts>,v1=<hex>` over `<ts>.<body>`), per-attempt
+   delivery log, auto-disable after 25 consecutive failures. Events
+   fire from `db:seed` by diffing provenance hashes.
+6. New endpoints must be registered in `lib/sdk/manifest.ts` (+
+   schemas in `lib/sdk/registry.ts`) and regenerated with
+   `npm run codegen` so SDKs and OpenAPI never drift.
 
 ## Data pipeline rules (Stage 2+)
 

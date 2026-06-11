@@ -44,26 +44,31 @@ interface IndexEntry {
   fingerprint: number[];
 }
 
-let _index: IndexEntry[] | null = null;
+/** One indexable molecule, however the backend stores it. */
+export interface StructureIndexInput {
+  slug: string;
+  name: string;
+  smiles: string;
+  className: string | undefined;
+}
 
-function buildIndex(): IndexEntry[] {
+export type StructureIndex = IndexEntry[];
+
+/**
+ * Fingerprint every input molecule. Backend-agnostic: the static
+ * repository feeds the seed files through this, the Postgres repository
+ * feeds rows from the `structures` table. Inputs should be pre-sorted
+ * by slug for stable result ordering.
+ */
+export function buildStructureIndex(
+  inputs: StructureIndexInput[],
+): StructureIndex {
   const out: IndexEntry[] = [];
-  for (const slug of Object.keys(SEED_STRUCTURES).sort()) {
-    const struct = SEED_STRUCTURES[slug];
-    const drug = SEED_DRUGS_BY_SLUG[slug];
-    if (!struct || !drug) continue;
+  for (const input of inputs) {
     try {
-      const mol = OCL.Molecule.fromSmiles(struct.smiles);
+      const mol = OCL.Molecule.fromSmiles(input.smiles);
       if (mol.getAtoms() > MAX_ATOMS) continue;
-      out.push({
-        slug,
-        name: drug.name,
-        smiles: struct.smiles,
-        className:
-          drug.classes.find((c) => c.kind === "epc")?.name ??
-          drug.classes[0]?.name,
-        fingerprint: mol.getIndex(),
-      });
+      out.push({ ...input, fingerprint: mol.getIndex() });
     } catch {
       // Same forgiveness as the offline pipeline — skip anything OCL
       // can't parse and keep going.
@@ -72,8 +77,30 @@ function buildIndex(): IndexEntry[] {
   return out;
 }
 
+let _index: IndexEntry[] | null = null;
+
 function getIndex(): IndexEntry[] {
-  if (!_index) _index = buildIndex();
+  if (!_index) {
+    _index = buildStructureIndex(
+      Object.keys(SEED_STRUCTURES)
+        .sort()
+        .flatMap((slug) => {
+          const struct = SEED_STRUCTURES[slug];
+          const drug = SEED_DRUGS_BY_SLUG[slug];
+          if (!struct || !drug) return [];
+          return [
+            {
+              slug,
+              name: drug.name,
+              smiles: struct.smiles,
+              className:
+                drug.classes.find((c) => c.kind === "epc")?.name ??
+                drug.classes[0]?.name,
+            },
+          ];
+        }),
+    );
+  }
   return _index;
 }
 
@@ -85,6 +112,15 @@ function getIndex(): IndexEntry[] {
  * Throws `InvalidSmilesError` if OpenChemLib cannot parse the input.
  */
 export function searchByStructure(
+  smiles: string,
+  opts: { limit: number; threshold: number },
+): StructureMatch[] {
+  return searchStructureIndex(getIndex(), smiles, opts);
+}
+
+/** Run a SMILES query against an arbitrary prebuilt index. */
+export function searchStructureIndex(
+  index: StructureIndex,
   smiles: string,
   opts: { limit: number; threshold: number },
 ): StructureMatch[] {
@@ -106,7 +142,6 @@ export function searchByStructure(
     throw new InvalidSmilesError(`Could not parse SMILES: ${msg}`);
   }
 
-  const index = getIndex();
   const scored: StructureMatch[] = [];
   for (const entry of index) {
     const raw = OCL.SSSearcherWithIndex.getSimilarityTanimoto(
