@@ -36,7 +36,12 @@ import {
   type Provenance,
   type TrialEntry,
 } from "../../lib/schemas";
-import { SEED_DRUGS } from "../../lib/data/seed/drugs";
+import {
+  enrichLimit,
+  enrichScaleMode,
+  loadEnrichmentDrugs,
+  openCheckpoint,
+} from "./enrich-shared";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -193,25 +198,40 @@ export function getSeedTrials(slug: string): DrugTrials | null {
 }
 
 async function main(): Promise<void> {
+  const scale = enrichScaleMode();
+  const limit = enrichLimit();
+  let drugs = loadEnrichmentDrugs();
+  if (limit) drugs = drugs.slice(0, limit);
   process.stderr.write(
-    `[fetch-trials] indexing ${SEED_DRUGS.length} drugs ` +
+    `[fetch-trials] mode=${scale ? "scale" : "static"} indexing ${drugs.length} drugs ` +
       `(topN=${TOP_N}, throttle=${THROTTLE_MS}ms)\n`,
   );
 
+  const checkpoint = scale
+    ? openCheckpoint<DrugTrials>("trials.checkpoint.ndjson", "trials.ndjson")
+    : null;
   const out = new Map<string, DrugTrials>();
   let withTrials = 0;
+  let processed = 0;
 
-  for (const drug of SEED_DRUGS) {
+  for (const drug of drugs) {
+    processed += 1;
+    if (checkpoint?.done(drug.slug)) continue;
+
     const body = await fetchStudies(drug.name);
     await sleep(THROTTLE_MS);
-    if (!body) continue;
+    if (!body) {
+      // transient (HTTP error): leave unrecorded so a resume retries it.
+      continue;
+    }
 
     const trials = (body.studies ?? [])
       .map(toEntry)
       .filter((t): t is TrialEntry => t !== null);
     const totalCount = body.totalCount ?? trials.length;
     if (trials.length === 0) {
-      process.stderr.write(`  ${drug.slug}: no registered studies\n`);
+      checkpoint?.record(drug.slug, null);
+      if (!checkpoint) process.stderr.write(`  ${drug.slug}: no registered studies\n`);
       continue;
     }
 
@@ -226,10 +246,21 @@ async function main(): Promise<void> {
     };
     DrugTrialsSchema.parse(entry);
     out.set(drug.slug, entry);
+    checkpoint?.record(drug.slug, entry);
     withTrials += 1;
+    if (processed % 100 === 0 || !checkpoint) {
+      process.stderr.write(
+        `  [${processed}/${drugs.length}] ${drug.slug}: ${trials.length} kept of ${totalCount} registry matches\n`,
+      );
+    }
+  }
+
+  if (checkpoint) {
+    const path = checkpoint.flush();
     process.stderr.write(
-      `  ${drug.slug}: ${trials.length} kept of ${totalCount} registry matches\n`,
+      `[fetch-trials] wrote ${checkpoint.size} drugs with trials → ${path}\n`,
     );
+    return;
   }
 
   const text = emitSeed(out);

@@ -32,7 +32,11 @@ import {
   type PgxPair,
   type Provenance,
 } from "../../lib/schemas";
-import { SEED_DRUGS } from "../../lib/data/seed/drugs";
+import {
+  enrichScaleMode,
+  loadEnrichmentDrugs,
+  writeEnrichmentNdjson,
+} from "./enrich-shared";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -149,10 +153,16 @@ async function main(): Promise<void> {
     }
   }
 
+  const scale = enrichScaleMode();
+  const drugs = loadEnrichmentDrugs();
+  process.stderr.write(
+    `[fetch-pgx] mode=${scale ? "scale" : "static"} joining ${drugs.length} drugs\n`,
+  );
+
   const out = new Map<string, DrugPgx>();
   let withPairs = 0;
 
-  for (const drug of SEED_DRUGS) {
+  for (const drug of drugs) {
     const rxcui = drug.identifiers.rxcui;
     const matched =
       (rxcui ? byRxcui.get(rxcui) : undefined) ??
@@ -177,7 +187,15 @@ async function main(): Promise<void> {
     DrugPgxSchema.parse(entry);
     out.set(drug.slug, entry);
     withPairs += 1;
-    process.stderr.write(`  ${drug.slug}: ${pairs.length} gene pairs\n`);
+    if (!scale) process.stderr.write(`  ${drug.slug}: ${pairs.length} gene pairs\n`);
+  }
+
+  if (scale) {
+    const path = writeEnrichmentNdjson("pgx.ndjson", [...out.values()]);
+    process.stderr.write(
+      `[fetch-pgx] wrote ${withPairs} drugs with PGx pairs → ${path}\n`,
+    );
+    return;
   }
 
   const text = emitSeed(out);

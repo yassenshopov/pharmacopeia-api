@@ -305,7 +305,9 @@ async function main() {
     console.log(`literature lists: ${literature.length}`);
 
     // ── ClinicalTrials.gov crosswalks ─────────────────────────────────
-    const trials = Object.values(SEED_TRIALS).map((raw) => {
+    const trialRows =
+      scaleEnrichment<unknown>("trials.ndjson") ?? Object.values(SEED_TRIALS);
+    const trials = trialRows.map((raw) => {
       const t = DrugTrialsSchema.parse(raw);
       return { drugSlug: t.drug, payload: json(t) };
     });
@@ -316,7 +318,9 @@ async function main() {
     console.log(`trial crosswalks: ${trials.length}`);
 
     // ── CPIC pharmacogenomics ─────────────────────────────────────────
-    const pgx = Object.values(SEED_PGX).map((raw) => {
+    const pgxRows =
+      scaleEnrichment<unknown>("pgx.ndjson") ?? Object.values(SEED_PGX);
+    const pgx = pgxRows.map((raw) => {
       const p = DrugPgxSchema.parse(raw);
       return { drugSlug: p.drug, payload: json(p) };
     });
