@@ -7,6 +7,8 @@ import type {
   ChangelogResponse,
   ClassDetailResponse,
   ClassListResponse,
+  ConditionResponse,
+  ConditionsListResponse,
   Drug,
   DrugInteractionsResponse,
   DrugListResponse,
@@ -256,6 +258,16 @@ export class PharmacopeiaClient {
   /** Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical. */
   getReaction(slug: string): Promise<ReactionResponse> {
     return this.request<ReactionResponse>("GET", `/reaction/${encodeURIComponent(slug)}`, {});
+  }
+
+  /** Browse ICD-10-CM conditions joined to the drugs labeled for them, ordered by number of labeled drugs. A reference reverse index of labeled uses — NOT a treatment recommendation. */
+  listConditions(query: { limit?: number; offset?: number; q?: string } = {}): Promise<ConditionsListResponse> {
+    return this.request<ConditionsListResponse>("GET", `/conditions`, { query });
+  }
+
+  /** Fetch one ICD-10-CM condition with the drugs labeled for it (each carrying the verbatim indication text that produced the link) and related conditions ranked by Jaccard similarity over the drug-id sets. */
+  getCondition(slug: string): Promise<ConditionResponse> {
+    return this.request<ConditionResponse>("GET", `/condition/${encodeURIComponent(slug)}`, {});
   }
 
   /** Meaning-based retrieval over drug-record passages. Embedding-backed when available; lexical fallback otherwise — `method` in the response reports which. */

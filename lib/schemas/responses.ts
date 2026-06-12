@@ -11,6 +11,7 @@ import { LiteratureReferenceSchema } from "./literature";
 import { TrialEntrySchema } from "./trial";
 import { PgxPairSchema } from "./pgx";
 import { ReactionSchema, ReactionSummarySchema } from "./reaction";
+import { ConditionSchema, ConditionSummarySchema } from "./condition";
 
 /**
  * Response envelope schemas for the public v1 API.
@@ -334,3 +335,27 @@ export type ReactionsListResponse = z.infer<typeof ReactionsListResponseSchema>;
  */
 export const ReactionResponseSchema = ReactionSchema;
 export type ReactionResponse = z.infer<typeof ReactionResponseSchema>;
+
+/**
+ * Conditions browse envelope. Lightweight per-row records ordered by
+ * the number of drugs labeled for each condition (desc) so the dense
+ * end of the indication distribution surfaces first. Capped to 200 per
+ * request like every other browse endpoint.
+ */
+export const ConditionsListResponseSchema = z.object({
+  items: z.array(ConditionSummarySchema),
+  pagination: PaginationSchema,
+});
+export type ConditionsListResponse = z.infer<
+  typeof ConditionsListResponseSchema
+>;
+
+/**
+ * Condition detail envelope. The full condition record with the drugs
+ * labeled for it (each carrying the verbatim indication text that
+ * produced the link) and Jaccard-ranked related conditions. The
+ * directory disclaimer is inside `Condition.disclaimer` itself so SDK
+ * consumers never have to re-state it.
+ */
+export const ConditionResponseSchema = ConditionSchema;
+export type ConditionResponse = z.infer<typeof ConditionResponseSchema>;

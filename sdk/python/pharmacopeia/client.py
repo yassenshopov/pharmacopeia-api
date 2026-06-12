@@ -11,6 +11,8 @@ from .models import (
     ChangelogResponse,
     ClassDetailResponse,
     ClassListResponse,
+    ConditionResponse,
+    ConditionsListResponse,
     Drug,
     DrugInteractionsResponse,
     DrugListResponse,
@@ -255,6 +257,17 @@ class PharmacopeiaClient:
         """Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical."""
         data = self._request("GET", f"/reaction/{quote(str(slug), safe='')}")
         return ReactionResponse.model_validate(data)
+
+    def list_conditions(self, *, limit: Optional[int] = None, offset: Optional[int] = None, q: Optional[str] = None) -> ConditionsListResponse:
+        """Browse ICD-10-CM conditions joined to the drugs labeled for them, ordered by number of labeled drugs. A reference reverse index of labeled uses — NOT a treatment recommendation."""
+        params = _drop_none({"limit": limit, "offset": offset, "q": q})
+        data = self._request("GET", "/conditions", params=params)
+        return ConditionsListResponse.model_validate(data)
+
+    def get_condition(self, slug: str) -> ConditionResponse:
+        """Fetch one ICD-10-CM condition with the drugs labeled for it (each carrying the verbatim indication text that produced the link) and related conditions ranked by Jaccard similarity over the drug-id sets."""
+        data = self._request("GET", f"/condition/{quote(str(slug), safe='')}")
+        return ConditionResponse.model_validate(data)
 
     def semantic_search(self, *, q: str, limit: Optional[int] = None, sections: Optional[str] = None) -> SemanticSearchResponse:
         """Meaning-based retrieval over drug-record passages. Embedding-backed when available; lexical fallback otherwise — `method` in the response reports which."""

@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { buildOpenApi, emitOpenApi } from "@/lib/sdk/openapi";
+import { buildPostman, emitPostman } from "@/lib/sdk/postman";
 import { buildSchemaBundle, SCHEMA_REGISTRY } from "@/lib/sdk/registry";
 import {
   API_BASE_PATH,
@@ -138,5 +139,37 @@ describe("OpenAPI document", () => {
   it("matches the committed sdk/openapi.json byte-for-byte (codegen is fresh)", () => {
     const committed = readFileSync(join(ROOT, "sdk", "openapi.json"), "utf8");
     expect(emitOpenApi(bundle)).toBe(committed);
+  });
+});
+
+describe("Postman collection", () => {
+  it("covers every manifest operation exactly once", () => {
+    const collection = buildPostman();
+    const items = collection.item.flatMap((folder) =>
+      folder.item.map((i) => i.name),
+    );
+    // Every operation surfaces as a request (keyed by its summary).
+    expect(items.length).toBe(OPERATIONS.length);
+    for (const op of OPERATIONS) {
+      expect(
+        items.includes(op.summary),
+        `missing Postman request for ${op.name}`,
+      ).toBe(true);
+    }
+  });
+
+  it("groups requests under declared API tags only", () => {
+    const tagNames = new Set(API_TAGS.map((t) => t.name));
+    for (const folder of buildPostman().item) {
+      expect(tagNames.has(folder.name as never), folder.name).toBe(true);
+    }
+  });
+
+  it("matches the committed sdk/postman_collection.json byte-for-byte (codegen is fresh)", () => {
+    const committed = readFileSync(
+      join(ROOT, "sdk", "postman_collection.json"),
+      "utf8",
+    );
+    expect(emitPostman()).toBe(committed);
   });
 });

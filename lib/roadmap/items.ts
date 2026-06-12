@@ -48,6 +48,7 @@ export type RoadmapItem = {
 };
 
 const SHIPPED_AT = "2026-05-28";
+const BRAINSTORM_SHIPPED_AT = "2026-06-12";
 const NEXT_TARGET = "2026-06-30";
 
 export const ROADMAP_ITEMS: RoadmapItem[] = [
@@ -887,44 +888,6 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     tags: ["openfda", "shortages"],
   },
 
-  // ── Next (2026-06 brainstorm intake) ─────────────────────────────
-  {
-    id: "conditions-entity",
-    title: "Conditions as a first-class entity (indication → drugs reverse index)",
-    body: "Every drug already carries indications and an ICD-10 crosswalk, but there's no way to land on a condition and see every drug indicated for it. A /conditions browse + /conditions/{slug} detail and GET /api/v1/conditions + /api/v1/condition/{slug}, built by transposing data already in the dataset — the same derived-view move that turned FAERS rows into the /reactions directory. Large SEO surface, zero new data dependency, reference-only framing (indications are labeled uses, never a treatment recommendation).",
-    status: "next",
-    kind: "data",
-    targetAt: NEXT_TARGET,
-    tags: ["conditions", "icd10", "reverse-index", "seo"],
-  },
-  {
-    id: "bulk-dataset-export",
-    title: "Bulk dataset export (downloadable NDJSON dumps + /data page)",
-    body: "The most \"PokeAPI for X\" gap: no way to grab the whole corpus in one shot. Streaming NDJSON exports of drugs, classes, and ingredients at stable URLs, plus a /data page documenting them — reusing the same repository every endpoint reads from, so a dump can never disagree with the live API. Takes scraping pressure off the per-record endpoints and makes the project genuinely forkable.",
-    status: "next",
-    kind: "api",
-    targetAt: NEXT_TARGET,
-    tags: ["export", "ndjson", "bulk"],
-  },
-  {
-    id: "postman-insomnia-collection",
-    title: "Postman / Insomnia collection generated from the API manifest",
-    body: "A Postman v2.1 collection emitted from the same OPERATIONS manifest the SDKs and OpenAPI document are built from, so import-and-try stays in lockstep with the live surface and can never drift. One more codegen target off the artifact already maintained — no hand-curated request lists.",
-    status: "next",
-    kind: "devx",
-    targetAt: NEXT_TARGET,
-    tags: ["postman", "codegen", "easy-win"],
-  },
-  {
-    id: "dea-controlled-substance-schedule",
-    title: "DEA controlled-substance schedule badge",
-    body: "DEA schedules I–V are public structured facts. A curated name → schedule crosswalk (same conservative, fill-only pattern as the ICD-10 crosswalk) surfaces a schedule on the drug record and an amber badge near the drug header, like the existing FDA-shortage badge. Reference fact only — never prescribing or diversion-control guidance.",
-    status: "next",
-    kind: "data",
-    targetAt: NEXT_TARGET,
-    tags: ["dea", "crosswalk", "controlled-substances"],
-  },
-
   // ── Later (2026-06 brainstorm intake) ────────────────────────────
   {
     id: "dailymed-spl-ingest",
@@ -989,6 +952,48 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     status: "exploring",
     kind: "devx",
     tags: ["sdk", "go", "docker", "self-host"],
+  },
+
+  // ── Shipped (2026-06 brainstorm intake) ──────────────────────────
+  {
+    id: "conditions-entity",
+    title: "Conditions as a first-class entity (indication → drugs reverse index)",
+    body: "Every drug already carries indications and an ICD-10 crosswalk, but there was no way to land on a condition and see every drug indicated for it. Shipped a /conditions browse + /conditions/{slug} detail and GET /api/v1/conditions + /api/v1/condition/{slug}, built by transposing data already in the dataset — the same derived-view move that turned FAERS rows into the /reactions directory. Large SEO surface, zero new data dependency, reference-only framing (indications are labeled uses, never a treatment recommendation).",
+    status: "shipped",
+    kind: "data",
+    milestone: "v0",
+    shippedAt: BRAINSTORM_SHIPPED_AT,
+    tags: ["conditions", "icd10", "reverse-index", "seo"],
+  },
+  {
+    id: "bulk-dataset-export",
+    title: "Bulk dataset export (downloadable NDJSON dumps + /data page)",
+    body: "The most \"PokeAPI for X\" gap: no way to grab the whole corpus in one shot. Shipped streaming NDJSON exports of drugs, classes, and ingredients at stable URLs, plus a /data page documenting them — reusing the same repository every endpoint reads from, so a dump can never disagree with the live API. Takes scraping pressure off the per-record endpoints and makes the project genuinely forkable.",
+    status: "shipped",
+    kind: "api",
+    milestone: "v0",
+    shippedAt: BRAINSTORM_SHIPPED_AT,
+    tags: ["export", "ndjson", "bulk"],
+  },
+  {
+    id: "postman-insomnia-collection",
+    title: "Postman / Insomnia collection generated from the API manifest",
+    body: "A Postman v2.1 collection emitted from the same OPERATIONS manifest the SDKs and OpenAPI document are built from, so import-and-try stays in lockstep with the live surface and can never drift. One more codegen target off the artifact already maintained — no hand-curated request lists.",
+    status: "shipped",
+    kind: "devx",
+    milestone: "v0",
+    shippedAt: BRAINSTORM_SHIPPED_AT,
+    tags: ["postman", "codegen", "easy-win"],
+  },
+  {
+    id: "dea-controlled-substance-schedule",
+    title: "DEA controlled-substance schedule badge",
+    body: "DEA schedules I–V are public structured facts. Shipped a curated name → schedule crosswalk (same conservative, fill-only pattern as the ICD-10 crosswalk) surfacing a schedule on the drug record and an amber badge near the drug header, like the existing FDA-shortage badge. Reference fact only — never prescribing or diversion-control guidance.",
+    status: "shipped",
+    kind: "data",
+    milestone: "v0",
+    shippedAt: BRAINSTORM_SHIPPED_AT,
+    tags: ["dea", "crosswalk", "controlled-substances"],
   },
 
   // ── Shipped (additional easy-wins) ───────────────────────────────

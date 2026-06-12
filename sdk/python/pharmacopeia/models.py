@@ -12,6 +12,9 @@ Jurisdiction = Literal["US-FDA", "EU-EMA", "UK-MHRA", "CA-HC"]
 Severity = Literal["contraindicated", "major", "moderate", "minor", "unknown"]
 
 
+DeaSchedule = Literal["I", "II", "III", "IV", "V"]
+
+
 DrugClassKind = Literal["atc", "moa", "epc", "pe", "pharm", "mesh"]
 
 
@@ -109,6 +112,14 @@ class LabelSections(BaseModel):
     adverse_reactions: Optional[str] = Field(default=None, alias="adverseReactions")
     use_in_specific_populations: Optional[str] = Field(default=None, alias="useInSpecificPopulations")
     overdosage: Optional[str] = None
+
+
+class ControlledSubstance(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    schedule: DeaSchedule
+    narcotic: Optional[bool] = None
+    description: str
 
 
 class Identifier(BaseModel):
@@ -220,6 +231,7 @@ class Drug(BaseModel):
     patient_summary: Optional[str] = Field(default=None, alias="patientSummary")
     interactions_narrative: Optional[str] = Field(default=None, alias="interactionsNarrative")
     label_sections: Optional[LabelSections] = Field(default=None, alias="labelSections")
+    controlled_substance: Optional[ControlledSubstance] = Field(default=None, alias="controlledSubstance")
     identifiers: Identifier
     chemical: Optional[ChemicalStructure] = None
     provenance: Provenance
@@ -658,6 +670,66 @@ class ReactionResponse(BaseModel):
     drugs: List[ReactionDrugRow]
     related_reactions: List[RelatedReaction] = Field(alias="relatedReactions")
     meta: Optional[ReactionMeta]
+    disclaimer: str
+
+
+class ConditionSummary(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    icd10: str
+    category: str
+    drug_count: int = Field(alias="drugCount")
+
+
+class ConditionDrugRow(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    indications: List[str]
+
+
+class RelatedCondition(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    shared_drugs: int = Field(alias="sharedDrugs")
+    similarity: float
+
+
+class Condition(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    icd10: str
+    category: str
+    drug_count: int = Field(alias="drugCount")
+    drugs: List[ConditionDrugRow]
+    related_conditions: List[RelatedCondition] = Field(alias="relatedConditions")
+    disclaimer: str
+
+
+class ConditionsListResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    items: List[ConditionSummary]
+    pagination: Pagination
+
+
+class ConditionResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    slug: str
+    name: str
+    icd10: str
+    category: str
+    drug_count: int = Field(alias="drugCount")
+    drugs: List[ConditionDrugRow]
+    related_conditions: List[RelatedCondition] = Field(alias="relatedConditions")
     disclaimer: str
 
 

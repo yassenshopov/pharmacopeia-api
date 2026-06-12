@@ -1,0 +1,1010 @@
+{
+  "info": {
+    "name": "pharmacopeia API",
+    "description": "Developer-first reference API for medications. Educational / informational use only. Set the `baseUrl` collection variable to your host (default is production) and `apiKey` for the key-gated operations.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://pharmacopeia.dev/api/v1"
+    },
+    {
+      "key": "apiKey",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Drugs",
+      "description": "Browse, fetch, and explore drugs. Includes per-drug interactions and structural neighbours.",
+      "item": [
+        {
+          "name": "List drugs (paginated), optionally filtered by class or ingredient.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drugs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drugs"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Page size (1–200, default 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "",
+                  "description": "Zero-based offset.",
+                  "disabled": true
+                },
+                {
+                  "key": "class",
+                  "value": "",
+                  "description": "Filter to drugs in this class slug.",
+                  "disabled": true
+                },
+                {
+                  "key": "ingredient",
+                  "value": "",
+                  "description": "Filter to drugs containing this ingredient slug.",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Case-insensitive substring filter over name, slug, synonyms, brands, and ingredient names.",
+                  "disabled": true
+                },
+                {
+                  "key": "jurisdiction",
+                  "value": "",
+                  "description": "Filter by regulatory jurisdiction (US-FDA, EU-EMA, UK-MHRA, CA-HC). The v0 dataset is US-FDA only.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /drugs`"
+          }
+        },
+        {
+          "name": "Fetch a single drug by slug.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ],
+              "query": [
+                {
+                  "key": "fields",
+                  "value": "",
+                  "description": "Optional comma-separated list of sections to include (mechanism, indications, contraindications, dosing, pharmacokinetics, interactions, labelSections, approvalHistory, chemical, patientSummary). Identity fields are always returned. Omit for the full record.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}`"
+          }
+        },
+        {
+          "name": "Fetch up to 100 drug records in a single round-trip. Returns the full records found plus the slugs that did not resolve.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/drugs/batch",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drugs",
+                "batch"
+              ]
+            },
+            "description": "`POST /drugs/batch`",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "List known interactions for a drug.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/interactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "interactions"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/interactions`"
+          }
+        },
+        {
+          "name": "Structurally similar drugs (Tanimoto over 2D fingerprints).",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/similar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "similar"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/similar`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Classes",
+      "description": "RxClass-style drug classes (FDA EPC, WHO ATC, MoA, MeSH) and their members.",
+      "item": [
+        {
+          "name": "List drug classes (paginated).",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/classes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "classes"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Page size (1–200, default 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "",
+                  "description": "Zero-based offset.",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Case-insensitive substring filter over name, slug, kind, and description.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /classes`"
+          }
+        },
+        {
+          "name": "Fetch a single drug class plus the drugs it contains.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/class/{slug}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "class",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /class/{slug}`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ingredients",
+      "description": "Active ingredients, the building blocks shared across drugs.",
+      "item": [
+        {
+          "name": "List active ingredients (paginated).",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ingredients",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ingredients"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Page size (1–200, default 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "",
+                  "description": "Zero-based offset.",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Case-insensitive substring filter over name, slug, and synonyms.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /ingredients`"
+          }
+        },
+        {
+          "name": "Fetch a single ingredient by slug.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/ingredient/{slug}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ingredient",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /ingredient/{slug}`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Brands",
+      "description": "Brand → generic crosswalk across the dataset.",
+      "item": [
+        {
+          "name": "Brand → generic crosswalk for every brand in the dataset.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/brands",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "brands"
+              ]
+            },
+            "description": "`GET /brands`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Search",
+      "description": "Lookup by name or by 2D chemical structure (SMILES Tanimoto).",
+      "item": [
+        {
+          "name": "Full-text search across drugs, classes, and ingredients.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Search query.",
+                  "disabled": false
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Max results (1–50, default 10).",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /search`"
+          }
+        },
+        {
+          "name": "Rank drugs in the dataset by 2D Tanimoto similarity to a caller-supplied SMILES. Structural proximity only.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/structure-search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "structure-search"
+              ]
+            },
+            "description": "`POST /structure-search`",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Interactions",
+      "description": "Multi-drug interaction checks. Severity-graded, with mechanism and source.",
+      "item": [
+        {
+          "name": "Check a set of 2–20 drug slugs for pairwise interactions.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/interactions/check",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "interactions",
+                "check"
+              ]
+            },
+            "description": "`POST /interactions/check`",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shortages",
+      "description": "FDA drug-shortage status crosswalk. Reference statistics only — for live status, consult the FDA shortages database directly.",
+      "item": [
+        {
+          "name": "FDA shortage entries (active, resolved, discontinuation) for a drug. Reference statistics only.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/shortages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "shortages"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/shortages`"
+          }
+        },
+        {
+          "name": "Every shortage entry across the dataset, sorted by drug then presentation.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shortages",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shortages"
+              ]
+            },
+            "description": "`GET /shortages`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AdverseEvents",
+      "description": "Aggregate FAERS adverse-event report counts. Counts are reporting volume, NOT incidence rates, signals, or causality. Reference statistics only.",
+      "item": [
+        {
+          "name": "Aggregate FAERS report counts for a drug — top reactions by reporting volume. NOT incidence rates, signals, or causality.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/adverse-events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "adverse-events"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/adverse-events`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reactions",
+      "description": "MedDRA Preferred Terms reported to FAERS, transposed across the dataset. Each reaction lists the drugs that report it most, ranked by share of the drug's matched reports, plus related reactions by Jaccard similarity. Reference statistics only — NOT a symptom checker, NOT diagnostic.",
+      "item": [
+        {
+          "name": "Browse MedDRA Preferred Terms reported to FAERS across the dataset, ordered by total reporting volume. Reference statistics only — NOT a symptom checker.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reactions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reactions"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Page size (1–200, default 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "",
+                  "description": "Zero-based offset.",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Case-insensitive substring filter over the reaction term, slug, and spelling aliases.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /reactions`"
+          }
+        },
+        {
+          "name": "Fetch one MedDRA Preferred Term with its per-drug breakdown (count + share of matched FAERS reports), related reactions ranked by Jaccard similarity over the drug-id sets, and optional reference metadata — NLM MeSH descriptor id, scope note, tree position, and recent PubMed papers on the term as a MeSH major topic. Alias slugs 301-redirect to canonical.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reaction/{slug}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reaction",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /reaction/{slug}`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Conditions",
+      "description": "ICD-10-CM concepts joined to the drugs whose labeled indications map to them, via a conservative public-domain crosswalk. Each condition lists the drugs labeled for it (with the verbatim indication text) and related conditions by Jaccard similarity. A reference reverse index of labeled uses — NOT a treatment recommendation, formulary, or clinical guidance.",
+      "item": [
+        {
+          "name": "Browse ICD-10-CM conditions joined to the drugs labeled for them, ordered by number of labeled drugs. A reference reverse index of labeled uses — NOT a treatment recommendation.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/conditions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "conditions"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Page size (1–200, default 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "",
+                  "description": "Zero-based offset.",
+                  "disabled": true
+                },
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Case-insensitive substring filter over the condition name, slug, ICD-10 code, and chapter.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /conditions`"
+          }
+        },
+        {
+          "name": "Fetch one ICD-10-CM condition with the drugs labeled for it (each carrying the verbatim indication text that produced the link) and related conditions ranked by Jaccard similarity over the drug-id sets.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/condition/{slug}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "condition",
+                ":slug"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /condition/{slug}`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Literature",
+      "description": "PubMed PMID crosswalks. Link drug records to canonical literature in PubMed.",
+      "item": [
+        {
+          "name": "Curated PubMed references for a drug, pinned to MeSH major topic at ingest time.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/literature",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "literature"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/literature`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Trials",
+      "description": "ClinicalTrials.gov crosswalks. Registered studies naming a drug as an intervention, plus the registry's total match count. Registration is NOT evidence of efficacy or safety — reference crosswalk only.",
+      "item": [
+        {
+          "name": "ClinicalTrials.gov registrations naming the drug as an intervention — freshest sample plus total registry match count. NOT evidence of efficacy or safety.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/trials",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "trials"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/trials`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pharmacogenomics",
+      "description": "CPIC-curated drug–gene pairs with evidence levels (CPIC A–D, ClinPGx 1A–4), FDA-label PGx annotations, and guideline links. Evidence metadata only — never testing or dosing guidance.",
+      "item": [
+        {
+          "name": "CPIC-curated drug–gene pairs with evidence levels and guideline links. Evidence metadata only — never testing or dosing guidance.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/pharmacogenomics",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "pharmacogenomics"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/pharmacogenomics`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Retrieval",
+      "description": "Meaning-based retrieval over drug-record passages. `/semantic-search` is free; `/grounded` is the key-gated tier that adds per-span citations with full provenance for LLM consumers.",
+      "item": [
+        {
+          "name": "Meaning-based retrieval over drug-record passages. Embedding-backed when available; lexical fallback otherwise — `method` in the response reports which.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/semantic-search",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "semantic-search"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "",
+                  "description": "Natural-language query (3–500 characters).",
+                  "disabled": false
+                },
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Max passages (1–20, default 8).",
+                  "disabled": true
+                },
+                {
+                  "key": "sections",
+                  "value": "",
+                  "description": "Optional comma-separated list of drug-record sections to search (e.g. mechanism,dosing,boxed-warning).",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /semantic-search`"
+          }
+        },
+        {
+          "name": "Key-gated retrieval tier for LLM consumers: same passages as /semantic-search plus per-span citations carrying full provenance (source URL, content hash, extraction timestamp, confidence).",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/grounded",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "grounded"
+              ]
+            },
+            "description": "`POST /grounded` — requires an API key.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Changelog",
+      "description": "Record-level change feed. Typed mirror of `/feed.xml` and `/feed.json`.",
+      "item": [
+        {
+          "name": "Recent record-level changes (typed mirror of /feed.xml and /feed.json).",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/changelog",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "changelog"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "",
+                  "description": "Max entries (1–200, default 50).",
+                  "disabled": true
+                },
+                {
+                  "key": "since",
+                  "value": "",
+                  "description": "ISO-8601 timestamp; only entries strictly after this are returned.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /changelog`"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "description": "Outbound webhooks on dataset changes. Deliveries are HMAC-SHA256 signed (`X-Pharmacopeia-Signature: t=<ts>,v1=<hex>` over `<ts>.<body>`). Requires an API key.",
+      "item": [
+        {
+          "name": "List the webhook endpoints registered by the calling API key.",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/webhooks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "webhooks"
+              ]
+            },
+            "description": "`GET /webhooks` — requires an API key."
+          }
+        },
+        {
+          "name": "Register a webhook endpoint. The response includes the HMAC signing secret exactly once — store it.",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/webhooks",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "webhooks"
+              ]
+            },
+            "description": "`POST /webhooks` — requires an API key.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Delete a webhook endpoint owned by the calling API key.",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{apiKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/webhooks/{id}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "webhooks",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            },
+            "description": "`DELETE /webhooks/{id}` — requires an API key."
+          }
+        }
+      ]
+    },
+    {
+      "name": "System",
+      "description": "Liveness, dataset counts, and version metadata.",
+      "item": [
+        {
+          "name": "Dataset counts and version metadata.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "stats"
+              ]
+            },
+            "description": "`GET /stats`"
+          }
+        },
+        {
+          "name": "Liveness + dataset-version probe. Tiny payload for monitors and clients.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "health"
+              ]
+            },
+            "description": "`GET /health`"
+          }
+        }
+      ]
+    }
+  ]
+}

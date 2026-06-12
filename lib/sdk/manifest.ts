@@ -29,6 +29,7 @@ export type OperationTag =
   | "Shortages"
   | "AdverseEvents"
   | "Reactions"
+  | "Conditions"
   | "Literature"
   | "Trials"
   | "Pharmacogenomics"
@@ -116,6 +117,11 @@ export const API_TAGS: ReadonlyArray<{
       "MedDRA Preferred Terms reported to FAERS, transposed across the dataset. Each reaction lists the drugs that report it most, ranked by share of the drug's matched reports, plus related reactions by Jaccard similarity. Reference statistics only — NOT a symptom checker, NOT diagnostic.",
   },
   {
+    name: "Conditions",
+    description:
+      "ICD-10-CM concepts joined to the drugs whose labeled indications map to them, via a conservative public-domain crosswalk. Each condition lists the drugs labeled for it (with the verbatim indication text) and related conditions by Jaccard similarity. A reference reverse index of labeled uses — NOT a treatment recommendation, formulary, or clinical guidance.",
+  },
+  {
     name: "Literature",
     description:
       "PubMed PMID crosswalks. Link drug records to canonical literature in PubMed.",
@@ -169,6 +175,7 @@ export const API_TAG_GROUPS: ReadonlyArray<{
       "Shortages",
       "AdverseEvents",
       "Reactions",
+      "Conditions",
       "Literature",
       "Trials",
       "Pharmacogenomics",
@@ -460,6 +467,39 @@ export const OPERATIONS: readonly Operation[] = [
     tag: "Reactions",
     pathParams: ["slug"],
     responseSchema: "ReactionResponse",
+  },
+  {
+    name: "listConditions",
+    method: "GET",
+    path: "/conditions",
+    summary:
+      "Browse ICD-10-CM conditions joined to the drugs labeled for them, ordered by number of labeled drugs. A reference reverse index of labeled uses — NOT a treatment recommendation.",
+    tag: "Conditions",
+    queryParams: [
+      {
+        name: "limit",
+        type: "number",
+        description: "Page size (1–200, default 50).",
+      },
+      { name: "offset", type: "number", description: "Zero-based offset." },
+      {
+        name: "q",
+        type: "string",
+        description:
+          "Case-insensitive substring filter over the condition name, slug, ICD-10 code, and chapter.",
+      },
+    ],
+    responseSchema: "ConditionsListResponse",
+  },
+  {
+    name: "getCondition",
+    method: "GET",
+    path: "/condition/{slug}",
+    summary:
+      "Fetch one ICD-10-CM condition with the drugs labeled for it (each carrying the verbatim indication text that produced the link) and related conditions ranked by Jaccard similarity over the drug-id sets.",
+    tag: "Conditions",
+    pathParams: ["slug"],
+    responseSchema: "ConditionResponse",
   },
   {
     name: "semanticSearch",

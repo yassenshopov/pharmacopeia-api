@@ -2,6 +2,8 @@ import type {
   AdverseEventStats,
   BrandEntry,
   ChangelogEntry,
+  Condition,
+  ConditionSummary,
   Drug,
   DrugClass,
   DrugPgx,
@@ -27,6 +29,7 @@ import type {
 import {
   AdverseEventStatsSchema,
   ChangelogEntrySchema,
+  ConditionSchema,
   DrugLiteratureSchema,
   DrugPgxSchema,
   DrugTrialsSchema,
@@ -56,6 +59,7 @@ import {
   toDrugSummary,
 } from "./dataset-views";
 import { applyIcd10Crosswalk } from "@/lib/ingest/icd10";
+import { applyControlledSubstanceCrosswalk } from "@/lib/ingest/controlled-substances";
 import { PrismaRepository } from "./prisma-repository";
 import { SEED_CLASSES, SEED_CLASSES_BY_SLUG } from "./seed/classes";
 import { SEED_DRUGS, SEED_DRUGS_BY_SLUG } from "./seed/drugs";
@@ -80,6 +84,7 @@ import {
 } from "./seed/shortages";
 import { getSeedSimilar } from "./seed/similarity";
 import { getReactionIndex, resolveReactionSlug } from "./reactions-index";
+import { conditionSearchText, getConditionIndex } from "./conditions-index";
 import {
   classSearchText,
   drugSearchText,
@@ -291,6 +296,21 @@ export interface PharmacopeiaRepository {
   resolveReactionSlug(
     slug: string,
   ): Promise<{ canonical: string; matched: string } | null>;
+
+  /**
+   * Browse index of conditions — ICD-10-CM concepts joined to the drugs
+   * whose labeled indications map to them via the public-domain
+   * crosswalk. Ordered by the number of labeled drugs desc. A reference
+   * reverse index of labeled uses, NOT a treatment recommendation.
+   */
+  listConditions(opts?: ListOpts): Promise<List<ConditionSummary>>;
+
+  /**
+   * One condition with the drugs labeled for it (each carrying the
+   * verbatim indication text that produced the link) plus related
+   * conditions ranked by Jaccard similarity over the drug-id sets.
+   */
+  getCondition(slug: string): Promise<Condition | null>;
 }
 
 export interface PassageSearchResult {
@@ -440,6 +460,11 @@ class StaticRepository implements PharmacopeiaRepository {
     for (const d of SEED_DRUGS) {
       const enriched = applyIcd10Crosswalk(d);
       if (enriched !== d) d.indications = enriched.indications;
+      // Same fill-only, idempotent treatment for the DEA schedule
+      // crosswalk so the static fallback serves the identical
+      // `controlledSubstance` the Postgres backend fills at read time.
+      const scheduled = applyControlledSubstanceCrosswalk(d);
+      if (scheduled !== d) d.controlledSubstance = scheduled.controlledSubstance;
     }
     SEED_CLASSES.forEach((c) => DrugClassSchema.parse(c));
     SEED_INGREDIENTS.forEach((i) => IngredientSchema.parse(i));
@@ -466,6 +491,13 @@ class StaticRepository implements PharmacopeiaRepository {
     const reactionIndex = getReactionIndex();
     for (const reaction of reactionIndex.reactions.values()) {
       ReactionSchema.parse(reaction);
+    }
+    // Conditions are *derived* from indications + the ICD-10 crosswalk
+    // (applied just above), so build once here to fail fast on any
+    // regression in the builder rather than at the first request.
+    const conditionIndex = getConditionIndex();
+    for (const condition of conditionIndex.conditions.values()) {
+      ConditionSchema.parse(condition);
     }
   }
 
@@ -761,6 +793,20 @@ class StaticRepository implements PharmacopeiaRepository {
     slug: string,
   ): Promise<{ canonical: string; matched: string } | null> {
     return resolveReactionSlug(slug);
+  }
+
+  async listConditions(opts?: ListOpts): Promise<List<ConditionSummary>> {
+    const q = normalizeQuery(opts?.q);
+    const summaries = q
+      ? getConditionIndex().summaries.filter((c) =>
+          conditionSearchText(c).includes(q),
+        )
+      : getConditionIndex().summaries;
+    return paginate(summaries, opts);
+  }
+
+  async getCondition(slug: string): Promise<Condition | null> {
+    return getConditionIndex().conditions.get(slug) ?? null;
   }
 }
 

@@ -37,12 +37,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const stats = await repo.getStats();
   const lastModified = new Date(stats.updatedAt);
 
-  const [drugs, classes, ingredients, reactions] = await Promise.all([
-    listAll((opts) => repo.listDrugs(opts)),
-    listAll((opts) => repo.listClasses(opts)),
-    listAll((opts) => repo.listIngredients(opts)),
-    listAll((opts) => repo.listReactions(opts)),
-  ]);
+  const [drugs, classes, ingredients, reactions, conditions] =
+    await Promise.all([
+      listAll((opts) => repo.listDrugs(opts)),
+      listAll((opts) => repo.listClasses(opts)),
+      listAll((opts) => repo.listIngredients(opts)),
+      listAll((opts) => repo.listReactions(opts)),
+      listAll((opts) => repo.listConditions(opts)),
+    ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -94,6 +96,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
+      url: absoluteUrl("/conditions"),
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
+    },
+    {
       url: absoluteUrl("/structure-search"),
       lastModified,
       changeFrequency: "monthly",
@@ -115,6 +123,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       url: absoluteUrl("/changelog"),
       lastModified,
       changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    {
+      url: absoluteUrl("/data"),
+      lastModified,
+      changeFrequency: "monthly",
       priority: 0.6,
     },
     {
@@ -171,11 +185,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
+  const conditionRoutes: MetadataRoute.Sitemap = conditions.map((c) => ({
+    url: absoluteUrl(`/conditions/${c.slug}`),
+    lastModified,
+    changeFrequency: "monthly",
+    priority: 0.5,
+  }));
+
   return [
     ...staticRoutes,
     ...drugRoutes,
     ...classRoutes,
     ...ingredientRoutes,
     ...reactionRoutes,
+    ...conditionRoutes,
   ];
 }

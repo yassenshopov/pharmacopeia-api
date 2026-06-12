@@ -4,6 +4,7 @@ import { buildSchemaBundle } from "@/lib/sdk/registry";
 import * as ts from "./emit-ts";
 import * as py from "./emit-py";
 import { emitOpenApi } from "./emit-openapi";
+import { emitPostman } from "@/lib/sdk/postman";
 import { GEN_HEADER_PY } from "./util";
 
 const ROOT = process.cwd();
@@ -41,6 +42,7 @@ function main(): void {
   write("sdk/python/pharmacopeia/__init__.py", emitPythonInit(bundle.order));
 
   write("sdk/openapi.json", emitOpenApi(bundle));
+  write("sdk/postman_collection.json", emitPostman());
 
   console.log(`Done. ${bundle.order.length} schemas emitted.`);
 }

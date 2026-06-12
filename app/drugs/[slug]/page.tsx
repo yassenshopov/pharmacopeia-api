@@ -4,7 +4,7 @@ import { cache } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { AlertTriangle, ArrowUpRight } from "lucide-react";
+import { AlertTriangle, ArrowUpRight, ShieldAlert } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CodeBlock } from "@/components/code-block";
 import {
@@ -296,6 +296,16 @@ export default async function DrugDetailPage({ params }: PageProps) {
                 FDA shortage
                 {activeShortages.length > 1 ? ` ×${activeShortages.length}` : ""}
               </a>
+            )}
+            {drug.controlledSubstance && (
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full border border-amber-600/40 bg-amber-600/10 px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider text-amber-800 dark:text-amber-300"
+                title={drug.controlledSubstance.description}
+              >
+                <ShieldAlert aria-hidden="true" className="h-3 w-3" />
+                DEA Schedule {drug.controlledSubstance.schedule}
+                {drug.controlledSubstance.narcotic ? " · narcotic" : ""}
+              </span>
             )}
           </div>
         </div>

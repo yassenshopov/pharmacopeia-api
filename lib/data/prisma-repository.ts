@@ -2,6 +2,8 @@ import type {
   AdverseEventStats,
   BrandEntry,
   ChangelogEntry,
+  Condition,
+  ConditionSummary,
   Drug,
   DrugClass,
   DrugLiterature,
@@ -44,6 +46,12 @@ import {
   resolveReactionSlugInIndex,
   type ReactionIndex,
 } from "./reactions-index";
+import {
+  buildConditionIndex,
+  conditionSearchText,
+  type ConditionIndex,
+} from "./conditions-index";
+import { applyControlledSubstanceCrosswalk } from "@/lib/ingest/controlled-substances";
 import { normalizeQuery, reactionSearchText } from "./search-text";
 import {
   buildStructureIndex,
@@ -94,6 +102,7 @@ export class PrismaRepository implements PharmacopeiaRepository {
   private _snapshot: Promise<{ drugs: Drug[]; classes: DrugClass[] }> | null =
     null;
   private _reactionIndex: Promise<ReactionIndex> | null = null;
+  private _conditionIndex: Promise<ConditionIndex> | null = null;
   private _structureIndex: Promise<StructureIndex> | null = null;
   private _lexicalPassageIndex: Promise<LexicalPassageIndex> | null = null;
 
@@ -147,6 +156,28 @@ export class PrismaRepository implements PharmacopeiaRepository {
       });
     }
     return this._reactionIndex;
+  }
+
+  private conditionIndex(): Promise<ConditionIndex> {
+    if (!this._conditionIndex) {
+      this._conditionIndex = (async () => {
+        const { drugs } = await this.snapshot();
+        return buildConditionIndex({
+          drugs: drugs.map((d) => ({
+            slug: d.slug,
+            name: d.name,
+            indications: d.indications.map((i) => ({
+              text: i.text,
+              icd10: i.icd10,
+            })),
+          })),
+        });
+      })().catch((err) => {
+        this._conditionIndex = null;
+        throw err;
+      });
+    }
+    return this._conditionIndex;
   }
 
   private structureIndex(): Promise<StructureIndex> {
@@ -242,7 +273,12 @@ export class PrismaRepository implements PharmacopeiaRepository {
 
   async getDrug(slug: string): Promise<Drug | null> {
     const row = await this.db.drug.findUnique({ where: { slug } });
-    return row ? (row.payload as unknown as Drug) : null;
+    if (!row) return null;
+    // Fill-only crosswalks at read so this backend serves the identical
+    // record the static seed bakes at construction, regardless of when
+    // the database was last seeded. Idempotent: a payload that already
+    // carries the field is returned untouched.
+    return applyControlledSubstanceCrosswalk(row.payload as unknown as Drug);
   }
 
   async getDrugsBatch(
@@ -258,7 +294,10 @@ export class PrismaRepository implements PharmacopeiaRepository {
     const missing: string[] = [];
     for (const slug of unique) {
       const payload = bySlug.get(slug);
-      if (payload) found.push(payload as unknown as Drug);
+      if (payload)
+        found.push(
+          applyControlledSubstanceCrosswalk(payload as unknown as Drug),
+        );
       else missing.push(slug);
     }
     return { found, missing };
@@ -652,5 +691,23 @@ export class PrismaRepository implements PharmacopeiaRepository {
   ): Promise<{ canonical: string; matched: string } | null> {
     const index = await this.reactionIndex();
     return resolveReactionSlugInIndex(index, slug);
+  }
+
+  async listConditions(opts?: ListOpts): Promise<List<ConditionSummary>> {
+    const { limit, offset } = clampListOpts(opts);
+    const index = await this.conditionIndex();
+    const q = normalizeQuery(opts?.q);
+    const summaries = q
+      ? index.summaries.filter((c) => conditionSearchText(c).includes(q))
+      : index.summaries;
+    return {
+      items: summaries.slice(offset, offset + limit),
+      pagination: { total: summaries.length, limit, offset },
+    };
+  }
+
+  async getCondition(slug: string): Promise<Condition | null> {
+    const index = await this.conditionIndex();
+    return index.conditions.get(slug) ?? null;
   }
 }

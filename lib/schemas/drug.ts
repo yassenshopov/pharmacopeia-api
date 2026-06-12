@@ -101,6 +101,26 @@ export const LabelSectionsSchema = z.object({
 });
 export type LabelSections = z.infer<typeof LabelSectionsSchema>;
 
+/** DEA controlled-substance schedule (I most restrictive, V least). */
+export const DeaScheduleSchema = z.enum(["I", "II", "III", "IV", "V"]);
+export type DeaSchedule = z.infer<typeof DeaScheduleSchema>;
+
+/**
+ * DEA controlled-substance classification, attached by a conservative
+ * curated crosswalk (`lib/ingest/controlled-substances.ts`) keyed on the
+ * drug's active ingredients. A public, structured regulatory fact — not
+ * prescribing or diversion-control guidance. Absent when the drug is not
+ * a scheduled substance (or the crosswalk has no confident match).
+ */
+export const ControlledSubstanceSchema = z.object({
+  schedule: DeaScheduleSchema,
+  /** DEA "narcotic" designation, where it applies. */
+  narcotic: z.boolean().optional(),
+  /** Short reference note describing the schedule. */
+  description: z.string(),
+});
+export type ControlledSubstance = z.infer<typeof ControlledSubstanceSchema>;
+
 export const IdentifierSchema = z.object({
   rxcui: z.string().optional(),
   ndc: z.array(z.string()).default([]),
@@ -178,6 +198,12 @@ export const DrugSchema = DrugSummarySchema.extend({
    * same openFDA label as the drug-level provenance.
    */
   labelSections: LabelSectionsSchema.optional(),
+  /**
+   * DEA controlled-substance schedule, where the drug is a scheduled
+   * substance. Filled by a conservative curated crosswalk; reference
+   * regulatory fact, never prescribing guidance.
+   */
+  controlledSubstance: ControlledSubstanceSchema.optional(),
   identifiers: IdentifierSchema,
   chemical: ChemicalStructureSchema.optional(),
   provenance: ProvenanceSchema,

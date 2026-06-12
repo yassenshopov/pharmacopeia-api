@@ -5,6 +5,8 @@ export type Jurisdiction = "US-FDA" | "EU-EMA" | "UK-MHRA" | "CA-HC";
 
 export type Severity = "contraindicated" | "major" | "moderate" | "minor" | "unknown";
 
+export type DeaSchedule = "I" | "II" | "III" | "IV" | "V";
+
 export type DrugClassKind = "atc" | "moa" | "epc" | "pe" | "pharm" | "mesh";
 
 export interface Provenance {
@@ -79,6 +81,12 @@ export interface LabelSections {
   adverseReactions?: string;
   useInSpecificPopulations?: string;
   overdosage?: string;
+}
+
+export interface ControlledSubstance {
+  schedule: DeaSchedule;
+  narcotic?: boolean;
+  description: string;
 }
 
 export interface Identifier {
@@ -172,6 +180,7 @@ export interface Drug {
   patientSummary?: string;
   interactionsNarrative?: string;
   labelSections?: LabelSections;
+  controlledSubstance?: ControlledSubstance;
   identifiers: Identifier;
   chemical?: ChemicalStructure;
   provenance: Provenance;
@@ -519,6 +528,54 @@ export interface ReactionResponse {
   drugs: ReactionDrugRow[];
   relatedReactions: RelatedReaction[];
   meta: ReactionMeta | null;
+  disclaimer: string;
+}
+
+export interface ConditionSummary {
+  slug: string;
+  name: string;
+  icd10: string;
+  category: string;
+  drugCount: number;
+}
+
+export interface ConditionDrugRow {
+  slug: string;
+  name: string;
+  indications: string[];
+}
+
+export interface RelatedCondition {
+  slug: string;
+  name: string;
+  sharedDrugs: number;
+  similarity: number;
+}
+
+export interface Condition {
+  slug: string;
+  name: string;
+  icd10: string;
+  category: string;
+  drugCount: number;
+  drugs: ConditionDrugRow[];
+  relatedConditions: RelatedCondition[];
+  disclaimer: string;
+}
+
+export interface ConditionsListResponse {
+  items: ConditionSummary[];
+  pagination: Pagination;
+}
+
+export interface ConditionResponse {
+  slug: string;
+  name: string;
+  icd10: string;
+  category: string;
+  drugCount: number;
+  drugs: ConditionDrugRow[];
+  relatedConditions: RelatedCondition[];
   disclaimer: string;
 }
 

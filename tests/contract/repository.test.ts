@@ -1,6 +1,8 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import type { PharmacopeiaRepository } from "@/lib/data/repository";
 import {
+  ConditionSchema,
+  ConditionSummarySchema,
   DrugClassSchema,
   DrugSchema,
   DrugSummarySchema,
@@ -8,6 +10,7 @@ import {
   PaginationSchema,
   SearchResultSchema,
 } from "@/lib/schemas";
+import { controlledSubstanceForNames } from "@/lib/ingest/controlled-substances";
 
 /**
  * Repository contract: behavioural invariants every backend must
@@ -284,6 +287,78 @@ function repositoryContract(
 
       expect(await repo.resolveReactionSlug("not-a-reaction")).toBeNull();
       expect(await repo.getReaction("not-a-reaction")).toBeNull();
+    });
+
+    it("conditions: browse is schema-valid, ordered by drugCount, and round-trips", async () => {
+      const { items, pagination } = await repo.listConditions({ limit: 200 });
+      expect(items.length).toBeGreaterThan(0);
+      for (const c of items) ConditionSummarySchema.parse(c);
+
+      // Browse order is drugCount desc.
+      const counts = items.map((c) => c.drugCount);
+      expect([...counts].sort((a, b) => b - a)).toEqual(counts);
+      expect(pagination.total).toBeGreaterThanOrEqual(items.length);
+
+      const top = items[0];
+      const condition = await repo.getCondition(top.slug);
+      expect(condition).not.toBeNull();
+      ConditionSchema.parse(condition);
+      expect(condition?.slug).toBe(top.slug);
+      expect(condition?.drugCount).toBe(top.drugCount);
+      // Every member carries at least one verbatim indication text.
+      for (const d of condition!.drugs) {
+        expect(d.indications.length).toBeGreaterThan(0);
+      }
+
+      expect(await repo.getCondition("not-a-condition")).toBeNull();
+    });
+
+    it("conditions: q filter matches the condition haystack", async () => {
+      const { items } = await repo.listConditions({ limit: 1 });
+      const hit = await repo.listConditions({ q: items[0].name, limit: 200 });
+      expect(hit.items.some((c) => c.slug === items[0].slug)).toBe(true);
+      const miss = await repo.listConditions({ q: "zzz-no-such-condition" });
+      expect(miss.items).toEqual([]);
+      expect(miss.pagination.total).toBe(0);
+    });
+
+    it("conditions: members are actually labeled for the condition's code", async () => {
+      const { items } = await repo.listConditions({ limit: 1 });
+      const condition = await repo.getCondition(items[0].slug);
+      expect(condition).not.toBeNull();
+      // Spot-check one member drug really carries the ICD-10 code on an
+      // indication — the link is never inferred.
+      const member = condition!.drugs[0];
+      const drug = await repo.getDrug(member.slug);
+      expect(drug).not.toBeNull();
+      expect(
+        drug!.indications.some((ind) => ind.icd10.includes(condition!.icd10)),
+      ).toBe(true);
+    });
+
+    it("controlled-substance crosswalk is applied to full drug records", async () => {
+      const page = await repo.listDrugs({ limit: 200 });
+      let scheduled = 0;
+      for (const summary of page.items) {
+        const drug = await repo.getDrug(summary.slug);
+        expect(drug).not.toBeNull();
+        const expected = controlledSubstanceForNames([
+          ...drug!.ingredients.map((i) => i.name),
+          drug!.name,
+          ...drug!.synonyms,
+        ]);
+        if (expected) {
+          // The repository must fill the same value the crosswalk
+          // computes — this is the invariant both backends share.
+          expect(drug!.controlledSubstance).toEqual(expected);
+          scheduled++;
+        }
+      }
+      // The most-prescribed dataset definitely contains scheduled drugs
+      // (benzodiazepines, opioids, stimulants), so the crosswalk must
+      // have matched at least one — guarding against a silently broken
+      // table or an unapplied crosswalk.
+      expect(scheduled).toBeGreaterThan(0);
     });
 
     it("listChangelog returns entries newest-first and honours limit", async () => {
