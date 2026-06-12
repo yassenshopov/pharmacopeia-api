@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { ArrowUpRight, Rss } from "lucide-react";
 
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ChangelogThumb } from "@/components/changelog-thumb";
 import { Badge } from "@/components/ui/badge";
 import { getRepository } from "@/lib/data/repository";
 import type { ChangelogAction, ChangelogEntry, ChangelogKind } from "@/lib/schemas";
@@ -185,64 +186,75 @@ export default async function ChangelogPage() {
 
 function EntryCard({ entry }: { entry: ChangelogEntry }) {
   return (
-    <article className="rounded-lg border border-border/80 bg-card/40 p-5">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <span
-          className={`rounded-sm border px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${ACTION_COLOR[entry.action]}`}
-        >
-          {entry.action}
-        </span>
-        <Badge variant="outline" className="font-mono text-[10px]">
-          {KIND_LABEL[entry.kind]}
-        </Badge>
-        <time
-          dateTime={entry.timestamp}
-          className="ml-auto font-mono text-[10px] text-muted-foreground"
-        >
-          {new Date(entry.timestamp).toISOString().slice(0, 10)}
-        </time>
+    <article className="flex gap-4 rounded-lg border border-border/80 bg-card/40 p-5">
+      <div className="min-w-0 flex-1">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <span
+            className={`rounded-sm border px-1.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wider ${ACTION_COLOR[entry.action]}`}
+          >
+            {entry.action}
+          </span>
+          <Badge variant="outline" className="font-mono text-[10px]">
+            {KIND_LABEL[entry.kind]}
+          </Badge>
+          <time
+            dateTime={entry.timestamp}
+            className="ml-auto font-mono text-[10px] text-muted-foreground"
+          >
+            {new Date(entry.timestamp).toISOString().slice(0, 10)}
+          </time>
+        </div>
+
+        <h3 className="text-lg font-semibold leading-tight">
+          <Link
+            href={entry.url}
+            className="rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+          >
+            {entry.title}
+          </Link>
+        </h3>
+
+        <p className="mt-2 text-pretty text-sm text-foreground/90">
+          {entry.summary}
+        </p>
+
+        {(entry.sources.length > 0 || entry.tags.length > 0) && (
+          <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+            {entry.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-sm border border-border/60 px-1.5 py-0.5 font-mono text-[10px]"
+              >
+                {tag}
+              </span>
+            ))}
+            {entry.sources.length > 0 && (
+              <span className="ml-auto flex flex-wrap items-center gap-2">
+                {entry.sources.map((src) => (
+                  <a
+                    key={src}
+                    href={src}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 rounded-sm text-[11px] transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    aria-label={`Source: ${hostOf(src)} (opens in new tab)`}
+                  >
+                    {hostOf(src)}
+                    <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                  </a>
+                ))}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
-      <h3 className="text-lg font-semibold leading-tight">
-        <Link
-          href={entry.url}
-          className="rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-        >
-          {entry.title}
-        </Link>
-      </h3>
-
-      <p className="mt-2 text-sm text-foreground/90">{entry.summary}</p>
-
-      {(entry.sources.length > 0 || entry.tags.length > 0) && (
-        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-          {entry.tags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-sm border border-border/60 px-1.5 py-0.5 font-mono text-[10px]"
-            >
-              {tag}
-            </span>
-          ))}
-          {entry.sources.length > 0 && (
-            <span className="ml-auto flex flex-wrap items-center gap-2">
-              {entry.sources.map((src) => (
-                <a
-                  key={src}
-                  href={src}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 rounded-sm text-[11px] transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
-                  aria-label={`Source: ${hostOf(src)} (opens in new tab)`}
-                >
-                  {hostOf(src)}
-                  <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
-                </a>
-              ))}
-            </span>
-          )}
-        </div>
-      )}
+      <ChangelogThumb
+        kind={entry.kind}
+        action={entry.action}
+        id={entry.id}
+        className="hidden sm:grid"
+      />
     </article>
   );
 }
