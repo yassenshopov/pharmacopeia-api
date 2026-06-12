@@ -16,8 +16,11 @@ import {
   Network,
   Package,
   Pill,
+  Quote,
   Rss,
+  ScanSearch,
   Search,
+  ShieldCheck,
   Sparkles,
   Tags,
   Workflow,
@@ -94,6 +97,17 @@ const pairs = await pc.checkInteractions([
   "warfarin",
   "ibuprofen",
 ]);`;
+
+const SAMPLE_GROUNDED = `// POST /api/v1/grounded — retrieval built for LLMs
+const res = await fetch("/api/v1/grounded", {
+  method: "POST",
+  headers: { Authorization: "Bearer pk_live_\u2026" },
+  body: JSON.stringify({ query: "metformin renal dosing" }),
+});
+
+const { passages, citations } = await res.json();
+// every passage.grounding span maps to a citation with
+// sourceUrl, sourceHash, extractedAt, confidence`;
 
 // Drugs featured in the Explore section — chosen so every slug has a
 // pre-rendered SVG under /public/structures and so the row spans well-
@@ -543,11 +557,91 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ─────────────────────────────── Ground */}
+      <section className="border-b border-border/60">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+          <SectionHeader
+            eyebrow="03 · Ground"
+            title="Retrieval your LLM can cite"
+            body="Every record is chunked into small, citable passages. Search them by meaning over plain REST — then reach for the grounded tier when a model needs a verifiable source behind every token."
+          />
+
+          <div className="mt-10 grid gap-4 lg:grid-cols-2">
+            {/* Semantic search — natural-language query → ranked passages */}
+            <ToolCard
+              href="/docs#semantic-search"
+              icon={<ScanSearch className="h-5 w-5" />}
+              title="Semantic search"
+              body="Ask what you mean, not what you can spell. Embedding-backed when available, lexical fallback otherwise — same shape either way."
+            >
+              <ToolFrame caption="GET · semantic-search">
+                <div className="border-b border-border/40 px-3 py-2">
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Search className="h-3.5 w-3.5 flex-none" aria-hidden="true" />
+                    <span className="truncate font-mono">
+                      beta blocker safe in asthma
+                    </span>
+                    <span className="ml-auto rounded border border-emerald-500/40 bg-emerald-500/10 px-1 font-mono text-[10px] uppercase tracking-wider text-emerald-700 dark:text-emerald-300">
+                      embedding
+                    </span>
+                  </div>
+                </div>
+                <ul className="divide-y divide-border/40">
+                  <PassageRow drug="nebivolol" section="mechanism" score={0.82} />
+                  <PassageRow drug="metoprolol" section="warnings" score={0.77} />
+                  <PassageRow drug="propranolol" section="cautions" score={0.71} />
+                </ul>
+              </ToolFrame>
+            </ToolCard>
+
+            {/* Grounded — passage with inline citation + provenance footer */}
+            <ToolCard
+              href="/docs#grounded"
+              icon={<Quote className="h-5 w-5" />}
+              title="Grounded answers"
+              body="The key-gated tier for LLM consumers: every passage carries a citation and a character-span grounding map back to its source."
+            >
+              <ToolFrame caption="POST · grounded · key-gated">
+                <div className="space-y-2 p-3">
+                  <p className="text-xs leading-relaxed text-foreground/80">
+                    Assess renal function before initiating and at least
+                    annually; metformin is contraindicated below an eGFR of
+                    30&nbsp;mL/min/1.73m².
+                    <sup className="ml-0.5 rounded bg-primary/15 px-1 font-mono text-[9px] text-primary">
+                      c1
+                    </sup>
+                  </p>
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-border/40 pt-2 font-mono text-[10px] text-muted-foreground">
+                    <span className="rounded bg-primary/15 px-1 text-primary">
+                      c1
+                    </span>
+                    <span className="text-foreground/70">drug/metformin</span>
+                    <span className="inline-flex items-center gap-1">
+                      <ShieldCheck className="h-3 w-3 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
+                      0.98
+                    </span>
+                    <span className="truncate">accessdata.fda.gov</span>
+                  </div>
+                </div>
+              </ToolFrame>
+            </ToolCard>
+          </div>
+
+          <div className="mt-6">
+            <CodeBlock
+              code={SAMPLE_GROUNDED}
+              label="POST /api/v1/grounded"
+              language="ts"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* ─────────────────────────────── Build */}
       <section className="border-b border-border/60 bg-card/30">
         <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
           <SectionHeader
-            eyebrow="03 · Build"
+            eyebrow="04 · Build"
             title="Build with it"
             body="REST, GraphQL, and typed clients for TypeScript and Python — all generated from the same Zod schema, so the contract never drifts."
           />
@@ -1012,6 +1106,39 @@ function CompareColumn({
         <span className="truncate font-mono text-foreground/80">{atc}</span>
       </div>
     </div>
+  );
+}
+
+function PassageRow({
+  drug,
+  section,
+  score,
+}: {
+  drug: string;
+  section: string;
+  score: number;
+}) {
+  return (
+    <li className="flex items-center gap-3 px-3 py-2 text-xs">
+      <span className="flex-1 truncate">
+        <span className="font-mono text-foreground/80">{drug}</span>
+        <span className="ml-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+          {section}
+        </span>
+      </span>
+      <span
+        aria-hidden="true"
+        className="hidden h-1 w-16 overflow-hidden rounded-full bg-foreground/10 sm:block"
+      >
+        <span
+          className="block h-full rounded-full bg-primary/70"
+          style={{ width: `${Math.round(score * 100)}%` }}
+        />
+      </span>
+      <span className="shrink-0 font-mono text-[11px] tabular-nums text-muted-foreground">
+        {score.toFixed(2)}
+      </span>
+    </li>
   );
 }
 
