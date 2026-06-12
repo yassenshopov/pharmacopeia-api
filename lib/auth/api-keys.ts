@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { getRepositoryKind } from "@/lib/data/repository";
 import { getPrismaClient } from "@/lib/db/client";
+import { defaultRateLimitPerMinute, utcDay } from "./rate-limit";
 
 /**
  * API-key authentication for the paid/grounded tier and webhook
@@ -20,6 +21,18 @@ export interface AuthenticatedKey {
   keyId: string | null;
   /** Lifetime request count after this call (db-backed keys only). */
   requestCount?: number;
+  /**
+   * Stable bucket id for the in-memory rate limiter: the row id for
+   * db-backed keys, the key's sha256 for env-var keys. Never the
+   * plaintext key.
+   */
+  rateLimitBucket: string;
+  /** Requests/minute allowed; from the row or the env default. */
+  rateLimitPerMinute: number;
+  /** Requests/UTC-day allowed (db-backed keys only). */
+  dailyQuota?: number;
+  /** Requests counted against today's quota, including this one. */
+  quotaUsedToday?: number;
 }
 
 export function hashApiKey(key: string): string {
@@ -56,7 +69,12 @@ export async function authenticateApiKey(
   if (!key) return null;
 
   if (envKeys().includes(key)) {
-    return { tier: "grounded", keyId: null };
+    return {
+      tier: "grounded",
+      keyId: null,
+      rateLimitBucket: hashApiKey(key),
+      rateLimitPerMinute: defaultRateLimitPerMinute(),
+    };
   }
 
   if (getRepositoryKind() !== "supabase") return null;
@@ -67,10 +85,28 @@ export async function authenticateApiKey(
   });
   if (!row || row.revokedAt) return null;
 
+  // Roll the quota counter over at UTC midnight. The read-then-update
+  // race at the rollover boundary can drop a count or two — acceptable
+  // for fair-use quotas, not worth a raw upsert.
+  const today = utcDay();
   const updated = await db.apiKey.update({
     where: { id: row.id },
-    data: { lastUsedAt: new Date(), requestCount: { increment: 1 } },
-    select: { requestCount: true },
+    data: {
+      lastUsedAt: new Date(),
+      requestCount: { increment: 1 },
+      ...(row.quotaDay === today
+        ? { quotaUsed: { increment: 1 } }
+        : { quotaDay: today, quotaUsed: 1 }),
+    },
+    select: { requestCount: true, quotaUsed: true },
   });
-  return { tier: row.tier, keyId: row.id, requestCount: updated.requestCount };
+  return {
+    tier: row.tier,
+    keyId: row.id,
+    requestCount: updated.requestCount,
+    rateLimitBucket: row.id,
+    rateLimitPerMinute: row.rateLimitPerMinute,
+    dailyQuota: row.dailyQuota,
+    quotaUsedToday: updated.quotaUsed,
+  };
 }

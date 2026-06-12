@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { DrugsListClient } from "@/components/drugs-list-client";
+import { parseBrowseParams, type BrowseSearchParams } from "@/lib/browse-params";
 import { getRepository } from "@/lib/data/repository";
 import { SEED_STRUCTURES } from "@/lib/data/seed/structures";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
+
+const PAGE_SIZE = 24;
 
 const DRUGS_PATH = "/drugs";
 const DRUGS_TITLE = "Drugs";
@@ -45,10 +48,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function DrugsPage() {
-  const { items: drugs, pagination } = await getRepository().listDrugs({
-    limit: 200,
-  });
+export default async function DrugsPage({
+  searchParams,
+}: {
+  searchParams: Promise<BrowseSearchParams>;
+}) {
+  const { query, page, limit, offset } = parseBrowseParams(
+    await searchParams,
+    PAGE_SIZE,
+  );
+  const repo = getRepository();
+  const [{ items: drugs, pagination }, stats] = await Promise.all([
+    repo.listDrugs({ q: query || undefined, limit, offset }),
+    repo.getStats(),
+  ]);
   const structureSlugs = Object.keys(SEED_STRUCTURES);
 
   return (
@@ -58,7 +71,7 @@ export default async function DrugsPage() {
         <div className="flex items-baseline justify-between gap-4">
           <h1 className="text-4xl font-semibold tracking-tight">Drugs</h1>
           <span className="font-mono text-sm text-muted-foreground">
-            {pagination.total} total
+            {stats.drugs.toLocaleString()} total
           </span>
         </div>
         <p className="max-w-2xl text-muted-foreground">
@@ -68,7 +81,14 @@ export default async function DrugsPage() {
         </p>
       </div>
 
-      <DrugsListClient items={drugs} structureSlugs={structureSlugs} />
+      <DrugsListClient
+        items={drugs}
+        total={pagination.total}
+        page={page}
+        pageSize={PAGE_SIZE}
+        query={query}
+        structureSlugs={structureSlugs}
+      />
     </div>
   );
 }

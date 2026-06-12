@@ -161,7 +161,7 @@ const ENDPOINTS: {
     method: "GET",
     path: "/api/v1/drugs",
     description:
-      "List drug summaries. Supports ?limit, ?offset, ?class=<slug>, and ?ingredient=<slug>.",
+      "List drug summaries. Supports ?limit, ?offset, ?q=<text>, ?class=<slug>, ?ingredient=<slug>, and ?jurisdiction=<agency>.",
   },
   {
     method: "GET",
@@ -212,9 +212,21 @@ const ENDPOINTS: {
   },
   {
     method: "GET",
+    path: "/api/v1/drug/{slug}/trials",
+    description:
+      "ClinicalTrials.gov registrations naming the drug as an intervention. Registration is NOT evidence of efficacy or safety.",
+  },
+  {
+    method: "GET",
+    path: "/api/v1/drug/{slug}/pharmacogenomics",
+    description:
+      "CPIC-curated drug–gene pairs with evidence levels and guideline links. Evidence metadata only — never testing or dosing guidance.",
+  },
+  {
+    method: "GET",
     path: "/api/v1/reactions",
     description:
-      "Browse MedDRA Preferred Terms reported to FAERS across the dataset (paginated).",
+      "Browse MedDRA Preferred Terms reported to FAERS across the dataset (paginated, filterable with ?q=).",
   },
   {
     method: "GET",
@@ -230,7 +242,8 @@ const ENDPOINTS: {
   {
     method: "GET",
     path: "/api/v1/classes",
-    description: "List pharmacological classes (ATC, EPC, MoA, MeSH).",
+    description:
+      "List pharmacological classes (ATC, EPC, MoA, MeSH). Filterable with ?q=.",
   },
   {
     method: "GET",
@@ -252,7 +265,8 @@ const ENDPOINTS: {
   {
     method: "GET",
     path: "/api/v1/ingredients",
-    description: "List active ingredients with chemistry identifiers.",
+    description:
+      "List active ingredients with chemistry identifiers. Filterable with ?q=.",
   },
   {
     method: "GET",
@@ -531,6 +545,16 @@ export default async function DocsPage() {
           timestamp, confidence — to every token it quotes.
         </p>
         <CodeBlock code={GROUNDED_SAMPLE} label="grounded" language="ts" />
+        <p className="mt-6 text-sm text-muted-foreground">
+          Key-gated endpoints are rate limited per key: a requests-per-minute
+          window reported via <code>X-RateLimit-Limit</code>,{" "}
+          <code>X-RateLimit-Remaining</code>, and{" "}
+          <code>X-RateLimit-Reset</code> headers, plus a daily quota reported
+          via <code>X-Quota-Limit</code> / <code>X-Quota-Remaining</code>{" "}
+          (resets at UTC midnight). Exceeding either returns{" "}
+          <code>429</code> with a <code>Retry-After</code> header and error
+          code <code>rate_limited</code>.
+        </p>
       </Section>
 
       <Section id="webhooks" title="Webhooks">

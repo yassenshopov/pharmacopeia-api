@@ -111,6 +111,20 @@ model Literature {
   @@map("literature")
 }
 
+model Trials {
+  drugSlug String @id @map("drug_slug")
+  payload  Json
+
+  @@map("trials")
+}
+
+model Pgx {
+  drugSlug String @id @map("drug_slug")
+  payload  Json
+
+  @@map("pgx")
+}
+
 model Structure {
   drugSlug String @id @map("drug_slug")
   smiles   String
@@ -138,8 +152,10 @@ model ReactionMeta {
 /// extracted by lib/data/passages.ts. `embedding` is filled by
 /// scripts/db/embed.ts (pgvector, 512-dim text-embedding-3-small) and
 /// reset to NULL whenever `text_hash` changes so re-embedding is
-/// delta-based. ~5k rows at current dataset size — sequential scan is
-/// fine, no ANN index needed until the dataset grows ~100x.
+/// delta-based. An HNSW index (`passages_embedding_hnsw_idx`,
+/// vector_cosine_ops) is created by scripts/db/seed.ts — Prisma can't
+/// model pgvector operator-class indexes, so it lives in raw SQL there.
+/// At ~80k rows (scale dataset) the ANN index keeps cosine search fast.
 model Passage {
   id         String                       @id
   drugSlug   String                       @map("drug_slug")
@@ -168,6 +184,14 @@ model ApiKey {
   revokedAt    DateTime?         @map("revoked_at")
   lastUsedAt   DateTime?         @map("last_used_at")
   requestCount Int               @default(0) @map("request_count")
+  /// Requests per minute allowed for this key (best-effort, per instance).
+  rateLimitPerMinute Int         @default(60) @map("rate_limit_per_minute")
+  /// Requests per UTC day allowed for this key. Enforced in the database.
+  dailyQuota   Int               @default(10000) @map("daily_quota")
+  /// UTC day (YYYY-MM-DD) the quota counter currently covers.
+  quotaDay     String?           @map("quota_day")
+  /// Requests counted against `quotaDay`. Resets when the day rolls over.
+  quotaUsed    Int               @default(0) @map("quota_used")
   webhooks     WebhookEndpoint[]
 
   @@map("api_keys")
@@ -207,6 +231,29 @@ model WebhookDelivery {
 
   @@index([endpointId])
   @@map("webhook_deliveries")
+}
+
+/// Dataset-wide derived views (brands, ATC tree, mechanism graph),
+/// materialised by scripts/db/seed.ts from the same pure builders in
+/// lib/data/dataset-views.ts that the repositories use. Serving these
+/// precomputed rows means a cold serverless instance never has to load
+/// every drug payload just to answer /v1/brands or /v1/mechanisms/graph.
+model DerivedView {
+  key       String   @id
+  payload   Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("derived_views")
+}
+
+/// Operational state for /api/cron/* jobs (rotation cursors, etc.).
+/// Keyed by job id; payload shape is owned by the route that writes it.
+model CronState {
+  id        String   @id
+  payload   Json
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("cron_state")
 }
 
 /// Single-row table describing the dataset snapshot currently being served.

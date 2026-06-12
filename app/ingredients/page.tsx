@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { IngredientsListClient } from "@/components/ingredients-list-client";
+import { parseBrowseParams, type BrowseSearchParams } from "@/lib/browse-params";
 import { getRepository } from "@/lib/data/repository";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
+const PAGE_SIZE = 24;
 const INGREDIENTS_PATH = "/ingredients";
 const INGREDIENTS_TITLE = "Ingredients";
 const INGREDIENTS_DESCRIPTION =
@@ -44,10 +46,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function IngredientsPage() {
-  const { items: ingredients, pagination } = await getRepository().listIngredients({
-    limit: 200,
-  });
+export default async function IngredientsPage({
+  searchParams,
+}: {
+  searchParams: Promise<BrowseSearchParams>;
+}) {
+  const { query, page, limit, offset } = parseBrowseParams(
+    await searchParams,
+    PAGE_SIZE,
+  );
+  const repo = getRepository();
+  const [{ items: ingredients, pagination }, stats] = await Promise.all([
+    repo.listIngredients({ q: query || undefined, limit, offset }),
+    repo.getStats(),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -56,7 +68,7 @@ export default async function IngredientsPage() {
         <div className="flex items-baseline justify-between gap-4">
           <h1 className="text-4xl font-semibold tracking-tight">Ingredients</h1>
           <span className="font-mono text-sm text-muted-foreground">
-            {pagination.total} total
+            {stats.ingredients.toLocaleString()} total
           </span>
         </div>
         <p className="max-w-2xl text-muted-foreground">
@@ -66,7 +78,13 @@ export default async function IngredientsPage() {
         </p>
       </div>
 
-      <IngredientsListClient items={ingredients} />
+      <IngredientsListClient
+        items={ingredients}
+        total={pagination.total}
+        page={page}
+        pageSize={PAGE_SIZE}
+        query={query}
+      />
     </div>
   );
 }

@@ -1,5 +1,5 @@
-import { invalid, ok, unauthorized } from "@/lib/api/response";
-import { authenticateApiKey } from "@/lib/auth/api-keys";
+import { invalid, ok } from "@/lib/api/response";
+import { guardApiKey, withRateLimitHeaders } from "@/lib/auth/guard";
 import { getRepository } from "@/lib/data/repository";
 import {
   GroundedRequestSchema,
@@ -24,8 +24,9 @@ import {
  * `npm run keys:create` or listed in PHARMACOPEIA_API_KEYS.
  */
 export async function POST(request: Request) {
-  const auth = await authenticateApiKey(request);
-  if (!auth) return unauthorized();
+  const guard = await guardApiKey(request);
+  if (!guard.ok) return guard.response;
+  const { auth } = guard;
 
   let raw: unknown;
   try {
@@ -71,22 +72,25 @@ export async function POST(request: Request) {
     };
   });
 
-  return ok(
-    {
-      query,
-      method,
-      ...(model ? { model } : {}),
-      passages,
-      citations,
-      usage: {
-        tier: auth.tier,
-        ...(auth.requestCount !== undefined
-          ? { requestCount: auth.requestCount }
-          : {}),
-      },
-      disclaimer: SEMANTIC_DISCLAIMER,
-    } satisfies GroundedResponse,
-    { cacheControl: "no-store" },
+  return withRateLimitHeaders(
+    ok(
+      {
+        query,
+        method,
+        ...(model ? { model } : {}),
+        passages,
+        citations,
+        usage: {
+          tier: auth.tier,
+          ...(auth.requestCount !== undefined
+            ? { requestCount: auth.requestCount }
+            : {}),
+        },
+        disclaimer: SEMANTIC_DISCLAIMER,
+      } satisfies GroundedResponse,
+      { cacheControl: "no-store" },
+    ),
+    guard.headers,
   );
 }
 

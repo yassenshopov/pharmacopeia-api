@@ -11,7 +11,9 @@ import type {
   DrugInteractionsResponse,
   DrugListResponse,
   DrugLiteratureResponse,
+  DrugPgxResponse,
   DrugShortagesResponse,
+  DrugTrialsResponse,
   DrugsBatchRequest,
   DrugsBatchResponse,
   GroundedRequest,
@@ -142,7 +144,7 @@ export class PharmacopeiaClient {
   }
 
   /** List drugs (paginated), optionally filtered by class or ingredient. */
-  listDrugs(query: { limit?: number; offset?: number; class?: string; ingredient?: string } = {}): Promise<DrugListResponse> {
+  listDrugs(query: { limit?: number; offset?: number; class?: string; ingredient?: string; q?: string; jurisdiction?: string } = {}): Promise<DrugListResponse> {
     return this.request<DrugListResponse>("GET", `/drugs`, { query });
   }
 
@@ -167,7 +169,7 @@ export class PharmacopeiaClient {
   }
 
   /** List drug classes (paginated). */
-  listClasses(query: { limit?: number; offset?: number } = {}): Promise<ClassListResponse> {
+  listClasses(query: { limit?: number; offset?: number; q?: string } = {}): Promise<ClassListResponse> {
     return this.request<ClassListResponse>("GET", `/classes`, { query });
   }
 
@@ -177,7 +179,7 @@ export class PharmacopeiaClient {
   }
 
   /** List active ingredients (paginated). */
-  listIngredients(query: { limit?: number; offset?: number } = {}): Promise<IngredientListResponse> {
+  listIngredients(query: { limit?: number; offset?: number; q?: string } = {}): Promise<IngredientListResponse> {
     return this.request<IngredientListResponse>("GET", `/ingredients`, { query });
   }
 
@@ -236,8 +238,18 @@ export class PharmacopeiaClient {
     return this.request<DrugLiteratureResponse>("GET", `/drug/${encodeURIComponent(slug)}/literature`, {});
   }
 
+  /** ClinicalTrials.gov registrations naming the drug as an intervention — freshest sample plus total registry match count. NOT evidence of efficacy or safety. */
+  getDrugTrials(slug: string): Promise<DrugTrialsResponse> {
+    return this.request<DrugTrialsResponse>("GET", `/drug/${encodeURIComponent(slug)}/trials`, {});
+  }
+
+  /** CPIC-curated drug–gene pairs with evidence levels and guideline links. Evidence metadata only — never testing or dosing guidance. */
+  getDrugPharmacogenomics(slug: string): Promise<DrugPgxResponse> {
+    return this.request<DrugPgxResponse>("GET", `/drug/${encodeURIComponent(slug)}/pharmacogenomics`, {});
+  }
+
   /** Browse MedDRA Preferred Terms reported to FAERS across the dataset, ordered by total reporting volume. Reference statistics only — NOT a symptom checker. */
-  listReactions(query: { limit?: number; offset?: number } = {}): Promise<ReactionsListResponse> {
+  listReactions(query: { limit?: number; offset?: number; q?: string } = {}): Promise<ReactionsListResponse> {
     return this.request<ReactionsListResponse>("GET", `/reactions`, { query });
   }
 

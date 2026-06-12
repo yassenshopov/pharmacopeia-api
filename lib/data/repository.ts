@@ -4,10 +4,13 @@ import type {
   ChangelogEntry,
   Drug,
   DrugClass,
+  DrugPgx,
   DrugSummary,
+  DrugTrials,
   Ingredient,
   Interaction,
   InteractionCheckResponse,
+  Jurisdiction,
   LiteratureReference,
   Pagination,
   PassageSection,
@@ -25,6 +28,8 @@ import {
   AdverseEventStatsSchema,
   ChangelogEntrySchema,
   DrugLiteratureSchema,
+  DrugPgxSchema,
+  DrugTrialsSchema,
   DrugSchema,
   DrugClassSchema,
   IngredientSchema,
@@ -50,6 +55,7 @@ import {
   buildMechanismGraph,
   toDrugSummary,
 } from "./dataset-views";
+import { applyIcd10Crosswalk } from "@/lib/ingest/icd10";
 import { PrismaRepository } from "./prisma-repository";
 import { SEED_CLASSES, SEED_CLASSES_BY_SLUG } from "./seed/classes";
 import { SEED_DRUGS, SEED_DRUGS_BY_SLUG } from "./seed/drugs";
@@ -65,6 +71,8 @@ import {
   SEED_ADVERSE_EVENTS,
 } from "./seed/adverse-events";
 import { getSeedLiterature, SEED_LITERATURE } from "./seed/literature";
+import { getSeedTrials, SEED_TRIALS } from "./seed/trials";
+import { getSeedPgx, SEED_PGX } from "./seed/pgx";
 import {
   getSeedShortages,
   listAllSeedShortages,
@@ -72,6 +80,13 @@ import {
 } from "./seed/shortages";
 import { getSeedSimilar } from "./seed/similarity";
 import { getReactionIndex, resolveReactionSlug } from "./reactions-index";
+import {
+  classSearchText,
+  drugSearchText,
+  ingredientSearchText,
+  normalizeQuery,
+  reactionSearchText,
+} from "./search-text";
 import { searchByStructure } from "./structure-search";
 import {
   buildLexicalPassageIndex,
@@ -90,7 +105,16 @@ export interface PharmacopeiaRepository {
   getStats(): Promise<Stats>;
 
   listDrugs(
-    opts?: ListOpts & { classSlug?: string; ingredientSlug?: string },
+    opts?: ListOpts & {
+      classSlug?: string;
+      ingredientSlug?: string;
+      /**
+       * Filter by regulatory jurisdiction. v0 data is all `US-FDA`;
+       * the filter exists so EMA (and later MHRA / Health Canada)
+       * records land additively without an API change.
+       */
+      jurisdiction?: Jurisdiction;
+    },
   ): Promise<List<DrugSummary>>;
   getDrug(slug: string): Promise<Drug | null>;
   /**
@@ -224,6 +248,24 @@ export interface PharmacopeiaRepository {
   getDrugLiterature(slug: string): Promise<LiteratureReference[]>;
 
   /**
+   * ClinicalTrials.gov registrations naming the drug as an
+   * intervention: the freshest sample kept at ingest time plus the
+   * registry's full match count. Returns `null` when the dataset has
+   * no snapshot for this drug. Registration is NOT evidence of
+   * efficacy or safety — reference crosswalk only.
+   */
+  getDrugTrials(slug: string): Promise<DrugTrials | null>;
+
+  /**
+   * CPIC-curated pharmacogenomic drug–gene pairs for a drug, with
+   * evidence levels (CPIC A–D, ClinPGx 1A–4), FDA-label PGx testing
+   * annotations, and guideline links. Returns `null` when CPIC has no
+   * curated pairs for this drug. Evidence metadata only — never
+   * testing or dosing guidance.
+   */
+  getDrugPgx(slug: string): Promise<DrugPgx | null>;
+
+  /**
    * Browse index of reactions (MedDRA Preferred Terms) reported to
    * FAERS across the dataset. Ordered by total reporting volume desc.
    * Each summary carries `drugCount`, `totalReports`, and any
@@ -283,6 +325,13 @@ export interface ListChangelogOpts {
 export interface ListOpts {
   limit?: number;
   offset?: number;
+  /**
+   * Case-insensitive substring filter over the entity's canonical
+   * search haystack (`lib/data/search-text.ts`). Server-side so browse
+   * surfaces stay correct at 5,000+ drugs — the client never needs the
+   * whole dataset to filter it.
+   */
+  q?: string;
 }
 
 export interface List<T> {
@@ -384,6 +433,14 @@ class StaticRepository implements PharmacopeiaRepository {
     // This is the only place we re-validate seed data because once it's
     // valid here, types guarantee it stays valid downstream.
     SEED_DRUGS.forEach((d) => DrugSchema.parse(d));
+    // One-time in-place ICD-10 enrichment so the static fallback serves
+    // the same codes the Postgres backend gets at seed time (backends
+    // must stay behaviourally identical). Fill-only and idempotent: a
+    // regenerated seed that already carries codes makes this a no-op.
+    for (const d of SEED_DRUGS) {
+      const enriched = applyIcd10Crosswalk(d);
+      if (enriched !== d) d.indications = enriched.indications;
+    }
     SEED_CLASSES.forEach((c) => DrugClassSchema.parse(c));
     SEED_INGREDIENTS.forEach((i) => IngredientSchema.parse(i));
     SEED_INTERACTIONS.forEach((x) => InteractionSchema.parse(x));
@@ -396,6 +453,12 @@ class StaticRepository implements PharmacopeiaRepository {
     }
     for (const lit of Object.values(SEED_LITERATURE)) {
       DrugLiteratureSchema.parse(lit);
+    }
+    for (const trials of Object.values(SEED_TRIALS)) {
+      DrugTrialsSchema.parse(trials);
+    }
+    for (const pgx of Object.values(SEED_PGX)) {
+      DrugPgxSchema.parse(pgx);
     }
     // Reactions are *derived* from SEED_ADVERSE_EVENTS by
     // `reactions-index`. Materialise once here so any regression in the
@@ -423,7 +486,11 @@ class StaticRepository implements PharmacopeiaRepository {
   }
 
   async listDrugs(
-    opts: ListOpts & { classSlug?: string; ingredientSlug?: string } = {},
+    opts: ListOpts & {
+      classSlug?: string;
+      ingredientSlug?: string;
+      jurisdiction?: Jurisdiction;
+    } = {},
   ): Promise<List<DrugSummary>> {
     let drugs = SEED_DRUGS;
     if (opts.classSlug) {
@@ -435,6 +502,13 @@ class StaticRepository implements PharmacopeiaRepository {
       drugs = drugs.filter((d) =>
         d.ingredients.some((i) => i.slug === opts.ingredientSlug),
       );
+    }
+    if (opts.jurisdiction) {
+      drugs = drugs.filter((d) => d.jurisdiction === opts.jurisdiction);
+    }
+    const q = normalizeQuery(opts.q);
+    if (q) {
+      drugs = drugs.filter((d) => drugSearchText(d).includes(q));
     }
     return paginate(drugs.map(toDrugSummary), opts);
   }
@@ -493,7 +567,11 @@ class StaticRepository implements PharmacopeiaRepository {
   }
 
   async listClasses(opts?: ListOpts): Promise<List<DrugClass>> {
-    return paginate(SEED_CLASSES, opts);
+    const q = normalizeQuery(opts?.q);
+    const classes = q
+      ? SEED_CLASSES.filter((c) => classSearchText(c).includes(q))
+      : SEED_CLASSES;
+    return paginate(classes, opts);
   }
 
   async getClass(slug: string): Promise<DrugClass | null> {
@@ -501,7 +579,11 @@ class StaticRepository implements PharmacopeiaRepository {
   }
 
   async listIngredients(opts?: ListOpts): Promise<List<Ingredient>> {
-    return paginate(SEED_INGREDIENTS, opts);
+    const q = normalizeQuery(opts?.q);
+    const ingredients = q
+      ? SEED_INGREDIENTS.filter((i) => ingredientSearchText(i).includes(q))
+      : SEED_INGREDIENTS;
+    return paginate(ingredients, opts);
   }
 
   async getIngredient(slug: string): Promise<Ingredient | null> {
@@ -531,16 +613,7 @@ class StaticRepository implements PharmacopeiaRepository {
     const matches: SearchResult[] = [];
 
     for (const d of SEED_DRUGS) {
-      const haystack = [
-        d.name,
-        d.slug,
-        ...d.synonyms,
-        ...d.brands,
-        ...d.ingredients.map((i) => i.name),
-      ]
-        .join(" ")
-        .toLowerCase();
-      if (haystack.includes(q)) {
+      if (drugSearchText(d).includes(q)) {
         matches.push({
           slug: d.slug,
           name: d.name,
@@ -551,10 +624,7 @@ class StaticRepository implements PharmacopeiaRepository {
     }
 
     for (const c of SEED_CLASSES) {
-      if (
-        c.name.toLowerCase().includes(q) ||
-        c.slug.toLowerCase().includes(q)
-      ) {
+      if (classSearchText(c).includes(q)) {
         matches.push({
           slug: c.slug,
           name: c.name,
@@ -565,10 +635,7 @@ class StaticRepository implements PharmacopeiaRepository {
     }
 
     for (const i of SEED_INGREDIENTS) {
-      if (
-        i.name.toLowerCase().includes(q) ||
-        i.slug.toLowerCase().includes(q)
-      ) {
+      if (ingredientSearchText(i).includes(q)) {
         matches.push({ slug: i.slug, name: i.name, kind: "ingredient" });
       }
     }
@@ -666,8 +733,22 @@ class StaticRepository implements PharmacopeiaRepository {
     return getSeedLiterature(slug)?.references ?? [];
   }
 
+  async getDrugTrials(slug: string): Promise<DrugTrials | null> {
+    return getSeedTrials(slug);
+  }
+
+  async getDrugPgx(slug: string): Promise<DrugPgx | null> {
+    return getSeedPgx(slug);
+  }
+
   async listReactions(opts?: ListOpts): Promise<List<ReactionSummary>> {
-    return paginate(getReactionIndex().summaries, opts);
+    const q = normalizeQuery(opts?.q);
+    const summaries = q
+      ? getReactionIndex().summaries.filter((r) =>
+          reactionSearchText(r).includes(q),
+        )
+      : getReactionIndex().summaries;
+    return paginate(summaries, opts);
   }
 
   async getReaction(slug: string): Promise<Reaction | null> {

@@ -1,27 +1,47 @@
 import type { MetadataRoute } from "next";
+import type { List } from "@/lib/data/repository";
 import { getRepository } from "@/lib/data/repository";
 import { absoluteUrl } from "@/lib/seo/site";
 
 /**
  * The sitemap is pulled directly from the repository so adding a drug
- * or class to `lib/data/seed/` (or, later, Supabase) automatically
- * surfaces it to crawlers.
+ * or class to `lib/data/seed/` (or Supabase) automatically surfaces it
+ * to crawlers.
  */
+
+const WINDOW = 200;
+/** Sitemap protocol cap is 50k URLs per file; stay safely under it. */
+const MAX_PER_ENTITY = 40_000;
+
+/**
+ * Drain a paginated list method. The repository caps `limit` at 200,
+ * so enumerating the full dataset (5,000+ drugs at scale) means
+ * walking offset windows until `total` is reached.
+ */
+async function listAll<T>(
+  fetchPage: (opts: { limit: number; offset: number }) => Promise<List<T>>,
+): Promise<T[]> {
+  const first = await fetchPage({ limit: WINDOW, offset: 0 });
+  const items = [...first.items];
+  const total = Math.min(first.pagination.total, MAX_PER_ENTITY);
+  while (items.length < total) {
+    const page = await fetchPage({ limit: WINDOW, offset: items.length });
+    if (page.items.length === 0) break;
+    items.push(...page.items);
+  }
+  return items;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const repo = getRepository();
   const stats = await repo.getStats();
   const lastModified = new Date(stats.updatedAt);
 
-  const [
-    { items: drugs },
-    { items: classes },
-    { items: ingredients },
-    { items: reactions },
-  ] = await Promise.all([
-    repo.listDrugs({ limit: 200 }),
-    repo.listClasses({ limit: 200 }),
-    repo.listIngredients({ limit: 200 }),
-    repo.listReactions({ limit: 200 }),
+  const [drugs, classes, ingredients, reactions] = await Promise.all([
+    listAll((opts) => repo.listDrugs(opts)),
+    listAll((opts) => repo.listClasses(opts)),
+    listAll((opts) => repo.listIngredients(opts)),
+    listAll((opts) => repo.listReactions(opts)),
   ]);
 
   const staticRoutes: MetadataRoute.Sitemap = [

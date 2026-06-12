@@ -12,7 +12,6 @@ import { getRepository } from "@/lib/data/repository";
 import type {
   ChemicalStructure,
   Drug,
-  DrugSummary,
   Interaction,
   Severity,
 } from "@/lib/schemas";
@@ -130,11 +129,19 @@ export async function generateMetadata({
   };
 }
 
+/** Suggested starting comparisons, shown only when all slugs resolve. */
+const SAMPLE_COMPARISONS: readonly string[][] = [
+  ["metformin", "glipizide"],
+  ["lisinopril", "losartan"],
+  ["atorvastatin", "rosuvastatin", "simvastatin"],
+  ["sertraline", "fluoxetine", "escitalopram"],
+];
+
 export default async function ComparePage({ searchParams }: PageProps) {
   const slugs = parseSlugs((await searchParams).drugs);
   const repo = getRepository();
 
-  const [resolved, summariesList] = await Promise.all([
+  const [resolved, sampleResolution] = await Promise.all([
     Promise.all(
       slugs.map(async (slug) => {
         const drug = await repo.getDrug(slug);
@@ -146,8 +153,12 @@ export default async function ComparePage({ searchParams }: PageProps) {
         return { slug, drug, structure, structureSvg };
       }),
     ),
-    repo.listDrugs({ limit: 200 }),
+    repo.getDrugsBatch(SAMPLE_COMPARISONS.flat()),
   ]);
+  const sampleSlugs = new Set(sampleResolution.found.map((d) => d.slug));
+  const samples = SAMPLE_COMPARISONS.filter((pair) =>
+    pair.every((slug) => sampleSlugs.has(slug)),
+  );
 
   const known = resolved.filter(
     (r): r is {
@@ -193,7 +204,6 @@ export default async function ComparePage({ searchParams }: PageProps) {
       </div>
 
       <CompareDrugPicker
-        all={summariesList.items}
         selected={known.map((k) => ({ slug: k.drug.slug, name: k.drug.name }))}
         maxDrugs={MAX_DRUGS}
       />
@@ -210,7 +220,7 @@ export default async function ComparePage({ searchParams }: PageProps) {
       )}
 
       {known.length === 0 ? (
-        <EmptyState all={summariesList.items} />
+        <EmptyState samples={samples} />
       ) : (
         <div className="mt-10 space-y-10">
           {pairInteractions.length > 0 && (
@@ -229,15 +239,8 @@ export default async function ComparePage({ searchParams }: PageProps) {
   );
 }
 
-function EmptyState({ all }: { all: DrugSummary[] }) {
-  const sample = [
-    ["metformin", "glipizide"],
-    ["lisinopril", "losartan"],
-    ["atorvastatin", "rosuvastatin", "simvastatin"],
-    ["sertraline", "fluoxetine", "escitalopram"],
-  ].filter((pair) =>
-    pair.every((slug) => all.some((d) => d.slug === slug)),
-  );
+function EmptyState({ samples }: { samples: readonly string[][] }) {
+  const sample = samples;
 
   return (
     <div className="mt-10 rounded-lg border border-border/60 bg-card/40 p-8">

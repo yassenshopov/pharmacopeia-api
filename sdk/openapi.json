@@ -52,6 +52,14 @@
       "description": "PubMed PMID crosswalks. Link drug records to canonical literature in PubMed."
     },
     {
+      "name": "Trials",
+      "description": "ClinicalTrials.gov crosswalks. Registered studies naming a drug as an intervention, plus the registry's total match count. Registration is NOT evidence of efficacy or safety — reference crosswalk only."
+    },
+    {
+      "name": "Pharmacogenomics",
+      "description": "CPIC-curated drug–gene pairs with evidence levels (CPIC A–D, ClinPGx 1A–4), FDA-label PGx annotations, and guideline links. Evidence metadata only — never testing or dosing guidance."
+    },
+    {
       "name": "Retrieval",
       "description": "Meaning-based retrieval over drug-record passages. `/semantic-search` is free; `/grounded` is the key-gated tier that adds per-span citations with full provenance for LLM consumers."
     },
@@ -134,6 +142,24 @@
             "in": "query",
             "required": false,
             "description": "Filter to drugs containing this ingredient slug.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Case-insensitive substring filter over name, slug, synonyms, brands, and ingredient names.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "jurisdiction",
+            "in": "query",
+            "required": false,
+            "description": "Filter by regulatory jurisdiction (US-FDA, EU-EMA, UK-MHRA, CA-HC). The v0 dataset is US-FDA only.",
             "schema": {
               "type": "string"
             }
@@ -406,6 +432,15 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Case-insensitive substring filter over name, slug, kind, and description.",
+            "schema": {
+              "type": "string"
+            }
           }
         ]
       }
@@ -513,6 +548,15 @@
             "description": "Zero-based offset.",
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Case-insensitive substring filter over name, slug, and synonyms.",
+            "schema": {
+              "type": "string"
             }
           }
         ]
@@ -1012,6 +1056,114 @@
         ]
       }
     },
+    "/api/v1/drug/{slug}/trials": {
+      "get": {
+        "operationId": "getDrugTrials",
+        "summary": "ClinicalTrials.gov registrations naming the drug as an intervention — freshest sample plus total registry match count. NOT evidence of efficacy or safety.",
+        "tags": [
+          "Trials"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DrugTrialsResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified — the resource has not changed since the ETag in `If-None-Match`."
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/drug/{slug}/pharmacogenomics": {
+      "get": {
+        "operationId": "getDrugPharmacogenomics",
+        "summary": "CPIC-curated drug–gene pairs with evidence levels and guideline links. Evidence metadata only — never testing or dosing guidance.",
+        "tags": [
+          "Pharmacogenomics"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DrugPgxResponse"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": "Not Modified — the resource has not changed since the ETag in `If-None-Match`."
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiError"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/api/v1/reactions": {
       "get": {
         "operationId": "listReactions",
@@ -1061,6 +1213,15 @@
             "description": "Zero-based offset.",
             "schema": {
               "type": "integer"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "description": "Case-insensitive substring filter over the reaction term, slug, and spelling aliases.",
+            "schema": {
+              "type": "string"
             }
           }
         ]
@@ -3293,6 +3454,203 @@
         ],
         "additionalProperties": false
       },
+      "TrialEntry": {
+        "type": "object",
+        "properties": {
+          "nctId": {
+            "type": "string",
+            "pattern": "^NCT\\d{8}$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "overallStatus": {
+            "type": "string",
+            "minLength": 1
+          },
+          "phases": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "studyType": {
+            "type": "string"
+          },
+          "conditions": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "leadSponsor": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "lastUpdateDate": {
+            "type": "string"
+          },
+          "enrollment": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "nctId",
+          "title",
+          "overallStatus",
+          "phases",
+          "conditions",
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "DrugTrialsResponse": {
+        "type": "object",
+        "properties": {
+          "drug": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slug",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "trials": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrialEntry"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "sampled": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "disclaimer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "drug",
+          "trials",
+          "totalCount",
+          "sampled",
+          "disclaimer"
+        ],
+        "additionalProperties": false
+      },
+      "PgxPair": {
+        "type": "object",
+        "properties": {
+          "gene": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cpicLevel": {
+            "type": "string"
+          },
+          "clinpgxLevel": {
+            "type": "string"
+          },
+          "fdaLabelTesting": {
+            "type": "string"
+          },
+          "guidelineName": {
+            "type": "string"
+          },
+          "guidelineUrl": {
+            "type": "string",
+            "format": "uri"
+          },
+          "citations": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "provisional": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "gene",
+          "citations",
+          "provisional"
+        ],
+        "additionalProperties": false
+      },
+      "DrugPgxResponse": {
+        "type": "object",
+        "properties": {
+          "drug": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[a-z0-9][a-z0-9-]*$"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "slug",
+              "name"
+            ],
+            "additionalProperties": false
+          },
+          "pairs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PgxPair"
+            }
+          },
+          "total": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "disclaimer": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "drug",
+          "pairs",
+          "total",
+          "disclaimer"
+        ],
+        "additionalProperties": false
+      },
       "ReactionSummary": {
         "type": "object",
         "properties": {
@@ -4257,6 +4615,8 @@
         "AdverseEvents",
         "Reactions",
         "Literature",
+        "Trials",
+        "Pharmacogenomics",
         "Retrieval"
       ]
     },

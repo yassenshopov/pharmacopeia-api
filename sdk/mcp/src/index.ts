@@ -294,6 +294,20 @@ export function createPharmacopeiaServer(
     async ({ slug }) => run(() => client.getDrugLiterature(slug)),
   );
 
+  server.tool(
+    "get_drug_pharmacogenomics",
+    "CPIC-curated pharmacogenomic drug-gene pairs with evidence levels (CPIC A-D, ClinPGx 1A-4), FDA-label PGx annotations, and guideline links. Evidence metadata only - NEVER testing or dosing guidance; ALWAYS surface that framing when summarising.",
+    { slug: z.string() },
+    async ({ slug }) => run(() => client.getDrugPharmacogenomics(slug)),
+  );
+
+  server.tool(
+    "get_drug_trials",
+    "ClinicalTrials.gov registrations naming the drug as an intervention — freshest sample plus the registry's total match count. Registration is NOT evidence of efficacy or safety; ALWAYS surface that framing when summarising.",
+    { slug: z.string() },
+    async ({ slug }) => run(() => client.getDrugTrials(slug)),
+  );
+
   // ── Reactions (MedDRA PT directory derived from FAERS) ────────────
   server.tool(
     "list_reactions",

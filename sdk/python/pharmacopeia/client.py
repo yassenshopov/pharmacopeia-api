@@ -15,7 +15,9 @@ from .models import (
     DrugInteractionsResponse,
     DrugListResponse,
     DrugLiteratureResponse,
+    DrugPgxResponse,
     DrugShortagesResponse,
+    DrugTrialsResponse,
     DrugsBatchRequest,
     DrugsBatchResponse,
     GroundedRequest,
@@ -133,9 +135,9 @@ class PharmacopeiaClient:
             )
         return response.json()
 
-    def list_drugs(self, *, limit: Optional[int] = None, offset: Optional[int] = None, drug_class: Optional[str] = None, ingredient: Optional[str] = None) -> DrugListResponse:
+    def list_drugs(self, *, limit: Optional[int] = None, offset: Optional[int] = None, drug_class: Optional[str] = None, ingredient: Optional[str] = None, q: Optional[str] = None, jurisdiction: Optional[str] = None) -> DrugListResponse:
         """List drugs (paginated), optionally filtered by class or ingredient."""
-        params = _drop_none({"limit": limit, "offset": offset, "class": drug_class, "ingredient": ingredient})
+        params = _drop_none({"limit": limit, "offset": offset, "class": drug_class, "ingredient": ingredient, "q": q, "jurisdiction": jurisdiction})
         data = self._request("GET", "/drugs", params=params)
         return DrugListResponse.model_validate(data)
 
@@ -160,9 +162,9 @@ class PharmacopeiaClient:
         data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/similar")
         return SimilarDrugsResponse.model_validate(data)
 
-    def list_classes(self, *, limit: Optional[int] = None, offset: Optional[int] = None) -> ClassListResponse:
+    def list_classes(self, *, limit: Optional[int] = None, offset: Optional[int] = None, q: Optional[str] = None) -> ClassListResponse:
         """List drug classes (paginated)."""
-        params = _drop_none({"limit": limit, "offset": offset})
+        params = _drop_none({"limit": limit, "offset": offset, "q": q})
         data = self._request("GET", "/classes", params=params)
         return ClassListResponse.model_validate(data)
 
@@ -171,9 +173,9 @@ class PharmacopeiaClient:
         data = self._request("GET", f"/class/{quote(str(slug), safe='')}")
         return ClassDetailResponse.model_validate(data)
 
-    def list_ingredients(self, *, limit: Optional[int] = None, offset: Optional[int] = None) -> IngredientListResponse:
+    def list_ingredients(self, *, limit: Optional[int] = None, offset: Optional[int] = None, q: Optional[str] = None) -> IngredientListResponse:
         """List active ingredients (paginated)."""
-        params = _drop_none({"limit": limit, "offset": offset})
+        params = _drop_none({"limit": limit, "offset": offset, "q": q})
         data = self._request("GET", "/ingredients", params=params)
         return IngredientListResponse.model_validate(data)
 
@@ -233,9 +235,19 @@ class PharmacopeiaClient:
         data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/literature")
         return DrugLiteratureResponse.model_validate(data)
 
-    def list_reactions(self, *, limit: Optional[int] = None, offset: Optional[int] = None) -> ReactionsListResponse:
+    def get_drug_trials(self, slug: str) -> DrugTrialsResponse:
+        """ClinicalTrials.gov registrations naming the drug as an intervention — freshest sample plus total registry match count. NOT evidence of efficacy or safety."""
+        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/trials")
+        return DrugTrialsResponse.model_validate(data)
+
+    def get_drug_pharmacogenomics(self, slug: str) -> DrugPgxResponse:
+        """CPIC-curated drug–gene pairs with evidence levels and guideline links. Evidence metadata only — never testing or dosing guidance."""
+        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/pharmacogenomics")
+        return DrugPgxResponse.model_validate(data)
+
+    def list_reactions(self, *, limit: Optional[int] = None, offset: Optional[int] = None, q: Optional[str] = None) -> ReactionsListResponse:
         """Browse MedDRA Preferred Terms reported to FAERS across the dataset, ordered by total reporting volume. Reference statistics only — NOT a symptom checker."""
-        params = _drop_none({"limit": limit, "offset": offset})
+        params = _drop_none({"limit": limit, "offset": offset, "q": q})
         data = self._request("GET", "/reactions", params=params)
         return ReactionsListResponse.model_validate(data)
 

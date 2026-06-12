@@ -411,6 +411,46 @@ export interface DrugLiteratureResponse {
   total: number;
 }
 
+export interface TrialEntry {
+  nctId: string;
+  title: string;
+  overallStatus: string;
+  phases: string[];
+  studyType?: string;
+  conditions: string[];
+  leadSponsor?: string;
+  startDate?: string;
+  lastUpdateDate?: string;
+  enrollment?: number;
+  url: string;
+}
+
+export interface DrugTrialsResponse {
+  drug: { slug: string; name: string };
+  trials: TrialEntry[];
+  totalCount: number;
+  sampled: number;
+  disclaimer: string;
+}
+
+export interface PgxPair {
+  gene: string;
+  cpicLevel?: string;
+  clinpgxLevel?: string;
+  fdaLabelTesting?: string;
+  guidelineName?: string;
+  guidelineUrl?: string;
+  citations: string[];
+  provisional: boolean;
+}
+
+export interface DrugPgxResponse {
+  drug: { slug: string; name: string };
+  pairs: PgxPair[];
+  total: number;
+  disclaimer: string;
+}
+
 export interface ReactionSummary {
   slug: string;
   name: string;

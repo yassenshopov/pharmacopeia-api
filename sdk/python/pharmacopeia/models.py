@@ -526,6 +526,54 @@ class DrugLiteratureResponse(BaseModel):
     total: int
 
 
+class TrialEntry(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    nct_id: str = Field(alias="nctId")
+    title: str
+    overall_status: str = Field(alias="overallStatus")
+    phases: List[str]
+    study_type: Optional[str] = Field(default=None, alias="studyType")
+    conditions: List[str]
+    lead_sponsor: Optional[str] = Field(default=None, alias="leadSponsor")
+    start_date: Optional[str] = Field(default=None, alias="startDate")
+    last_update_date: Optional[str] = Field(default=None, alias="lastUpdateDate")
+    enrollment: Optional[int] = None
+    url: str
+
+
+class DrugTrialsResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: Dict[str, Any]
+    trials: List[TrialEntry]
+    total_count: int = Field(alias="totalCount")
+    sampled: int
+    disclaimer: str
+
+
+class PgxPair(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    gene: str
+    cpic_level: Optional[str] = Field(default=None, alias="cpicLevel")
+    clinpgx_level: Optional[str] = Field(default=None, alias="clinpgxLevel")
+    fda_label_testing: Optional[str] = Field(default=None, alias="fdaLabelTesting")
+    guideline_name: Optional[str] = Field(default=None, alias="guidelineName")
+    guideline_url: Optional[str] = Field(default=None, alias="guidelineUrl")
+    citations: List[str]
+    provisional: bool
+
+
+class DrugPgxResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: Dict[str, Any]
+    pairs: List[PgxPair]
+    total: int
+    disclaimer: str
+
+
 class ReactionSummary(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 

@@ -1,60 +1,90 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useId, useMemo, useState, useTransition } from "react";
+import {
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { Plus, Search, X } from "lucide-react";
 
 import type { DrugSummary } from "@/lib/schemas";
 
 interface CompareDrugPickerProps {
-  /** Every drug summary in the dataset (already paged on the server). */
-  all: DrugSummary[];
   /** Drugs currently in the comparison, in display order. */
   selected: { slug: string; name: string }[];
   /** Maximum number of drugs that can be compared at once. */
   maxDrugs: number;
 }
 
+const SUGGESTION_LIMIT = 8;
+const SUGGEST_DEBOUNCE_MS = 250;
+
 /**
  * URL-driven multi-select. Every change rewrites `?drugs=…` so the
  * comparison is shareable, bookmarkable, and statically generatable for
- * any combination — there is no client-side state beyond the query
- * input.
+ * any combination. Suggestions come from the server (`?q=` on
+ * /api/v1/drugs), so the picker works across the whole dataset without
+ * shipping it to the client.
  */
 export function CompareDrugPicker({
-  all,
   selected,
   maxDrugs,
 }: CompareDrugPickerProps) {
   const router = useRouter();
   const inputId = useId();
   const [query, setQuery] = useState("");
+  const [matches, setMatches] = useState<DrugSummary[]>([]);
   const [isPending, startTransition] = useTransition();
+  const abortRef = useRef<AbortController | null>(null);
 
   const selectedSlugs = useMemo(
     () => new Set(selected.map((s) => s.slug)),
     [selected],
   );
 
-  const suggestions = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return [];
-    const matches: DrugSummary[] = [];
-    for (const d of all) {
-      if (matches.length >= 8) break;
-      if (selectedSlugs.has(d.slug)) continue;
-      const haystack = [
-        d.name,
-        d.slug,
-        ...d.synonyms,
-        ...d.brands,
-      ]
-        .join(" ")
-        .toLowerCase();
-      if (haystack.includes(q)) matches.push(d);
+  useEffect(() => {
+    const q = query.trim();
+    if (!q) {
+      abortRef.current?.abort();
+      setMatches([]);
+      return;
     }
-    return matches;
-  }, [all, query, selectedSlugs]);
+    const t = setTimeout(async () => {
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      try {
+        const params = new URLSearchParams({
+          q,
+          // Over-fetch slightly so filtering out already-selected
+          // drugs still leaves a full suggestion list.
+          limit: String(SUGGESTION_LIMIT + maxDrugs),
+        });
+        const res = await fetch(`/api/v1/drugs?${params}`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) return;
+        const data = (await res.json()) as { items: DrugSummary[] };
+        if (!controller.signal.aborted) setMatches(data.items);
+      } catch {
+        // Aborted or network error — keep previous suggestions.
+      }
+    }, SUGGEST_DEBOUNCE_MS);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query]);
+
+  const suggestions = useMemo(
+    () =>
+      matches
+        .filter((d) => !selectedSlugs.has(d.slug))
+        .slice(0, SUGGESTION_LIMIT),
+    [matches, selectedSlugs],
+  );
 
   const atLimit = selected.length >= maxDrugs;
 

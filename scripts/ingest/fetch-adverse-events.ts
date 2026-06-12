@@ -20,26 +20,26 @@
  * field that travels with the data so downstream consumers can never
  * accidentally interpret these counts as incidence rates or signals.
  *
+ * Per-record logic (query building, escaping, shaping, hashing) lives
+ * in `lib/ingest/adverse-events.ts`, shared with the rotating cron
+ * refresher — never duplicated. This script only owns the TS-seed
+ * serialisation and the full-dataset walk.
+ *
  * Tunables (env):
  *   FAERS_TOP_N       max reactions stored per drug (default 25, max 100)
  *   FAERS_THROTTLE_MS delay between requests          (default 100)
  *   FAERS_MAX_DRUGS   debug cap on drug count         (default Infinity)
+ *   OPENFDA_API_KEY   optional; lifts the 1,000 req/day unkeyed cap
  *
  * Run: npm run ingest:adverse-events
  */
 
 import { writeFileSync } from "node:fs";
-import { createHash } from "node:crypto";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import {
-  AdverseEventStatsSchema,
-  ADVERSE_EVENT_DISCLAIMER,
-  type AdverseEventReport,
-  type AdverseEventStats,
-  type Provenance,
-} from "../../lib/schemas";
+import type { AdverseEventStats } from "../../lib/schemas";
+import { fetchAdverseEventStats } from "../../lib/ingest/adverse-events";
 import { SEED_DRUGS } from "../../lib/data/seed/drugs";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -64,136 +64,9 @@ function clampInt(
   return Math.min(Math.max(Math.trunc(n), lo), hi);
 }
 
-interface CountTermBucket {
-  term: string;
-  count: number;
-}
-
-interface CountResponse {
-  results?: CountTermBucket[];
-  error?: { code?: string; message?: string };
-}
-
-interface MetaResponse {
-  meta?: { results?: { total?: number } };
-  results?: Array<{
-    receivedate?: string;
-    receiptdate?: string;
-  }>;
-  error?: { code?: string; message?: string };
-}
-
 async function sleep(ms: number): Promise<void> {
   if (ms <= 0) return;
   await new Promise((r) => setTimeout(r, ms));
-}
-
-function titleCaseReaction(term: string): string {
-  return term
-    .toLowerCase()
-    .split(/\s+/)
-    .map((w) => (w.length > 0 ? w[0].toUpperCase() + w.slice(1) : w))
-    .join(" ");
-}
-
-function fdaSearch(genericName: string): string {
-  // openFDA wants `field:"value"`. Lowercase and double-quote to match
-  // the indexed form. Some names have apostrophes or commas which need
-  // to be escaped inside the quoted string.
-  const escaped = genericName
-    .toLowerCase()
-    .replace(/\\/g, "\\\\")
-    .replace(/"/g, '\\"');
-  return `patient.drug.openfda.generic_name:"${escaped}"`;
-}
-
-function buildCountUrl(genericName: string): string {
-  const search = encodeURIComponent(fdaSearch(genericName));
-  const count = encodeURIComponent("patient.reaction.reactionmeddrapt.exact");
-  return `https://api.fda.gov/drug/event.json?search=${search}&count=${count}&limit=${TOP_N}`;
-}
-
-function buildTotalUrl(genericName: string): string {
-  const search = encodeURIComponent(fdaSearch(genericName));
-  return `https://api.fda.gov/drug/event.json?search=${search}&limit=1`;
-}
-
-async function fetchJson<T>(url: string): Promise<T | null> {
-  const res = await fetch(url, { headers: { Accept: "application/json" } });
-  if (res.status === 404) return null; // openFDA's no-results signal.
-  if (!res.ok) {
-    process.stderr.write(`  ! HTTP ${res.status} on ${url}\n`);
-    return null;
-  }
-  return (await res.json()) as T;
-}
-
-function toIsoDate(raw: string | undefined): string | undefined {
-  if (!raw) return undefined;
-  if (/^\d{8}$/.test(raw)) {
-    // openFDA returns YYYYMMDD in `receivedate` etc.
-    return `${raw.slice(0, 4)}-${raw.slice(4, 6)}-${raw.slice(6, 8)}`;
-  }
-  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
-  return undefined;
-}
-
-async function fetchOne(drugSlug: string, genericName: string): Promise<AdverseEventStats | null> {
-  const countUrl = buildCountUrl(genericName);
-  const totalUrl = buildTotalUrl(genericName);
-
-  const [countPayload, totalPayload] = await Promise.all([
-    fetchJson<CountResponse>(countUrl),
-    fetchJson<MetaResponse>(totalUrl),
-  ]);
-
-  if (!countPayload?.results || countPayload.results.length === 0) {
-    return null;
-  }
-
-  const topReactions: AdverseEventReport[] = countPayload.results
-    .filter((r) => r.term && Number.isFinite(r.count) && r.count > 0)
-    .map((r) => ({
-      reaction: titleCaseReaction(r.term),
-      count: r.count,
-    }));
-
-  if (topReactions.length === 0) return null;
-
-  const totalReports = totalPayload?.meta?.results?.total ?? 0;
-  const sampleDate =
-    toIsoDate(totalPayload?.results?.[0]?.receivedate) ??
-    toIsoDate(totalPayload?.results?.[0]?.receiptdate);
-
-  const sourceHash = createHash("sha256")
-    .update(
-      JSON.stringify({
-        url: countUrl,
-        total: totalReports,
-        top: topReactions,
-      }),
-    )
-    .digest("hex");
-
-  const provenance: Provenance = {
-    sourceUrl: countUrl,
-    sourceHash,
-    extractedAt: EXTRACTED_AT,
-    extractor: "openfda-faers",
-    confidence: 0.85,
-  };
-
-  const stats: AdverseEventStats = {
-    drug: drugSlug,
-    totalReports,
-    topReactions,
-    ...(sampleDate ? { windowEnd: sampleDate } : {}),
-    disclaimer: ADVERSE_EVENT_DISCLAIMER,
-    provenance,
-  };
-
-  AdverseEventStatsSchema.parse(stats);
-  return stats;
 }
 
 function emitSeed(map: Map<string, AdverseEventStats>): string {
@@ -266,7 +139,12 @@ async function main(): Promise<void> {
   let withoutData = 0;
 
   for (const drug of drugs) {
-    const stats = await fetchOne(drug.slug, drug.name);
+    const stats = await fetchAdverseEventStats(drug.slug, drug.name, {
+      topN: TOP_N,
+      extractedAt: EXTRACTED_AT,
+      apiKey: process.env.OPENFDA_API_KEY,
+      log: (line) => process.stderr.write(`  ! ${line}\n`),
+    });
     if (stats) {
       out.set(drug.slug, stats);
       withData += 1;

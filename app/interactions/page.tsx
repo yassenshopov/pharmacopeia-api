@@ -51,8 +51,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function InteractionsPage() {
   const repo = getRepository();
+  // First grid page only — the checker filters server-side from there.
   const [{ items: drugs }, narrativeSlugs, stats] = await Promise.all([
-    repo.listDrugs({ limit: 200 }),
+    repo.listDrugs({ limit: 24 }),
     repo.listInteractionNarrativeSlugs(),
     repo.getStats(),
   ]);
@@ -72,8 +73,9 @@ export default async function InteractionsPage() {
             fallback for what isn&apos;t in the pair-graph yet.
           </p>
           <p className="mt-3 text-xs text-muted-foreground">
-            {drugs.length} drugs available · {narrativeSlugs.length} carry an
-            openFDA narrative · {stats.interactions} curated pairs
+            {stats.drugs.toLocaleString()} drugs available ·{" "}
+            {narrativeSlugs.length.toLocaleString()} carry an openFDA
+            narrative · {stats.interactions} curated pairs
           </p>
         </div>
 

@@ -1,5 +1,5 @@
-import { invalid, notConfigured, ok, unauthorized } from "@/lib/api/response";
-import { authenticateApiKey } from "@/lib/auth/api-keys";
+import { invalid, notConfigured, ok } from "@/lib/api/response";
+import { guardApiKey, withRateLimitHeaders } from "@/lib/auth/guard";
 import { getRepositoryKind } from "@/lib/data/repository";
 import { getPrismaClient } from "@/lib/db/client";
 import { newWebhookSecret } from "@/lib/webhooks/dispatch";
@@ -48,26 +48,29 @@ function toPublicEndpoint(row: EndpointRow): WebhookEndpoint {
 }
 
 export async function GET(request: Request) {
-  const auth = await authenticateApiKey(request);
-  if (!auth) return unauthorized();
+  const guard = await guardApiKey(request);
+  if (!guard.ok) return guard.response;
   if (getRepositoryKind() !== "supabase") return notConfigured(DB_REQUIRED);
 
   const rows = await getPrismaClient().webhookEndpoint.findMany({
-    where: { apiKeyId: auth.keyId },
+    where: { apiKeyId: guard.auth.keyId },
     orderBy: { createdAt: "asc" },
   });
-  return ok(
-    {
-      endpoints: rows.map(toPublicEndpoint),
-      total: rows.length,
-    } satisfies WebhooksListResponse,
-    { cacheControl: "no-store" },
+  return withRateLimitHeaders(
+    ok(
+      {
+        endpoints: rows.map(toPublicEndpoint),
+        total: rows.length,
+      } satisfies WebhooksListResponse,
+      { cacheControl: "no-store" },
+    ),
+    guard.headers,
   );
 }
 
 export async function POST(request: Request) {
-  const auth = await authenticateApiKey(request);
-  if (!auth) return unauthorized();
+  const guard = await guardApiKey(request);
+  if (!guard.ok) return guard.response;
   if (getRepositoryKind() !== "supabase") return notConfigured(DB_REQUIRED);
 
   let raw: unknown;
@@ -87,17 +90,20 @@ export async function POST(request: Request) {
   const secret = newWebhookSecret();
   const row = await getPrismaClient().webhookEndpoint.create({
     data: {
-      apiKeyId: auth.keyId,
+      apiKeyId: guard.auth.keyId,
       url: parsed.data.url,
       events: parsed.data.events,
       secret,
     },
   });
-  return ok(
-    {
-      ...toPublicEndpoint(row),
-      secret,
-    } satisfies WebhookEndpointCreated,
-    { status: 201, cacheControl: "no-store" },
+  return withRateLimitHeaders(
+    ok(
+      {
+        ...toPublicEndpoint(row),
+        secret,
+      } satisfies WebhookEndpointCreated,
+      { status: 201, cacheControl: "no-store" },
+    ),
+    guard.headers,
   );
 }

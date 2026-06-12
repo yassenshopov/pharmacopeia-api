@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { AlertTriangle, BookOpen, Check, Loader2, Search, X } from "lucide-react";
-import { useCallback, useId, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { Badge } from "@/components/ui/badge";
 import type { DrugSummary, Severity } from "@/lib/schemas";
@@ -23,9 +30,13 @@ interface CheckResponse {
 }
 
 interface InteractionsCheckerProps {
+  /** Initial picker grid — the first page of the dataset. */
   drugs: DrugSummary[];
   narrativeSlugs: string[];
 }
+
+const GRID_SIZE = 24;
+const FILTER_DEBOUNCE_MS = 250;
 
 const MIN_SELECTION = 2;
 const MAX_SELECTION = 20;
@@ -72,30 +83,55 @@ export function InteractionsChecker({
 
   const narrativeSet = useMemo(() => new Set(narrativeSlugs), [narrativeSlugs]);
   const selectedSet = useMemo(() => new Set(selected), [selected]);
-  const drugBySlug = useMemo(() => {
-    const map = new Map<string, DrugSummary>();
-    for (const d of drugs) map.set(d.slug, d);
-    return map;
-  }, [drugs]);
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    if (!q) return drugs.slice(0, 24);
-    return drugs
-      .filter((d) => {
-        const haystack = [
-          d.name,
-          d.slug,
-          ...d.synonyms,
-          ...d.brands,
-          ...d.ingredients.map((i) => i.name),
-        ]
-          .join(" ")
-          .toLowerCase();
-        return haystack.includes(q);
-      })
-      .slice(0, 24);
-  }, [drugs, query]);
+  // Server-filtered picker grid. The dataset is 5,000+ drugs at scale,
+  // so the client never holds more than one grid page; names of drugs
+  // the user has seen or selected are accumulated in `drugBySlug`.
+  const [filtered, setFiltered] = useState<DrugSummary[]>(
+    drugs.slice(0, GRID_SIZE),
+  );
+  const [filtering, setFiltering] = useState(false);
+  const [drugBySlug, setDrugBySlug] = useState<Map<string, DrugSummary>>(
+    () => new Map(drugs.map((d) => [d.slug, d])),
+  );
+  const filterAbortRef = useRef<AbortController | null>(null);
+  const firstFilterRun = useRef(true);
+
+  useEffect(() => {
+    // The server already rendered the unfiltered first page.
+    if (firstFilterRun.current) {
+      firstFilterRun.current = false;
+      return;
+    }
+    const q = query.trim();
+    const t = setTimeout(async () => {
+      filterAbortRef.current?.abort();
+      const controller = new AbortController();
+      filterAbortRef.current = controller;
+      setFiltering(true);
+      try {
+        const params = new URLSearchParams({ limit: String(GRID_SIZE) });
+        if (q) params.set("q", q);
+        const res = await fetch(`/api/v1/drugs?${params}`, {
+          signal: controller.signal,
+        });
+        if (!res.ok) return;
+        const data = (await res.json()) as { items: DrugSummary[] };
+        if (controller.signal.aborted) return;
+        setFiltered(data.items);
+        setDrugBySlug((prev) => {
+          const next = new Map(prev);
+          for (const d of data.items) next.set(d.slug, d);
+          return next;
+        });
+      } catch {
+        // Aborted or network error — keep the previous grid.
+      } finally {
+        if (!controller.signal.aborted) setFiltering(false);
+      }
+    }, FILTER_DEBOUNCE_MS);
+    return () => clearTimeout(t);
+  }, [query]);
 
   const toggle = useCallback((slug: string) => {
     setResult(null);
@@ -202,7 +238,10 @@ export function InteractionsChecker({
 
           <ul
             aria-labelledby="picker-title"
-            className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3"
+            aria-busy={filtering}
+            className={`mt-4 grid gap-2 transition-opacity sm:grid-cols-2 lg:grid-cols-3 motion-reduce:transition-none ${
+              filtering ? "opacity-60" : ""
+            }`}
           >
             {filtered.map((d) => {
               const isSelected = selectedSet.has(d.slug);

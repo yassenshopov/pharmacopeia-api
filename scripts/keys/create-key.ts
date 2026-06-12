@@ -3,6 +3,7 @@
  *
  *   npm run keys:create -- --name "acme staging"
  *   npm run keys:create -- --name "acme prod" --tier grounded
+ *   npm run keys:create -- --name "acme prod" --rate-limit 120 --daily-quota 50000
  *
  * Prints the plaintext key (`pk_live_...`) exactly once — only its
  * sha256 is stored, so a lost key can only be revoked and re-minted.
@@ -18,12 +19,26 @@ function argValue(flag: string): string | undefined {
   return i >= 0 ? process.argv[i + 1] : undefined;
 }
 
+function intArg(flag: string): number | undefined {
+  const raw = argValue(flag);
+  if (raw === undefined) return undefined;
+  const value = Number.parseInt(raw, 10);
+  if (!Number.isFinite(value) || value <= 0) {
+    throw new Error(`${flag} must be a positive integer, got "${raw}"`);
+  }
+  return value;
+}
+
 async function main() {
   const name = argValue("--name");
   if (!name) {
-    throw new Error('Usage: npm run keys:create -- --name "<key name>" [--tier grounded]');
+    throw new Error(
+      'Usage: npm run keys:create -- --name "<key name>" [--tier grounded] [--rate-limit <req/min>] [--daily-quota <req/day>]',
+    );
   }
   const tier = argValue("--tier") ?? "grounded";
+  const rateLimitPerMinute = intArg("--rate-limit");
+  const dailyQuota = intArg("--daily-quota");
 
   const connectionString = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
   if (!connectionString) {
@@ -36,9 +51,18 @@ async function main() {
   try {
     const key = `pk_live_${randomBytes(24).toString("base64url")}`;
     const row = await prisma.apiKey.create({
-      data: { keyHash: hashApiKey(key), name, tier },
+      data: {
+        keyHash: hashApiKey(key),
+        name,
+        tier,
+        ...(rateLimitPerMinute !== undefined ? { rateLimitPerMinute } : {}),
+        ...(dailyQuota !== undefined ? { dailyQuota } : {}),
+      },
     });
     console.log(`Created API key "${row.name}" (tier: ${row.tier}, id: ${row.id})`);
+    console.log(
+      `  limits: ${row.rateLimitPerMinute} req/min, ${row.dailyQuota} req/day`,
+    );
     console.log("");
     console.log(`  ${key}`);
     console.log("");

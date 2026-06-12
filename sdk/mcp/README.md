@@ -83,6 +83,8 @@ Add to `~/.cursor/mcp.json` (or the project-local `.cursor/mcp.json`):
 | `list_shortages`         | All FDA shortage entries across the dataset.           |
 | `get_drug_adverse_events`| Aggregate FAERS report counts (reporting volume only). |
 | `get_drug_literature`    | Curated PubMed references (MeSH major topic).          |
+| `get_drug_trials`        | ClinicalTrials.gov registrations (not evidence).       |
+| `get_drug_pharmacogenomics` | CPIC drug–gene pairs (evidence metadata only).      |
 | `list_reactions`         | Browse MedDRA Preferred Terms (FAERS PT directory).    |
 | `get_reaction`           | One reaction: per-drug shares + related reactions.     |
 | `get_stats`              | Dataset counts + version metadata.                     |

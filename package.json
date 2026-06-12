@@ -6,6 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
@@ -18,8 +21,12 @@
     "ingest:shortages": "tsx scripts/ingest/fetch-shortages.ts",
     "ingest:adverse-events": "tsx scripts/ingest/fetch-adverse-events.ts",
     "ingest:literature": "tsx scripts/ingest/fetch-literature.ts",
+    "ingest:trials": "tsx scripts/ingest/fetch-trials.ts",
+    "ingest:pgx": "tsx scripts/ingest/fetch-pgx.ts",
     "ingest:reaction-meta": "tsx scripts/ingest/fetch-reaction-meta.ts",
     "ingest": "tsx scripts/ingest/fetch-drugs.ts",
+    "ingest:universe": "tsx scripts/ingest/build-universe.ts",
+    "ingest:scale": "tsx scripts/ingest/fetch-drugs-scale.ts",
     "codegen": "tsx scripts/codegen/generate.ts",
     "sdk:set-version": "tsx scripts/codegen/set-sdk-version.ts",
     "sdk:build:ts": "npm --prefix sdk/typescript install --no-audit --no-fund && npm --prefix sdk/typescript run build",
@@ -60,6 +67,7 @@
     "prisma": "^7.8.0",
     "tailwindcss": "^4",
     "tsx": "^4.22.3",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^4.1.8"
   }
 }

@@ -8,6 +8,8 @@ export * from "./changelog";
 export * from "./shortage";
 export * from "./adverse-events";
 export * from "./literature";
+export * from "./trial";
+export * from "./pgx";
 export * from "./reaction";
 export * from "./semantic";
 export * from "./webhook";

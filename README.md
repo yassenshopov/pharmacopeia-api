@@ -41,6 +41,15 @@ npm run dev
 Open <http://localhost:3000> for the site and
 <http://localhost:3000/api/v1/stats> for the API.
 
+```bash
+npm test              # Vitest: unit + repository contract + route tests
+npm run typecheck     # tsc --noEmit
+```
+
+Tests run against the static seed dataset by default; set
+`TEST_DATABASE_URL` to also run the repository contract suite against
+Postgres. CI (GitHub Actions) runs both on every push and PR.
+
 ## What's in the dataset
 
 | Entity        | Count | Notes                                            |
@@ -92,7 +101,11 @@ components/
   ui/                         — shadcn/ui primitives
 scripts/
   ingest/
-    fetch-drugs.ts            — RxNav + openFDA → drugs/classes/ingredients
+    shared.ts                 — shared fetchers + record builder (both pipelines)
+    curated-names.ts          — hand-curated core drug list
+    fetch-drugs.ts            — curated TS seed (RxNav + openFDA)
+    build-universe.ts         — RxNorm → programmatic 5,000+ candidate universe
+    fetch-drugs-scale.ts      — concurrent, resumable scale ingest → NDJSON
     fetch-structures.ts       — PubChem → 2D structure SVGs
     fetch-interactions.ts     — openFDA interaction narratives
     fetch-similarity.ts       — OpenChemLib Tanimoto structural analogs
@@ -126,6 +139,27 @@ npm run ingest:structures    # PubChem → public/structures/*.svg + seed
 npm run ingest:interactions  # openFDA → interaction narratives
 npm run ingest:similarity     # OpenChemLib → structural analogs (no network)
 ```
+
+### Scaling to 5,000+ drugs
+
+The curated `npm run ingest` above produces the ~310-drug TS seed baked
+into the bundle. The near-exhaustive US-FDA dataset is a separate,
+database-only pipeline that shares the exact same record builder
+(`scripts/ingest/shared.ts`) so records can't drift:
+
+```bash
+npm run ingest:universe      # RxNorm full ingredient space → data/ingest/universe.json
+OPENFDA_API_KEY=... npm run ingest:scale   # concurrent, resumable; writes NDJSON artifacts
+npm run db:seed              # auto-loads the scale NDJSON when present (else the TS seed)
+npm run db:embed             # embed the new passages
+```
+
+`ingest:scale` checkpoints every candidate to
+`data/ingest/checkpoint.ndjson`, so a killed run resumes where it left
+off. Candidates without a real openFDA label are routed to
+`data/ingest/review.ndjson` (a coverage report lands in `report.json`)
+instead of the public dataset. A free `OPENFDA_API_KEY` is effectively
+required — without it openFDA caps at 1,000 requests/day.
 
 With a Supabase project configured (see `.env.example`), push the
 schema and load the validated dataset into Postgres:

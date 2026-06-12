@@ -30,6 +30,8 @@ export type OperationTag =
   | "AdverseEvents"
   | "Reactions"
   | "Literature"
+  | "Trials"
+  | "Pharmacogenomics"
   | "Retrieval"
   | "Changelog"
   | "Webhooks"
@@ -119,6 +121,16 @@ export const API_TAGS: ReadonlyArray<{
       "PubMed PMID crosswalks. Link drug records to canonical literature in PubMed.",
   },
   {
+    name: "Trials",
+    description:
+      "ClinicalTrials.gov crosswalks. Registered studies naming a drug as an intervention, plus the registry's total match count. Registration is NOT evidence of efficacy or safety — reference crosswalk only.",
+  },
+  {
+    name: "Pharmacogenomics",
+    description:
+      "CPIC-curated drug–gene pairs with evidence levels (CPIC A–D, ClinPGx 1A–4), FDA-label PGx annotations, and guideline links. Evidence metadata only — never testing or dosing guidance.",
+  },
+  {
     name: "Retrieval",
     description:
       "Meaning-based retrieval over drug-record passages. `/semantic-search` is free; `/grounded` is the key-gated tier that adds per-span citations with full provenance for LLM consumers.",
@@ -158,6 +170,8 @@ export const API_TAG_GROUPS: ReadonlyArray<{
       "AdverseEvents",
       "Reactions",
       "Literature",
+      "Trials",
+      "Pharmacogenomics",
       "Retrieval",
     ],
   },
@@ -184,6 +198,18 @@ export const OPERATIONS: readonly Operation[] = [
         name: "ingredient",
         type: "string",
         description: "Filter to drugs containing this ingredient slug.",
+      },
+      {
+        name: "q",
+        type: "string",
+        description:
+          "Case-insensitive substring filter over name, slug, synonyms, brands, and ingredient names.",
+      },
+      {
+        name: "jurisdiction",
+        type: "string",
+        description:
+          "Filter by regulatory jurisdiction (US-FDA, EU-EMA, UK-MHRA, CA-HC). The v0 dataset is US-FDA only.",
       },
     ],
     responseSchema: "DrugListResponse",
@@ -242,6 +268,12 @@ export const OPERATIONS: readonly Operation[] = [
     queryParams: [
       { name: "limit", type: "number", description: "Page size (1–200, default 50)." },
       { name: "offset", type: "number", description: "Zero-based offset." },
+      {
+        name: "q",
+        type: "string",
+        description:
+          "Case-insensitive substring filter over name, slug, kind, and description.",
+      },
     ],
     responseSchema: "ClassListResponse",
   },
@@ -263,6 +295,12 @@ export const OPERATIONS: readonly Operation[] = [
     queryParams: [
       { name: "limit", type: "number", description: "Page size (1–200, default 50)." },
       { name: "offset", type: "number", description: "Zero-based offset." },
+      {
+        name: "q",
+        type: "string",
+        description:
+          "Case-insensitive substring filter over name, slug, and synonyms.",
+      },
     ],
     responseSchema: "IngredientListResponse",
   },
@@ -371,6 +409,26 @@ export const OPERATIONS: readonly Operation[] = [
     responseSchema: "DrugLiteratureResponse",
   },
   {
+    name: "getDrugTrials",
+    method: "GET",
+    path: "/drug/{slug}/trials",
+    summary:
+      "ClinicalTrials.gov registrations naming the drug as an intervention — freshest sample plus total registry match count. NOT evidence of efficacy or safety.",
+    tag: "Trials",
+    pathParams: ["slug"],
+    responseSchema: "DrugTrialsResponse",
+  },
+  {
+    name: "getDrugPharmacogenomics",
+    method: "GET",
+    path: "/drug/{slug}/pharmacogenomics",
+    summary:
+      "CPIC-curated drug–gene pairs with evidence levels and guideline links. Evidence metadata only — never testing or dosing guidance.",
+    tag: "Pharmacogenomics",
+    pathParams: ["slug"],
+    responseSchema: "DrugPgxResponse",
+  },
+  {
     name: "listReactions",
     method: "GET",
     path: "/reactions",
@@ -384,6 +442,12 @@ export const OPERATIONS: readonly Operation[] = [
         description: "Page size (1–200, default 50).",
       },
       { name: "offset", type: "number", description: "Zero-based offset." },
+      {
+        name: "q",
+        type: "string",
+        description:
+          "Case-insensitive substring filter over the reaction term, slug, and spelling aliases.",
+      },
     ],
     responseSchema: "ReactionsListResponse",
   },

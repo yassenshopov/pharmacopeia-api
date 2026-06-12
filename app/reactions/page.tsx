@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ReactionsListClient } from "@/components/reactions-list-client";
+import { parseBrowseParams, type BrowseSearchParams } from "@/lib/browse-params";
 import { getRepository } from "@/lib/data/repository";
 import { REACTION_DIRECTORY_DESCRIPTION } from "@/lib/schemas";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
+const PAGE_SIZE = 30;
 const REACTIONS_PATH = "/reactions";
 const REACTIONS_TITLE = "Reactions";
 const REACTIONS_DESCRIPTION =
@@ -45,10 +47,21 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ReactionsPage() {
-  const { items: reactions, pagination } = await getRepository().listReactions({
-    limit: 200,
-  });
+export default async function ReactionsPage({
+  searchParams,
+}: {
+  searchParams: Promise<BrowseSearchParams>;
+}) {
+  const { query, page, limit, offset } = parseBrowseParams(
+    await searchParams,
+    PAGE_SIZE,
+  );
+  const repo = getRepository();
+  const [{ items: reactions, pagination }, { pagination: all }] =
+    await Promise.all([
+      repo.listReactions({ q: query || undefined, limit, offset }),
+      repo.listReactions({ limit: 1 }),
+    ]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -57,7 +70,7 @@ export default async function ReactionsPage() {
         <div className="flex items-baseline justify-between gap-4">
           <h1 className="text-4xl font-semibold tracking-tight">Reactions</h1>
           <span className="font-mono text-sm text-muted-foreground">
-            {pagination.total} total
+            {all.total.toLocaleString()} total
           </span>
         </div>
         <p className="max-w-3xl text-muted-foreground">
@@ -81,7 +94,13 @@ export default async function ReactionsPage() {
         Dashboard directly.
       </div>
 
-      <ReactionsListClient items={reactions} />
+      <ReactionsListClient
+        items={reactions}
+        total={pagination.total}
+        page={page}
+        pageSize={PAGE_SIZE}
+        query={query}
+      />
     </div>
   );
 }

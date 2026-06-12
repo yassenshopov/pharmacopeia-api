@@ -7,6 +7,12 @@ import type { Metadata } from "next";
 import { AlertTriangle, ArrowUpRight } from "lucide-react";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { CodeBlock } from "@/components/code-block";
+import {
+  PlainLanguageNotice,
+  PlainLanguageProvider,
+  PlainLanguageToggle,
+  ProseText,
+} from "@/components/plain-language";
 import { ProvenanceBadge } from "@/components/provenance-badge";
 import { Toc, type TocItem } from "@/components/toc";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +20,11 @@ import { Separator } from "@/components/ui/separator";
 import { getSeedStructure } from "@/lib/data/seed/structures";
 import { slugifyReactionName } from "@/lib/data/reactions-index";
 import { getRepository } from "@/lib/data/repository";
+import {
+  fleschKincaidGrade,
+  simplifyClinicalSegments,
+  simplifyClinicalText,
+} from "@/lib/plain-language";
 import type {
   ChemicalStructure,
   Drug,
@@ -78,6 +89,16 @@ function formatExtractedDate(value: string): string {
  * to >100% — that's expected, not a bug. We collapse very small shares
  * to `<0.1%` and skip decimals at the high end where they're noise.
  */
+/** "ACTIVE_NOT_RECRUITING" → "Active not recruiting", "PHASE2" → "Phase 2". */
+function formatRegistryToken(token: string): string {
+  const words = token
+    .replace(/PHASE(\d)/g, "PHASE $1")
+    .split("_")
+    .join(" ")
+    .toLowerCase();
+  return words.charAt(0).toUpperCase() + words.slice(1);
+}
+
 function formatReactionShare(count: number, totalReports: number): string {
   if (totalReports <= 0 || count <= 0) return "—";
   const pct = (count / totalReports) * 100;
@@ -164,6 +185,8 @@ export default async function DrugDetailPage({ params }: PageProps) {
   const activeShortages = shortages.filter((s) => s.status === "active");
   const adverseEvents = await repo.getAdverseEventStats(slug);
   const literature = await repo.getDrugLiterature(slug);
+  const trialsSnapshot = await repo.getDrugTrials(slug);
+  const pgxSnapshot = await repo.getDrugPgx(slug);
   const structure = getSeedStructure(slug);
   const structureSvg = structure
     ? await loadStructureSvg(structure.structureSvgPath)
@@ -199,10 +222,32 @@ export default async function DrugDetailPage({ params }: PageProps) {
     tocItems.push({ id: "adverse-events", label: "FAERS reports" });
   if (literature.length > 0)
     tocItems.push({ id: "literature", label: "Literature" });
+  if (trialsSnapshot && trialsSnapshot.trials.length > 0)
+    tocItems.push({ id: "trials", label: "Clinical trials" });
+  if (pgxSnapshot && pgxSnapshot.pairs.length > 0)
+    tocItems.push({ id: "pharmacogenomics", label: "Pharmacogenomics" });
   if (similar.length > 0)
     tocItems.push({ id: "analogs", label: "Structural analogs" });
 
+  const proseTexts = [
+    ls?.boxedWarning,
+    drug.mechanism?.summary,
+    ...drug.indications.map((i) => i.text),
+    ...drug.contraindications.map((c) => c.text),
+    ls?.dosageAndAdministration,
+    ...drug.dosing.map((d) => d.notes),
+    ls?.warningsAndPrecautions,
+    ls?.adverseReactions,
+    ls?.useInSpecificPopulations,
+    ls?.overdosage,
+    ...interactions.flatMap((x) => [x.description, x.recommendation]),
+  ].filter((t): t is string => Boolean(t));
+  const plainGrade = fleschKincaidGrade(
+    proseTexts.map(simplifyClinicalText).join(" "),
+  );
+
   return (
+    <PlainLanguageProvider>
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
       <script {...jsonLdScriptProps(drugJsonLd(drug))} />
 
@@ -255,11 +300,16 @@ export default async function DrugDetailPage({ params }: PageProps) {
           </div>
         </div>
 
-        <div className="rounded-lg border border-border/80 bg-card/40 p-4 font-mono text-xs">
-          <div className="mb-2 text-muted-foreground">GET</div>
-          <code translate="no">/api/v1/drug/{drug.slug}</code>
+        <div className="flex shrink-0 flex-col items-start gap-3 sm:items-end">
+          <PlainLanguageToggle />
+          <div className="rounded-lg border border-border/80 bg-card/40 p-4 font-mono text-xs">
+            <div className="mb-2 text-muted-foreground">GET</div>
+            <code translate="no">/api/v1/drug/{drug.slug}</code>
+          </div>
         </div>
       </div>
+
+      <PlainLanguageNotice grade={plainGrade} />
 
       {ls?.boxedWarning && (
         <section
@@ -279,7 +329,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
               Boxed warning
             </h2>
           </div>
-          <p className="text-sm text-foreground/90">{ls.boxedWarning}</p>
+          <p className="text-sm text-foreground/90">
+            <Prose text={ls.boxedWarning} />
+          </p>
         </section>
       )}
 
@@ -307,7 +359,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
                 />
               }
             >
-              <p>{drug.mechanism.summary}</p>
+              <p>
+                <Prose text={drug.mechanism.summary} />
+              </p>
               {drug.mechanism.targets.length > 0 && (
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {drug.mechanism.targets.map((t) => (
@@ -341,7 +395,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
                     key={i}
                     className="flex items-baseline justify-between gap-4 rounded-md border border-border/60 px-3 py-2 text-sm"
                   >
-                    <span>{ind.text}</span>
+                    <span>
+                      <Prose text={ind.text} />
+                    </span>
                     {ind.icd10.length > 0 && (
                       <span className="font-mono text-[10px] text-muted-foreground">
                         ICD-10: {ind.icd10.join(", ")}
@@ -370,7 +426,9 @@ export default async function DrugDetailPage({ params }: PageProps) {
                     key={i}
                     className="flex items-baseline justify-between gap-4 rounded-md border border-border/60 px-3 py-2 text-sm"
                   >
-                    <span>{c.text}</span>
+                    <span>
+                      <Prose text={c.text} />
+                    </span>
                     <SeverityBadge severity={c.severity} />
                   </li>
                 ))}
@@ -391,7 +449,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
             >
               {ls?.dosageAndAdministration && (
                 <p className="text-sm leading-relaxed text-foreground/90">
-                  {ls.dosageAndAdministration}
+                  <Prose text={ls.dosageAndAdministration} />
                 </p>
               )}
               {drug.dosing.length > 0 && (
@@ -431,7 +489,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
                     )}
                     {d.notes && (
                       <p className="mt-2 text-xs text-muted-foreground">
-                        {d.notes}
+                        <Prose text={d.notes} />
                       </p>
                     )}
                   </li>
@@ -453,7 +511,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
               }
             >
               <p className="text-sm leading-relaxed text-foreground/90">
-                {ls.warningsAndPrecautions}
+                <Prose text={ls.warningsAndPrecautions} />
               </p>
             </Section>
           )}
@@ -470,7 +528,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
               }
             >
               <p className="text-sm leading-relaxed text-foreground/90">
-                {ls.adverseReactions}
+                <Prose text={ls.adverseReactions} />
               </p>
             </Section>
           )}
@@ -487,7 +545,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
               }
             >
               <p className="text-sm leading-relaxed text-foreground/90">
-                {ls.useInSpecificPopulations}
+                <Prose text={ls.useInSpecificPopulations} />
               </p>
             </Section>
           )}
@@ -575,14 +633,14 @@ export default async function DrugDetailPage({ params }: PageProps) {
                         <SeverityBadge severity={x.severity} />
                       </div>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        {x.description}
+                        <Prose text={x.description} />
                       </p>
                       {x.recommendation && (
                         <p className="mt-2 text-xs text-muted-foreground">
                           <span className="font-semibold text-foreground">
                             Recommendation:{" "}
                           </span>
-                          {x.recommendation}
+                          <Prose text={x.recommendation} />
                         </p>
                       )}
                     </li>
@@ -604,7 +662,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
               }
             >
               <p className="text-sm leading-relaxed text-foreground/90">
-                {ls.overdosage}
+                <Prose text={ls.overdosage} />
               </p>
             </Section>
           )}
@@ -871,6 +929,141 @@ export default async function DrugDetailPage({ params }: PageProps) {
             </Section>
           )}
 
+          {trialsSnapshot && trialsSnapshot.trials.length > 0 && (
+            <Section
+              id="trials"
+              title="Clinical trials"
+              right={
+                <Link
+                  href={`/api/v1/drug/${drug.slug}/trials`}
+                  aria-label={`View ${drug.name} clinical trial registrations as JSON`}
+                  className="inline-flex items-center gap-1 rounded-sm text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                >
+                  View JSON
+                  <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                </Link>
+              }
+            >
+              <p className="mb-3 text-xs text-muted-foreground">
+                The {trialsSnapshot.trials.length} most recently updated of{" "}
+                <span className="tabular-nums">
+                  {trialsSnapshot.totalCount.toLocaleString("en-US")}
+                </span>{" "}
+                ClinicalTrials.gov registrations naming {drug.name} as an
+                intervention. Registration is not evidence of efficacy or
+                safety — reference crosswalk only.
+              </p>
+              <ul className="space-y-3">
+                {trialsSnapshot.trials.map((trial) => (
+                  <li
+                    key={trial.nctId}
+                    className="rounded-md border border-border/60 px-3 py-2 text-sm"
+                  >
+                    <a
+                      href={trial.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-sm font-medium text-foreground hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                    >
+                      {trial.title}
+                    </a>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      <span>{formatRegistryToken(trial.overallStatus)}</span>
+                      {trial.phases
+                        .filter((p) => p !== "NA")
+                        .map((p) => (
+                          <span key={p}> · {formatRegistryToken(p)}</span>
+                        ))}
+                      {trial.studyType && (
+                        <span> · {formatRegistryToken(trial.studyType)}</span>
+                      )}
+                      {trial.enrollment !== undefined && (
+                        <span className="tabular-nums">
+                          {" "}
+                          · {trial.enrollment.toLocaleString("en-US")} enrolled
+                        </span>
+                      )}
+                      {trial.leadSponsor && <span> · {trial.leadSponsor}</span>}
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-0.5 font-mono text-[10px] text-muted-foreground">
+                      <span translate="no">{trial.nctId}</span>
+                      {trial.lastUpdateDate && (
+                        <span className="tabular-nums">
+                          updated {trial.lastUpdateDate}
+                        </span>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
+          {pgxSnapshot && pgxSnapshot.pairs.length > 0 && (
+            <Section
+              id="pharmacogenomics"
+              title="Pharmacogenomics"
+              right={
+                <Link
+                  href={`/api/v1/drug/${drug.slug}/pharmacogenomics`}
+                  aria-label={`View ${drug.name} pharmacogenomic drug-gene pairs as JSON`}
+                  className="inline-flex items-center gap-1 rounded-sm text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring motion-reduce:transition-none"
+                >
+                  View JSON
+                  <ArrowUpRight aria-hidden="true" className="h-3 w-3" />
+                </Link>
+              }
+            >
+              <p className="mb-3 text-xs text-muted-foreground">
+                CPIC-curated drug–gene pairs for {drug.name}. Levels describe
+                the strength of curated evidence and guideline status — never
+                a recommendation to test or to adjust therapy.
+              </p>
+              <ul className="space-y-3">
+                {pgxSnapshot.pairs.map((pair) => (
+                  <li
+                    key={pair.gene}
+                    className="rounded-md border border-border/60 px-3 py-2 text-sm"
+                  >
+                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      <span className="font-mono font-medium" translate="no">
+                        {pair.gene}
+                      </span>
+                      {pair.cpicLevel && (
+                        <span className="rounded-sm bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                          CPIC {pair.cpicLevel}
+                          {pair.provisional ? " (provisional)" : ""}
+                        </span>
+                      )}
+                      {pair.clinpgxLevel && (
+                        <span className="rounded-sm bg-muted px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+                          ClinPGx {pair.clinpgxLevel}
+                        </span>
+                      )}
+                      {pair.fdaLabelTesting && (
+                        <span className="text-xs text-muted-foreground">
+                          FDA label: {pair.fdaLabelTesting}
+                        </span>
+                      )}
+                    </div>
+                    {pair.guidelineUrl && (
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        <a
+                          href={pair.guidelineUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="rounded-sm hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                        >
+                          {pair.guidelineName ?? "CPIC guideline"}
+                        </a>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </Section>
+          )}
+
           {similar.length > 0 && (
             <Section
               id="analogs"
@@ -1012,6 +1205,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
         <Toc items={tocItems} />
       </div>
     </div>
+    </PlainLanguageProvider>
   );
 }
 
@@ -1128,6 +1322,15 @@ function Section({
       {children}
     </section>
   );
+}
+
+/**
+ * Clinical prose that participates in the plain-language toggle. The
+ * simplified variant is computed here on the server so the client swap
+ * is a pure string pick.
+ */
+function Prose({ text }: { text: string }) {
+  return <ProseText clinical={text} plain={simplifyClinicalSegments(text)} />;
 }
 
 function KV({ label, value }: { label: string; value: string }) {

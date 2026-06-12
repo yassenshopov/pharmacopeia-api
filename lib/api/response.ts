@@ -117,6 +117,24 @@ export function unauthorized(
   });
 }
 
+export function rateLimited(
+  message: string,
+  init: { retryAfterSeconds: number; headers?: Record<string, string> },
+): NextResponse {
+  const body: ApiError = {
+    error: { code: "rate_limited", message },
+  };
+  return NextResponse.json(body, {
+    status: 429,
+    headers: {
+      "Retry-After": String(init.retryAfterSeconds),
+      "Cache-Control": "no-store",
+      "X-Robots-Tag": NOINDEX,
+      ...init.headers,
+    },
+  });
+}
+
 export function notConfigured(message: string): NextResponse {
   const body: ApiError = {
     error: { code: "not_configured", message },

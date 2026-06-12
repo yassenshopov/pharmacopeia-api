@@ -5,10 +5,13 @@ import type {
   Drug,
   DrugClass,
   DrugLiterature,
+  DrugPgx,
   DrugSummary,
+  DrugTrials,
   Ingredient,
   Interaction,
   InteractionCheckResponse,
+  Jurisdiction,
   LiteratureReference,
   PassageSection,
   Provenance,
@@ -41,6 +44,7 @@ import {
   resolveReactionSlugInIndex,
   type ReactionIndex,
 } from "./reactions-index";
+import { normalizeQuery, reactionSearchText } from "./search-text";
 import {
   buildStructureIndex,
   searchStructureIndex,
@@ -199,13 +203,25 @@ export class PrismaRepository implements PharmacopeiaRepository {
   }
 
   async listDrugs(
-    opts: ListOpts & { classSlug?: string; ingredientSlug?: string } = {},
+    opts: ListOpts & {
+      classSlug?: string;
+      ingredientSlug?: string;
+      jurisdiction?: Jurisdiction;
+    } = {},
   ): Promise<List<DrugSummary>> {
     const { limit, offset } = clampListOpts(opts);
+    const q = normalizeQuery(opts.q);
     const where = {
       ...(opts.classSlug ? { classSlugs: { has: opts.classSlug } } : {}),
       ...(opts.ingredientSlug
         ? { ingredientSlugs: { has: opts.ingredientSlug } }
+        : {}),
+      ...(q ? { searchText: { contains: q } } : {}),
+      // JSON-path filter; cardinality is tiny (a handful of agencies)
+      // and v0 data is all US-FDA. Promote to an extracted column when
+      // a second jurisdiction actually lands.
+      ...(opts.jurisdiction
+        ? { payload: { path: ["jurisdiction"], equals: opts.jurisdiction } }
         : {}),
     };
     const [rows, total] = await Promise.all([
@@ -298,14 +314,17 @@ export class PrismaRepository implements PharmacopeiaRepository {
 
   async listClasses(opts?: ListOpts): Promise<List<DrugClass>> {
     const { limit, offset } = clampListOpts(opts);
+    const q = normalizeQuery(opts?.q);
+    const where = q ? { searchText: { contains: q } } : {};
     const [rows, total] = await Promise.all([
       this.db.drugClass.findMany({
+        where,
         orderBy: { slug: "asc" },
         skip: offset,
         take: limit,
         select: { payload: true },
       }),
-      this.db.drugClass.count(),
+      this.db.drugClass.count({ where }),
     ]);
     return {
       items: rows.map((r) => r.payload as unknown as DrugClass),
@@ -320,14 +339,17 @@ export class PrismaRepository implements PharmacopeiaRepository {
 
   async listIngredients(opts?: ListOpts): Promise<List<Ingredient>> {
     const { limit, offset } = clampListOpts(opts);
+    const q = normalizeQuery(opts?.q);
+    const where = q ? { searchText: { contains: q } } : {};
     const [rows, total] = await Promise.all([
       this.db.ingredient.findMany({
+        where,
         orderBy: { slug: "asc" },
         skip: offset,
         take: limit,
         select: { payload: true },
       }),
-      this.db.ingredient.count(),
+      this.db.ingredient.count({ where }),
     ]);
     return {
       items: rows.map((r) => r.payload as unknown as Ingredient),
@@ -340,22 +362,47 @@ export class PrismaRepository implements PharmacopeiaRepository {
     return row ? (row.payload as unknown as Ingredient) : null;
   }
 
+  /**
+   * Dataset-wide views are precomputed by `scripts/db/seed.ts` into the
+   * `derived_views` table so cold instances never load every payload
+   * just to answer a browse endpoint. Falls back to building from the
+   * full snapshot when the row (or the table itself, pre-`db push`) is
+   * missing — both paths run the same pure builders, so the answer is
+   * identical either way.
+   */
+  private async derivedView<T>(key: string): Promise<T | null> {
+    try {
+      const row = await this.db.derivedView.findUnique({ where: { key } });
+      return row ? (row.payload as unknown as T) : null;
+    } catch {
+      return null;
+    }
+  }
+
   async listBrands(): Promise<BrandEntry[]> {
+    const view = await this.derivedView<BrandEntry[]>("brands");
+    if (view) return view;
     const { drugs } = await this.snapshot();
     return buildBrands(drugs);
   }
 
   async listAtcGroups(): Promise<AtcGroup[]> {
+    const view = await this.derivedView<AtcGroup[]>("atc-groups");
+    if (view) return view;
     const { classes } = await this.snapshot();
     return buildAtcGroups(classes);
   }
 
   async getAtcTree(): Promise<AtcTreeNode[]> {
+    const view = await this.derivedView<AtcTreeNode[]>("atc-tree");
+    if (view) return view;
     const { drugs, classes } = await this.snapshot();
     return buildAtcTree(drugs, classes);
   }
 
   async getMechanismGraph(): Promise<MechanismGraph> {
+    const view = await this.derivedView<MechanismGraph>("mechanism-graph");
+    if (view) return view;
     const { drugs } = await this.snapshot();
     return buildMechanismGraph(drugs);
   }
@@ -566,12 +613,30 @@ export class PrismaRepository implements PharmacopeiaRepository {
     return (row.payload as unknown as DrugLiterature).references;
   }
 
+  async getDrugTrials(slug: string): Promise<DrugTrials | null> {
+    const row = await this.db.trials.findUnique({
+      where: { drugSlug: slug },
+    });
+    return row ? (row.payload as unknown as DrugTrials) : null;
+  }
+
+  async getDrugPgx(slug: string): Promise<DrugPgx | null> {
+    const row = await this.db.pgx.findUnique({
+      where: { drugSlug: slug },
+    });
+    return row ? (row.payload as unknown as DrugPgx) : null;
+  }
+
   async listReactions(opts?: ListOpts): Promise<List<ReactionSummary>> {
     const { limit, offset } = clampListOpts(opts);
     const index = await this.reactionIndex();
+    const q = normalizeQuery(opts?.q);
+    const summaries = q
+      ? index.summaries.filter((r) => reactionSearchText(r).includes(q))
+      : index.summaries;
     return {
-      items: index.summaries.slice(offset, offset + limit),
-      pagination: { total: index.summaries.length, limit, offset },
+      items: summaries.slice(offset, offset + limit),
+      pagination: { total: summaries.length, limit, offset },
     };
   }
 

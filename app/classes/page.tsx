@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ClassesListClient } from "@/components/classes-list-client";
+import { parseBrowseParams, type BrowseSearchParams } from "@/lib/browse-params";
 import { getRepository } from "@/lib/data/repository";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
+const PAGE_SIZE = 24;
 const CLASSES_PATH = "/classes";
 const CLASSES_TITLE = "Drug classes";
 const CLASSES_DESCRIPTION =
@@ -44,10 +46,20 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function ClassesPage() {
-  const { items: classes, pagination } = await getRepository().listClasses({
-    limit: 200,
-  });
+export default async function ClassesPage({
+  searchParams,
+}: {
+  searchParams: Promise<BrowseSearchParams>;
+}) {
+  const { query, page, limit, offset } = parseBrowseParams(
+    await searchParams,
+    PAGE_SIZE,
+  );
+  const repo = getRepository();
+  const [{ items: classes, pagination }, stats] = await Promise.all([
+    repo.listClasses({ q: query || undefined, limit, offset }),
+    repo.getStats(),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
@@ -56,7 +68,7 @@ export default async function ClassesPage() {
         <div className="flex items-baseline justify-between gap-4">
           <h1 className="text-4xl font-semibold tracking-tight">Classes</h1>
           <span className="font-mono text-sm text-muted-foreground">
-            {pagination.total} total
+            {stats.classes.toLocaleString()} total
           </span>
         </div>
         <p className="max-w-2xl text-muted-foreground">
@@ -65,7 +77,13 @@ export default async function ClassesPage() {
         </p>
       </div>
 
-      <ClassesListClient items={classes} />
+      <ClassesListClient
+        items={classes}
+        total={pagination.total}
+        page={page}
+        pageSize={PAGE_SIZE}
+        query={query}
+      />
     </div>
   );
 }

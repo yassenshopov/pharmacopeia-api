@@ -8,6 +8,8 @@ import { PaginationSchema, SlugSchema } from "./shared";
 import { ShortageEntrySchema } from "./shortage";
 import { AdverseEventStatsSchema } from "./adverse-events";
 import { LiteratureReferenceSchema } from "./literature";
+import { TrialEntrySchema } from "./trial";
+import { PgxPairSchema } from "./pgx";
 import { ReactionSchema, ReactionSummarySchema } from "./reaction";
 
 /**
@@ -281,6 +283,36 @@ export const DrugLiteratureResponseSchema = z.object({
 export type DrugLiteratureResponse = z.infer<
   typeof DrugLiteratureResponseSchema
 >;
+
+/**
+ * Per-drug ClinicalTrials.gov envelope. `trials` is the most recently
+ * updated sample the ingest pipeline kept; `totalCount` is the full
+ * registry match count for the intervention query at extraction time.
+ * The `disclaimer` field travels with the payload so SDK and MCP
+ * consumers inherit the framing: registration is not evidence.
+ */
+export const DrugTrialsResponseSchema = z.object({
+  drug: z.object({ slug: SlugSchema, name: z.string() }),
+  trials: z.array(TrialEntrySchema),
+  totalCount: z.number().int().nonnegative(),
+  sampled: z.number().int().nonnegative(),
+  disclaimer: z.string(),
+});
+export type DrugTrialsResponse = z.infer<typeof DrugTrialsResponseSchema>;
+
+/**
+ * Per-drug pharmacogenomics envelope. CPIC-curated drug–gene pairs
+ * with evidence levels and guideline links. The `disclaimer` field
+ * travels with the payload so SDK and MCP consumers inherit the
+ * framing: evidence metadata, never testing or dosing guidance.
+ */
+export const DrugPgxResponseSchema = z.object({
+  drug: z.object({ slug: SlugSchema, name: z.string() }),
+  pairs: z.array(PgxPairSchema),
+  total: z.number().int().nonnegative(),
+  disclaimer: z.string(),
+});
+export type DrugPgxResponse = z.infer<typeof DrugPgxResponseSchema>;
 
 /**
  * Reactions browse envelope. Lightweight per-row records ordered by

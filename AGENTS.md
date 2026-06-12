@@ -84,6 +84,62 @@ stays in the tree as a fallback for local dev without env vars. Both
 backends must stay behaviourally identical — new derived views belong
 in backend-agnostic modules, never in one repository only.
 
+## Scale ingest (5,000+ drugs)
+
+The near-exhaustive US-FDA dataset is produced by a separate pipeline
+that never touches the bundle — it lives only in Postgres:
+
+1. `npm run ingest:universe` builds `data/ingest/universe.json` from
+ RxNorm's full ingredient space, tiered `curated` (the hand list) →
+ `prescribable` (RxNorm Prescribable subset) → `extended` (long tail).
+2. `npm run ingest:scale` walks the universe with a concurrent worker
+ pool, checkpointing every verdict to `data/ingest/checkpoint.ndjson`
+ (kill + re-run = resume). It writes `drugs/classes/ingredients
+ .ndjson`, `review.ndjson`, and `report.json`. Set `OPENFDA_API_KEY`
+ — without it openFDA caps at 1,000 requests/day.
+3. Publish gate: programmatic candidates need a real openFDA label;
+ resolved-but-unlabeled ones land in `review.ndjson`, never the
+ public dataset. Curated names keep their legacy no-label allowance.
+4. `npm run db:seed` prefers the NDJSON artifacts when present
+ (`PHARM_DATASET=scale|static` forces); the TS seed stays the small
+ curated bundle fallback.
+5. All per-record logic (fetchers, text cleaning, record builder,
+ class-slug collision handling) is shared with the curated pipeline
+ via `scripts/ingest/shared.ts` — the two pipelines must never have
+ their own copies of it.
+
+## Scheduled refresh + crosswalks (shipped)
+
+1. **Cron ingest**: `vercel.json` schedules
+ `/api/cron/refresh-shortages` daily (`CRON_SECRET`-gated). The route
+ rebuilds the openFDA shortages dataset straight into Postgres and
+ skips the write when a content hash says upstream didn't change.
+ Per-record logic lives in `lib/ingest/shortages.ts`, shared with
+ `scripts/ingest/fetch-shortages.ts` — never duplicated. New cron
+ surfaces follow the same pattern: `app/api/cron/<job>/route.ts`,
+ logic in `lib/ingest/`, internal-only (no manifest entry).
+2. **ICD-10 crosswalk** (`lib/ingest/icd10.ts`): curated keyword →
+ ICD-10-CM table applied to indication text. Fill-only (never
+ overwrites existing codes), conservative by design. Applied in the
+ ingest record builder, at `db:seed` load, and once at
+ `StaticRepository` construction so both backends serve identical
+ codes. SNOMED stays empty pending licensing.
+3. **Jurisdiction filter**: `/v1/drugs?jurisdiction=` is validated
+ against the Zod enum and filters both backends (JSON-path on
+ Postgres until a second jurisdiction justifies an extracted column).
+
+## Tests and CI
+
+- `npm test` (Vitest): unit tests for pure modules, a repository
+ contract suite that pins both backends to identical behaviour, and
+ route-handler tests. `npm run typecheck` for tsc.
+- Tests default to the static repository (`tests/setup.ts` deletes
+ `DATABASE_URL`); set `TEST_DATABASE_URL` to also run the contract
+ suite against Postgres.
+- CI (`.github/workflows/ci.yml`) runs typecheck + tests on push/PR.
+- New repository methods must be covered by the contract suite, in
+ `tests/contract/repository.test.ts`, so backends can't drift.
+
 ## Semantic retrieval, grounded tier, webhooks (shipped)
 
 1. **Passages** (`lib/data/passages.ts`) are the retrieval unit: every
