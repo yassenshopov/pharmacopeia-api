@@ -14,6 +14,7 @@ from .models import (
     ConditionResponse,
     ConditionsListResponse,
     Drug,
+    DrugHistoryResponse,
     DrugInteractionsResponse,
     DrugListResponse,
     DrugLiteratureResponse,
@@ -143,9 +144,9 @@ class PharmacopeiaClient:
         data = self._request("GET", "/drugs", params=params)
         return DrugListResponse.model_validate(data)
 
-    def get_drug(self, slug: str, *, fields: Optional[str] = None) -> Drug:
+    def get_drug(self, slug: str, *, fields: Optional[str] = None, as_of: Optional[str] = None) -> Drug:
         """Fetch a single drug by slug."""
-        params = _drop_none({"fields": fields})
+        params = _drop_none({"fields": fields, "asOf": as_of})
         data = self._request("GET", f"/drug/{quote(str(slug), safe='')}", params=params)
         return Drug.model_validate(data)
 
@@ -158,6 +159,12 @@ class PharmacopeiaClient:
         """List known interactions for a drug."""
         data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/interactions")
         return DrugInteractionsResponse.model_validate(data)
+
+    def get_drug_history(self, slug: str, *, as_of: Optional[str] = None) -> DrugHistoryResponse:
+        """Dataset time-travel: the drug's current-snapshot provenance plus its change-event timeline (newest first). Pin ?asOf= to trim the timeline to a past instant. Leans on provenance + the changelog; no separate version store."""
+        params = _drop_none({"asOf": as_of})
+        data = self._request("GET", f"/drug/{quote(str(slug), safe='')}/history", params=params)
+        return DrugHistoryResponse.model_validate(data)
 
     def get_similar_drugs(self, slug: str) -> SimilarDrugsResponse:
         """Structurally similar drugs (Tanimoto over 2D fingerprints)."""

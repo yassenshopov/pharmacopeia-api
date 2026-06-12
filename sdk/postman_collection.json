@@ -100,6 +100,12 @@
                   "value": "",
                   "description": "Optional comma-separated list of sections to include (mechanism, indications, contraindications, dosing, pharmacokinetics, interactions, labelSections, approvalHistory, chemical, patientSummary). Identity fields are always returned. Omit for the full record.",
                   "disabled": true
+                },
+                {
+                  "key": "asOf",
+                  "value": "",
+                  "description": "Dataset time-travel: ISO-8601 instant. Records are a single newest snapshot, so this gates by extraction time — a drug extracted after this instant 404s (it was not yet in the dataset). See /drug/{slug}/history for the full change timeline.",
+                  "disabled": true
                 }
               ]
             },
@@ -161,6 +167,39 @@
               ]
             },
             "description": "`GET /drug/{slug}/interactions`"
+          }
+        },
+        {
+          "name": "Dataset time-travel: the drug's current-snapshot provenance plus its change-event timeline (newest first). Pin ?asOf= to trim the timeline to a past instant. Leans on provenance + the changelog; no separate version store.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/drug/{slug}/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "drug",
+                ":slug",
+                "history"
+              ],
+              "variable": [
+                {
+                  "key": "slug",
+                  "value": ""
+                }
+              ],
+              "query": [
+                {
+                  "key": "asOf",
+                  "value": "",
+                  "description": "ISO-8601 instant; only change events at or before it are returned, and the instant is echoed back in `asOf`.",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "`GET /drug/{slug}/history`"
           }
         },
         {

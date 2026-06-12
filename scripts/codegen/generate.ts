@@ -3,6 +3,7 @@ import { dirname, join } from "node:path";
 import { buildSchemaBundle } from "@/lib/sdk/registry";
 import * as ts from "./emit-ts";
 import * as py from "./emit-py";
+import * as go from "./emit-go";
 import { emitOpenApi } from "./emit-openapi";
 import { emitPostman } from "@/lib/sdk/postman";
 import { GEN_HEADER_PY } from "./util";
@@ -40,6 +41,9 @@ function main(): void {
   write("sdk/python/pharmacopeia/models.py", py.emitModels(bundle));
   write("sdk/python/pharmacopeia/client.py", py.emitClient());
   write("sdk/python/pharmacopeia/__init__.py", emitPythonInit(bundle.order));
+
+  write("sdk/go/types.go", go.emitTypes(bundle));
+  write("sdk/go/client.go", go.emitClient());
 
   write("sdk/openapi.json", emitOpenApi(bundle));
   write("sdk/postman_collection.json", emitPostman());

@@ -6,9 +6,10 @@ validates against** — there is no second, drifting copy of the contract.
 
 ```
 sdk/
-  typescript/   @pharmacopeia/client  — generated TS types + client
-  python/       pharmacopeia          — generated Pydantic models + client
-  openapi.json  OpenAPI 3.1 document  — for any other language
+  typescript/   @pharmacopeia/client          — generated TS types + client
+  python/       pharmacopeia                  — generated Pydantic models + client
+  go/           pharmacopeia-go               — generated Go structs + client
+  openapi.json  OpenAPI 3.1 document          — for any other language
 ```
 
 ## How generation works
@@ -22,10 +23,12 @@ lib/sdk/manifest.ts     the endpoint list (method, path, params, schemas)
         │   1. Zod → JSON Schema  (Zod v4 `z.toJSONSchema`)
         │   2. JSON Schema → TypeScript types + client
         │   3. JSON Schema → Pydantic models + client
-        │   4. JSON Schema + manifest → OpenAPI 3.1
+        │   4. JSON Schema → Go structs + client
+        │   5. JSON Schema + manifest → OpenAPI 3.1
         ▼
 sdk/typescript/src/{types,client}.ts
 sdk/python/pharmacopeia/{models,client,__init__}.py
+sdk/go/{types,client}.go
 sdk/openapi.json
 ```
 
@@ -47,8 +50,9 @@ hand — change the Zod schema or the manifest and regenerate.
 
 Both clients and the OpenAPI document update from that single edit.
 
-See [`typescript/README.md`](./typescript/README.md) and
-[`python/README.md`](./python/README.md) for usage.
+See [`typescript/README.md`](./typescript/README.md),
+[`python/README.md`](./python/README.md), and
+[`go/README.md`](./go/README.md) for usage.
 
 ## Releasing to npm and PyPI
 

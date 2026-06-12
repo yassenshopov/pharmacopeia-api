@@ -89,6 +89,13 @@ export interface ControlledSubstance {
   description: string;
 }
 
+export interface OrangeBook {
+  teCode?: string;
+  referenceListed?: boolean;
+  genericAvailable: boolean;
+  description: string;
+}
+
 export interface Identifier {
   rxcui?: string;
   ndc: string[];
@@ -181,6 +188,7 @@ export interface Drug {
   interactionsNarrative?: string;
   labelSections?: LabelSections;
   controlledSubstance?: ControlledSubstance;
+  orangeBook?: OrangeBook;
   identifiers: Identifier;
   chemical?: ChemicalStructure;
   provenance: Provenance;
@@ -440,6 +448,14 @@ export interface DrugTrialsResponse {
   totalCount: number;
   sampled: number;
   disclaimer: string;
+}
+
+export interface DrugHistoryResponse {
+  drug: { slug: string; name: string };
+  provenance: Provenance;
+  asOf?: string;
+  events: ChangelogEntry[];
+  total: number;
 }
 
 export interface PgxPair {

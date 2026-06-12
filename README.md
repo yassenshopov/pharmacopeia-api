@@ -50,6 +50,35 @@ Tests run against the static seed dataset by default; set
 `TEST_DATABASE_URL` to also run the repository contract suite against
 Postgres. CI (GitHub Actions) runs both on every push and PR.
 
+## Self-hosting (Docker)
+
+pharmacopeia is forkable — a clone-and-run path that doesn't assume
+Vercel. The image builds on Next.js [standalone
+output](https://nextjs.org/docs/app/api-reference/config/next-config-js/output);
+with no `DATABASE_URL` it serves the static seed dataset baked into the
+bundle, so it's useful the moment it starts.
+
+```bash
+docker build -t pharmacopeia-api .
+docker run -p 3000:3000 pharmacopeia-api
+# → http://localhost:3000  and  http://localhost:3000/api/v1/health
+```
+
+Point it at a real Postgres backend by passing the env vars (the same
+ones the Vercel deployment uses); `/api/v1/health` reports which backend
+answered (`static` vs `supabase`):
+
+```bash
+docker run -p 3000:3000 \
+  -e DATABASE_URL="postgresql://…" \
+  -e DIRECT_URL="postgresql://…" \
+  pharmacopeia-api
+```
+
+A Go client lives alongside the TypeScript and Python SDKs under
+[`sdk/go`](./sdk/go) — all three are generated from the same Zod schemas,
+so none can drift from the API.
+
 ## What's in the dataset
 
 | Entity        | Count | Notes                                            |

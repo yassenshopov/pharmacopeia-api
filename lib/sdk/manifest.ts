@@ -235,6 +235,12 @@ export const OPERATIONS: readonly Operation[] = [
         description:
           "Optional comma-separated list of sections to include (mechanism, indications, contraindications, dosing, pharmacokinetics, interactions, labelSections, approvalHistory, chemical, patientSummary). Identity fields are always returned. Omit for the full record.",
       },
+      {
+        name: "asOf",
+        type: "string",
+        description:
+          "Dataset time-travel: ISO-8601 instant. Records are a single newest snapshot, so this gates by extraction time — a drug extracted after this instant 404s (it was not yet in the dataset). See /drug/{slug}/history for the full change timeline.",
+      },
     ],
     responseSchema: "Drug",
   },
@@ -256,6 +262,24 @@ export const OPERATIONS: readonly Operation[] = [
     tag: "Drugs",
     pathParams: ["slug"],
     responseSchema: "DrugInteractionsResponse",
+  },
+  {
+    name: "getDrugHistory",
+    method: "GET",
+    path: "/drug/{slug}/history",
+    summary:
+      "Dataset time-travel: the drug's current-snapshot provenance plus its change-event timeline (newest first). Pin ?asOf= to trim the timeline to a past instant. Leans on provenance + the changelog; no separate version store.",
+    tag: "Drugs",
+    pathParams: ["slug"],
+    queryParams: [
+      {
+        name: "asOf",
+        type: "string",
+        description:
+          "ISO-8601 instant; only change events at or before it are returned, and the instant is echoed back in `asOf`.",
+      },
+    ],
+    responseSchema: "DrugHistoryResponse",
   },
   {
     name: "getSimilarDrugs",

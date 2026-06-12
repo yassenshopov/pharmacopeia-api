@@ -188,6 +188,12 @@ const ENDPOINTS: {
   },
   {
     method: "GET",
+    path: "/api/v1/drug/{slug}/history",
+    description:
+      "Dataset time-travel: the drug's current-snapshot provenance plus its change-event timeline (newest first). Pin ?asOf= to trim to a past instant. The drug endpoint also accepts ?asOf= to gate by extraction time.",
+  },
+  {
+    method: "GET",
     path: "/api/v1/drug/{slug}/shortages",
     description:
       "FDA shortage entries (active, resolved, discontinuation) for a drug. Reference statistics only.",

@@ -4,7 +4,7 @@ import { DrugClassSchema } from "./drug-class";
 import { DrugSchema, DrugSummarySchema } from "./drug";
 import { IngredientSchema } from "./ingredient";
 import { InteractionSchema } from "./interaction";
-import { PaginationSchema, SlugSchema } from "./shared";
+import { PaginationSchema, ProvenanceSchema, SlugSchema } from "./shared";
 import { ShortageEntrySchema } from "./shortage";
 import { AdverseEventStatsSchema } from "./adverse-events";
 import { LiteratureReferenceSchema } from "./literature";
@@ -300,6 +300,36 @@ export const DrugTrialsResponseSchema = z.object({
   disclaimer: z.string(),
 });
 export type DrugTrialsResponse = z.infer<typeof DrugTrialsResponseSchema>;
+
+/**
+ * Per-drug history envelope (dataset time-travel).
+ *
+ * pharmacopeia stamps `provenance.extractedAt` on every record, and the
+ * changelog records when each entity was added, updated, or removed.
+ * This envelope leans on both — it never builds a separate version
+ * store. `provenance` is the current (newest) snapshot's audit trail;
+ * `events` is the change timeline for this drug, newest first, drawn
+ * from the same feed that powers `/changelog`.
+ *
+ * When the caller pins `?asOf=`, the response echoes the requested
+ * instant back in `asOf` and trims `events` to those at or before it, so
+ * a consumer can reconstruct *when* a record changed. Field-level
+ * payload time-travel (the values a record held at an arbitrary past
+ * instant) is intentionally out of scope until a version store lands —
+ * this surface reports existence and change timing from data already on
+ * hand.
+ */
+export const DrugHistoryResponseSchema = z.object({
+  drug: z.object({ slug: SlugSchema, name: z.string() }),
+  /** Audit trail of the current (newest) snapshot. */
+  provenance: ProvenanceSchema,
+  /** Echoed back when the caller pins `?asOf=`. */
+  asOf: z.string().datetime().optional(),
+  /** Change events affecting this drug, newest first. */
+  events: z.array(ChangelogEntrySchema),
+  total: z.number().int().nonnegative(),
+});
+export type DrugHistoryResponse = z.infer<typeof DrugHistoryResponseSchema>;
 
 /**
  * Per-drug pharmacogenomics envelope. CPIC-curated drug–gene pairs

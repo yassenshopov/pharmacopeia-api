@@ -52,6 +52,8 @@ import {
   type ConditionIndex,
 } from "./conditions-index";
 import { applyControlledSubstanceCrosswalk } from "@/lib/ingest/controlled-substances";
+import { applyOrangeBookCrosswalk } from "@/lib/ingest/orange-book";
+import { rankFuzzy, type FuzzyCandidate } from "./fuzzy-search";
 import { normalizeQuery, reactionSearchText } from "./search-text";
 import {
   buildStructureIndex,
@@ -79,6 +81,17 @@ import {
 
 /** Fallbacks when the dataset_meta row is missing (pre-seed database). */
 const FALLBACK_VERSION = "v0.1.0-db";
+
+/**
+ * Fill-only crosswalks applied to a drug payload at read time so this
+ * backend serves the identical record the static seed bakes at
+ * construction. Each is idempotent — a payload that already carries the
+ * field is returned untouched — and the order matches the static repo's
+ * construction loop so both backends can never disagree.
+ */
+function applyReadCrosswalks(drug: Drug): Drug {
+  return applyOrangeBookCrosswalk(applyControlledSubstanceCrosswalk(drug));
+}
 
 /**
  * Repository implementation backed by Supabase Postgres through Prisma.
@@ -278,7 +291,16 @@ export class PrismaRepository implements PharmacopeiaRepository {
     // record the static seed bakes at construction, regardless of when
     // the database was last seeded. Idempotent: a payload that already
     // carries the field is returned untouched.
-    return applyControlledSubstanceCrosswalk(row.payload as unknown as Drug);
+    return applyReadCrosswalks(row.payload as unknown as Drug);
+  }
+
+  async getDrugChangeHistory(slug: string): Promise<ChangelogEntry[]> {
+    const rows = await this.db.changelogEntry.findMany({
+      where: { payload: { path: ["entitySlug"], equals: slug } },
+      orderBy: { timestamp: "desc" },
+      select: { payload: true },
+    });
+    return rows.map((r) => r.payload as unknown as ChangelogEntry);
   }
 
   async getDrugsBatch(
@@ -295,9 +317,7 @@ export class PrismaRepository implements PharmacopeiaRepository {
     for (const slug of unique) {
       const payload = bySlug.get(slug);
       if (payload)
-        found.push(
-          applyControlledSubstanceCrosswalk(payload as unknown as Drug),
-        );
+        found.push(applyReadCrosswalks(payload as unknown as Drug));
       else missing.push(slug);
     }
     return { found, missing };
@@ -494,7 +514,24 @@ export class PrismaRepository implements PharmacopeiaRepository {
       const i = r.payload as unknown as Ingredient;
       matches.push({ slug: i.slug, name: i.name, kind: "ingredient" });
     }
-    return matches.slice(0, limit);
+    if (matches.length > 0) return matches.slice(0, limit);
+
+    // Typo-tolerant fallback: nothing matched as a substring, so re-rank
+    // the primary names by trigram similarity. The candidate set is the
+    // lightweight `name` columns only (no payloads), scored by the same
+    // shared scorer the static backend uses — identical results either
+    // way.
+    const [drugNames, classNames, ingredientNames] = await Promise.all([
+      this.db.drug.findMany({ select: { slug: true, name: true } }),
+      this.db.drugClass.findMany({ select: { slug: true, name: true } }),
+      this.db.ingredient.findMany({ select: { slug: true, name: true } }),
+    ]);
+    const candidates: FuzzyCandidate[] = [
+      ...drugNames.map((d) => ({ ...d, kind: "drug" as const })),
+      ...classNames.map((c) => ({ ...c, kind: "class" as const })),
+      ...ingredientNames.map((i) => ({ ...i, kind: "ingredient" as const })),
+    ];
+    return rankFuzzy(q, candidates, { limit });
   }
 
   /**

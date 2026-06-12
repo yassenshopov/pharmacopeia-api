@@ -1,4 +1,4 @@
-import { CheckCircle2, Circle, HelpCircle } from "lucide-react";
+import { Ban, CheckCircle2, Circle, HelpCircle } from "lucide-react";
 import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { StatCard } from "@/components/stat-card";
@@ -331,7 +331,7 @@ function TimelineItem({ item }: { item: RoadmapItem }) {
         aria-hidden="true"
         className="absolute -left-[calc(1.5rem+0.5px)] top-0.5 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full bg-background"
       >
-        <StatusIcon status={item.status} />
+        <StatusIcon status={item.status} blocked={Boolean(item.blocked)} />
       </span>
 
       <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
@@ -350,6 +350,15 @@ function TimelineItem({ item }: { item: RoadmapItem }) {
         >
           {KIND_LABEL[item.kind]}
         </Badge>
+        {item.blocked ? (
+          <Badge
+            variant="outline"
+            className="gap-1 border-rose-500/40 bg-rose-500/10 text-[10px] uppercase tracking-wider text-rose-700 dark:text-rose-300"
+          >
+            <Ban aria-hidden="true" className="h-3 w-3" />
+            Blocked
+          </Badge>
+        ) : null}
         {item.milestone ? (
           <Badge
             variant="ghost"
@@ -365,6 +374,15 @@ function TimelineItem({ item }: { item: RoadmapItem }) {
       {item.body ? (
         <p className="mt-1 max-w-prose text-sm leading-relaxed text-muted-foreground">
           {item.body}
+        </p>
+      ) : null}
+
+      {item.blocked ? (
+        <p className="mt-2 max-w-prose rounded-md border border-rose-500/30 bg-rose-500/5 px-3 py-2 text-xs leading-relaxed text-muted-foreground">
+          <span className="font-semibold text-rose-700 dark:text-rose-300">
+            Blocked:
+          </span>{" "}
+          {item.blocked}
         </p>
       ) : null}
 
@@ -404,7 +422,16 @@ function TimelineItem({ item }: { item: RoadmapItem }) {
   );
 }
 
-function StatusIcon({ status }: { status: RoadmapStatus }) {
+function StatusIcon({
+  status,
+  blocked = false,
+}: {
+  status: RoadmapStatus;
+  blocked?: boolean;
+}) {
+  if (blocked) {
+    return <Ban className="h-3.5 w-3.5 text-rose-600 dark:text-rose-400" />;
+  }
   switch (status) {
     case "shipped":
       return (

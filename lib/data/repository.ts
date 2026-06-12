@@ -60,6 +60,7 @@ import {
 } from "./dataset-views";
 import { applyIcd10Crosswalk } from "@/lib/ingest/icd10";
 import { applyControlledSubstanceCrosswalk } from "@/lib/ingest/controlled-substances";
+import { applyOrangeBookCrosswalk } from "@/lib/ingest/orange-book";
 import { PrismaRepository } from "./prisma-repository";
 import { SEED_CLASSES, SEED_CLASSES_BY_SLUG } from "./seed/classes";
 import { SEED_DRUGS, SEED_DRUGS_BY_SLUG } from "./seed/drugs";
@@ -93,6 +94,7 @@ import {
   reactionSearchText,
 } from "./search-text";
 import { searchByStructure } from "./structure-search";
+import { rankFuzzy, type FuzzyCandidate } from "./fuzzy-search";
 import {
   buildLexicalPassageIndex,
   buildPassages,
@@ -122,6 +124,14 @@ export interface PharmacopeiaRepository {
     },
   ): Promise<List<DrugSummary>>;
   getDrug(slug: string): Promise<Drug | null>;
+
+  /**
+   * Change-event timeline for one drug, newest first — every changelog
+   * entry whose `entitySlug` is this drug. Powers the dataset
+   * time-travel surface (`/drug/{slug}/history`). Leans on the same feed
+   * as `/changelog`; no separate version store.
+   */
+  getDrugChangeHistory(slug: string): Promise<ChangelogEntry[]>;
   /**
    * Resolve many slug → Drug lookups in one call. Returns the full
    * records for every slug that resolved (deduped, in caller order)
@@ -447,6 +457,7 @@ function paginate<T>(items: T[], opts?: ListOpts): List<T> {
  */
 class StaticRepository implements PharmacopeiaRepository {
   private _passageIndex: LexicalPassageIndex | null = null;
+  private _fuzzyCandidates: FuzzyCandidate[] | null = null;
 
   constructor() {
     // Fail-fast validation: every seed record must satisfy its schema.
@@ -465,6 +476,11 @@ class StaticRepository implements PharmacopeiaRepository {
       // `controlledSubstance` the Postgres backend fills at read time.
       const scheduled = applyControlledSubstanceCrosswalk(d);
       if (scheduled !== d) d.controlledSubstance = scheduled.controlledSubstance;
+      // Same fill-only, idempotent treatment for the FDA Orange Book
+      // therapeutic-equivalence crosswalk so the static fallback serves
+      // the identical `orangeBook` the Postgres backend fills at read.
+      const orangeBooked = applyOrangeBookCrosswalk(d);
+      if (orangeBooked !== d) d.orangeBook = orangeBooked.orangeBook;
     }
     SEED_CLASSES.forEach((c) => DrugClassSchema.parse(c));
     SEED_INGREDIENTS.forEach((i) => IngredientSchema.parse(i));
@@ -552,6 +568,12 @@ class StaticRepository implements PharmacopeiaRepository {
     const narrative = getSeedInteractionsNarrative(slug);
     if (!narrative) return drug;
     return { ...drug, interactionsNarrative: narrative.text };
+  }
+
+  async getDrugChangeHistory(slug: string): Promise<ChangelogEntry[]> {
+    return SEED_CHANGELOG.filter((e) => e.entitySlug === slug).sort(
+      (a, b) => Date.parse(b.timestamp) - Date.parse(a.timestamp),
+    );
   }
 
   async getDrugsBatch(
@@ -672,7 +694,37 @@ class StaticRepository implements PharmacopeiaRepository {
       }
     }
 
-    return matches.slice(0, limit);
+    if (matches.length > 0) return matches.slice(0, limit);
+
+    // Typo-tolerant fallback: nothing matched as a substring, so re-rank
+    // the primary names by trigram similarity. Same pure scorer the
+    // Postgres backend uses, fed the same name-only candidates, so the
+    // two backends return identical fuzzy results.
+    return rankFuzzy(q, this.fuzzyCandidates(), { limit });
+  }
+
+  /** Name-only candidate set for the trigram fallback (built lazily). */
+  private fuzzyCandidates(): FuzzyCandidate[] {
+    if (!this._fuzzyCandidates) {
+      this._fuzzyCandidates = [
+        ...SEED_DRUGS.map((d) => ({
+          slug: d.slug,
+          name: d.name,
+          kind: "drug" as const,
+        })),
+        ...SEED_CLASSES.map((c) => ({
+          slug: c.slug,
+          name: c.name,
+          kind: "class" as const,
+        })),
+        ...SEED_INGREDIENTS.map((i) => ({
+          slug: i.slug,
+          name: i.name,
+          kind: "ingredient" as const,
+        })),
+      ];
+    }
+    return this._fuzzyCandidates;
   }
 
   /**

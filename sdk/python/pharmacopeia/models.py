@@ -122,6 +122,15 @@ class ControlledSubstance(BaseModel):
     description: str
 
 
+class OrangeBook(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    te_code: Optional[str] = Field(default=None, alias="teCode")
+    reference_listed: Optional[bool] = Field(default=None, alias="referenceListed")
+    generic_available: bool = Field(alias="genericAvailable")
+    description: str
+
+
 class Identifier(BaseModel):
     model_config = ConfigDict(populate_by_name=True)
 
@@ -232,6 +241,7 @@ class Drug(BaseModel):
     interactions_narrative: Optional[str] = Field(default=None, alias="interactionsNarrative")
     label_sections: Optional[LabelSections] = Field(default=None, alias="labelSections")
     controlled_substance: Optional[ControlledSubstance] = Field(default=None, alias="controlledSubstance")
+    orange_book: Optional[OrangeBook] = Field(default=None, alias="orangeBook")
     identifiers: Identifier
     chemical: Optional[ChemicalStructure] = None
     provenance: Provenance
@@ -562,6 +572,16 @@ class DrugTrialsResponse(BaseModel):
     total_count: int = Field(alias="totalCount")
     sampled: int
     disclaimer: str
+
+
+class DrugHistoryResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
+    drug: Dict[str, Any]
+    provenance: Provenance
+    as_of: Optional[str] = Field(default=None, alias="asOf")
+    events: List[ChangelogEntry]
+    total: int
 
 
 class PgxPair(BaseModel):

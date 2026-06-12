@@ -1,6 +1,7 @@
 import { beforeAll, describe, expect, it } from "vitest";
 import type { PharmacopeiaRepository } from "@/lib/data/repository";
 import {
+  ChangelogEntrySchema,
   ConditionSchema,
   ConditionSummarySchema,
   DrugClassSchema,
@@ -96,6 +97,23 @@ function repositoryContract(
       const result = await repo.getDrugsBatch([a, "nope-1", b, a, "nope-1"]);
       expect(result.found.map((d) => d.slug)).toEqual([a, b]);
       expect(result.missing).toEqual(["nope-1"]);
+    });
+
+    it("getDrugChangeHistory returns schema-valid events newest-first for the entity", async () => {
+      const { items } = await repo.listDrugs({ limit: 1 });
+      const events = await repo.getDrugChangeHistory(items[0].slug);
+      for (const e of events) {
+        ChangelogEntrySchema.parse(e);
+        expect(e.entitySlug).toBe(items[0].slug);
+      }
+      for (let i = 1; i < events.length; i++) {
+        expect(Date.parse(events[i - 1].timestamp)).toBeGreaterThanOrEqual(
+          Date.parse(events[i].timestamp),
+        );
+      }
+      expect(await repo.getDrugChangeHistory("definitely-not-a-drug")).toEqual(
+        [],
+      );
     });
 
     it("list q filter matches each entity's search haystack and reports filtered totals", async () => {
@@ -204,6 +222,21 @@ function repositoryContract(
       expect(await repo.search("   ", 10)).toEqual([]);
       const results = await repo.search("a", 3);
       expect(results.length).toBeLessThanOrEqual(3);
+    });
+
+    it("search falls back to trigram fuzzy matching on a one-char typo", async () => {
+      const { items } = await repo.listDrugs({ limit: 1 });
+      const name = items[0].name;
+      // Duplicate the middle character: the resulting query is never a
+      // substring of any name (so the exact path comes up empty), yet it
+      // keeps almost all trigrams — so only the fuzzy fallback can
+      // recover the intended drug, and it reliably does, even for short
+      // names where a transposition would fall below threshold.
+      const mid = Math.floor(name.length / 2);
+      const typo = name.slice(0, mid + 1) + name[mid] + name.slice(mid + 1);
+      const results = await repo.search(typo, 10);
+      for (const r of results) SearchResultSchema.parse(r);
+      expect(results.some((r) => r.slug === items[0].slug)).toBe(true);
     });
 
     it("searchPassages reports its method and returns ranked, bounded results", async () => {

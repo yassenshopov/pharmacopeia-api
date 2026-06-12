@@ -70,6 +70,7 @@ import {
 } from "../../lib/data/search-text";
 import { applyIcd10Crosswalk } from "../../lib/ingest/icd10";
 import { applyControlledSubstanceCrosswalk } from "../../lib/ingest/controlled-substances";
+import { applyOrangeBookCrosswalk } from "../../lib/ingest/orange-book";
 import { dispatchWebhookEvent, newEventId } from "../../lib/webhooks/dispatch";
 import type { WebhookDrugChange, WebhookEventPayload } from "../../lib/schemas";
 
@@ -175,10 +176,12 @@ async function main() {
       // ICD-10 crosswalk fills empty indication code arrays at load
       // time so datasets produced before the crosswalk landed still
       // get codes without a full re-ingest. Deterministic, fill-only.
-      const drug = applyControlledSubstanceCrosswalk(
-        applyIcd10Crosswalk(
-          DrugSchema.parse(
-            narrative ? { ...raw, interactionsNarrative: narrative } : raw,
+      const drug = applyOrangeBookCrosswalk(
+        applyControlledSubstanceCrosswalk(
+          applyIcd10Crosswalk(
+            DrugSchema.parse(
+              narrative ? { ...raw, interactionsNarrative: narrative } : raw,
+            ),
           ),
         ),
       );

@@ -10,6 +10,7 @@ import type {
   ConditionResponse,
   ConditionsListResponse,
   Drug,
+  DrugHistoryResponse,
   DrugInteractionsResponse,
   DrugListResponse,
   DrugLiteratureResponse,
@@ -151,7 +152,7 @@ export class PharmacopeiaClient {
   }
 
   /** Fetch a single drug by slug. */
-  getDrug(slug: string, query: { fields?: string } = {}): Promise<Drug> {
+  getDrug(slug: string, query: { fields?: string; asOf?: string } = {}): Promise<Drug> {
     return this.request<Drug>("GET", `/drug/${encodeURIComponent(slug)}`, { query });
   }
 
@@ -163,6 +164,11 @@ export class PharmacopeiaClient {
   /** List known interactions for a drug. */
   getDrugInteractions(slug: string): Promise<DrugInteractionsResponse> {
     return this.request<DrugInteractionsResponse>("GET", `/drug/${encodeURIComponent(slug)}/interactions`, {});
+  }
+
+  /** Dataset time-travel: the drug's current-snapshot provenance plus its change-event timeline (newest first). Pin ?asOf= to trim the timeline to a past instant. Leans on provenance + the changelog; no separate version store. */
+  getDrugHistory(slug: string, query: { asOf?: string } = {}): Promise<DrugHistoryResponse> {
+    return this.request<DrugHistoryResponse>("GET", `/drug/${encodeURIComponent(slug)}/history`, { query });
   }
 
   /** Structurally similar drugs (Tanimoto over 2D fingerprints). */

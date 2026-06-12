@@ -121,6 +121,38 @@ export const ControlledSubstanceSchema = z.object({
 });
 export type ControlledSubstance = z.infer<typeof ControlledSubstanceSchema>;
 
+/**
+ * FDA Orange Book ("Approved Drug Products with Therapeutic Equivalence
+ * Evaluations") summary, attached by a conservative curated crosswalk
+ * (`lib/ingest/orange-book.ts`) keyed on the drug's active ingredients.
+ *
+ * The Orange Book is free and public-domain FDA data. The fields here
+ * are the stable, structured regulatory facts — therapeutic-equivalence
+ * (TE) code, whether a Reference Listed Drug exists, and whether an
+ * AB-rated generic is marketed. Per-product patent and exclusivity
+ * expiry dates move on FDA-update timescales and are deliberately left
+ * to a future authoritative ingest rather than curated by hand here.
+ *
+ * Reference regulatory facts only — never substitution, prescribing, or
+ * formulary guidance (see AGENTS.md). Absent when the crosswalk has no
+ * confident match.
+ */
+export const OrangeBookSchema = z.object({
+  /**
+   * Two-or-three-character therapeutic-equivalence code for the
+   * predominant marketed product (e.g. `AB`, `AB1`, `AP`, `BX`). A-codes
+   * are rated therapeutically equivalent; B-codes are not (or lack data).
+   */
+  teCode: z.string().optional(),
+  /** Whether an FDA-designated Reference Listed Drug (RLD) exists. */
+  referenceListed: z.boolean().optional(),
+  /** Whether an AB-rated generic of the product is marketed. */
+  genericAvailable: z.boolean(),
+  /** Short reference note describing the TE rating. */
+  description: z.string(),
+});
+export type OrangeBook = z.infer<typeof OrangeBookSchema>;
+
 export const IdentifierSchema = z.object({
   rxcui: z.string().optional(),
   ndc: z.array(z.string()).default([]),
@@ -204,6 +236,12 @@ export const DrugSchema = DrugSummarySchema.extend({
    * regulatory fact, never prescribing guidance.
    */
   controlledSubstance: ControlledSubstanceSchema.optional(),
+  /**
+   * FDA Orange Book therapeutic-equivalence summary, where a confident
+   * curated match exists. Filled by a conservative crosswalk; reference
+   * regulatory fact, never substitution guidance.
+   */
+  orangeBook: OrangeBookSchema.optional(),
   identifiers: IdentifierSchema,
   chemical: ChemicalStructureSchema.optional(),
   provenance: ProvenanceSchema,

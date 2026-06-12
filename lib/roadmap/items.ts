@@ -45,10 +45,18 @@ export type RoadmapItem = {
   targetAt?: string;
   tags?: string[];
   links?: RoadmapLink[];
+  /**
+   * Short reason the item can't move yet — a missing dataset, a
+   * licensing question, an unresolved framing decision. When set, the
+   * roadmap page flags the item as blocked so a reader can tell "not
+   * scheduled" apart from "waiting on something external".
+   */
+  blocked?: string;
 };
 
 const SHIPPED_AT = "2026-05-28";
 const BRAINSTORM_SHIPPED_AT = "2026-06-12";
+const FOLLOWUP_SHIPPED_AT = "2026-06-12";
 const NEXT_TARGET = "2026-06-30";
 
 export const ROADMAP_ITEMS: RoadmapItem[] = [
@@ -673,10 +681,11 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "fuzzy-search-fallback",
     title: "Typo-tolerant search (trigram fallback)",
-    body: "When exact substring search comes up empty, a shared trigram-similarity scorer re-ranks candidate names so 'metfornin' still finds metformin. One pure scoring module used by both backends — identical results whether the data lives in the bundle or Postgres.",
-    status: "in-progress",
+    body: "When exact substring search comes up empty, a shared trigram-similarity scorer (lib/data/fuzzy-search.ts) re-ranks candidate names so 'metfornin' still finds metformin. The Jaccard-over-3-grams scorer mirrors Postgres pg_trgm but runs in JS on both backends, fed the same name-only candidates — so /search returns identical fuzzy results whether the data lives in the bundle or Postgres. Pinned by a unit suite and a both-backends contract test.",
+    status: "shipped",
     kind: "api",
     startedAt: "2026-06-11",
+    shippedAt: FOLLOWUP_SHIPPED_AT,
     tags: ["search"],
   },
   {
@@ -758,6 +767,8 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     body: "Fill the still-empty pair-graph gap: a drug↔drug interaction network with severity-weighted edges, exposed as data and as a D3 view that reuses the mechanism-graph rendering. Educational aggregate view, not a clinical checker. Gated on sourcing a real structured DDI dataset — RxNav `interaction` is retired, openFDA's `drug_interactions` field is one-sided narrative (already surfaced via `interactionsNarrative` on the drug record), and the licensed full feeds (DrugBank Plus, Lexicomp) sit outside the project's free-and-public rule. The schema, repository surface, and check endpoint are all ready; waiting on the data.",
     status: "later",
     kind: "data",
+    blocked:
+      "No free, structured drug–drug interaction dataset. RxNav's interaction API is retired, openFDA's field is one-sided narrative (already surfaced), and the licensed feeds (DrugBank Plus, Lexicomp) sit outside the free-and-public rule. Schema, repository surface, and check endpoint are ready — waiting on the data.",
     tags: ["d3", "interactions", "blocked-on-data"],
   },
   {
@@ -907,10 +918,11 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   },
   {
     id: "orange-book-crosswalk",
-    title: "Orange Book crosswalk (therapeutic equivalence, generics, patents/exclusivity)",
-    body: "FDA's Orange Book is free and downloadable. Adds therapeutic-equivalence (TE) codes, reference-listed-drug flags, and patent/exclusivity expiry — strongly factual, reference-style data that rounds out the regulatory picture without any paid feed.",
-    status: "later",
+    title: "Orange Book crosswalk (therapeutic equivalence, generics)",
+    body: "FDA's Orange Book is free, public-domain data. A conservative curated crosswalk (lib/ingest/orange-book.ts, same fill-only pattern as the ICD-10 and DEA crosswalks) attaches a therapeutic-equivalence summary to the drug record — TE code, whether a Reference Listed Drug exists, and whether an AB-rated generic is marketed — surfaced as an `orangeBook` field and a header badge. Applied identically at ingest, db:seed, and the static fallback so both backends agree. Per-product patent and exclusivity expiry dates move on FDA-update timescales and are deliberately left to a future authoritative ingest rather than hand-curated. Reference regulatory facts only — never substitution guidance.",
+    status: "shipped",
     kind: "data",
+    shippedAt: FOLLOWUP_SHIPPED_AT,
     tags: ["orange-book", "fda", "generics"],
   },
   {
@@ -919,6 +931,8 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
     body: "NIH LactMed is free and public. Carefully framed reference summaries (never dosing guidance) carrying the same per-record provenance and confidence model as everything else — additive to the drug record, gated behind the same educational disclaimer.",
     status: "later",
     kind: "data",
+    blocked:
+      "Framing decision unresolved: pregnancy/lactation content is exactly where reference-style language is hardest to keep clear of advice. Needs a deliberate presentation + disclaimer design before any ingest, so it stays squarely educational.",
     tags: ["lactmed", "nih", "blocked-on-framing"],
   },
   {
@@ -932,9 +946,10 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "dataset-time-travel",
     title: "Dataset time-travel (?asOf= snapshots + record history endpoint)",
-    body: "Provenance already stamps extractedAt on every record. Expose GET /api/v1/drug/{slug}/history and an ?asOf= snapshot parameter so consumers can diff how a record changed over time — leaning directly on the provenance investment instead of adding new data.",
-    status: "later",
+    body: "Leans directly on the provenance investment instead of adding a version store. GET /api/v1/drug/{slug}/history returns the current snapshot's provenance plus the drug's change-event timeline (drawn from the same feed as /changelog, filtered to the entity), and ?asOf= trims that timeline to a past instant. The drug endpoint also accepts ?asOf= to gate by extraction time — a record extracted after the instant 404s, so a consumer can pin the dataset to a date. Field-level payload time-travel stays future work behind a version store; this surface reports existence and change timing from data already on hand.",
+    status: "shipped",
     kind: "api",
+    shippedAt: FOLLOWUP_SHIPPED_AT,
     tags: ["provenance", "history", "snapshots"],
   },
   {
@@ -948,9 +963,10 @@ export const ROADMAP_ITEMS: RoadmapItem[] = [
   {
     id: "go-sdk-and-docker",
     title: "Go SDK + self-host Docker image",
-    body: "Extend the schema-driven codegen pipeline with a Go client, and ship a Docker image plus a self-host guide so the \"forkable open reference\" story becomes concrete — a clone-and-run path that doesn't assume Vercel.",
-    status: "exploring",
+    body: "The schema-driven codegen pipeline now emits a third client: typed Go structs + a client (sdk/go) generated from the same Zod registry as the TS and Python SDKs, so it can't drift either. And a multi-stage Dockerfile on Next.js standalone output makes the \"forkable open reference\" story concrete — docker build, docker run, and the app serves the static seed with no env vars (or a real Postgres backend when DATABASE_URL is set). Self-host instructions live in the README.",
+    status: "shipped",
     kind: "devx",
+    shippedAt: FOLLOWUP_SHIPPED_AT,
     tags: ["sdk", "go", "docker", "self-host"],
   },
 
