@@ -1,0 +1,9 @@
+<svg id="mol682" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>formaldehyde</title>
+  <style> #mol682 text {font-family: sans-serif;} #mol682 { pointer-events:none; } #mol682 .event  { pointer-events:all; } #mol682 line { stroke-linecap:round; } #mol682 polygon { stroke-linejoin:round; } </style>
+  <text x="144.16" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <line x1="169.49" y1="112.44" x2="155.15" y2="120.72" stroke="currentColor" stroke-width="1.44" />
+  <line x1="171.29" y1="115.56" x2="156.95" y2="123.84" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol682:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol682:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol682:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

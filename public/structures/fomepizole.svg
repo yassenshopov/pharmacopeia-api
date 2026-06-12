@@ -1,0 +1,26 @@
+<svg id="mol680" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>4-methyl-1H-pyrazole</title>
+  <style> #mol680 text {font-family: sans-serif;} #mol680 { pointer-events:none; } #mol680 .event  { pointer-events:all; } #mol680 line { stroke-linecap:round; } #mol680 polygon { stroke-linejoin:round; } </style>
+  <text x="125.56" y="124.31" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="115.45" y="124.31" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="137.56" y="145.1" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <line x1="168.6" y1="111.57" x2="146.67" y2="101.81" stroke="currentColor" stroke-width="1.44" />
+  <line x1="164.38" y1="113.63" x2="147.96" y2="106.32" stroke="currentColor" stroke-width="1.44" />
+  <line x1="166.09" y1="135.44" x2="148.67" y2="139.14" stroke="currentColor" stroke-width="1.44" />
+  <line x1="162.39" y1="132.54" x2="148.67" y2="135.46" stroke="currentColor" stroke-width="1.44" />
+  <line x1="189.38" y1="99.57" x2="168.6" y2="111.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="146.67" y1="101.81" x2="136.67" y2="112.92" stroke="currentColor" stroke-width="1.44" />
+  <line x1="134.66" y1="126.64" x2="138.57" y2="133.43" stroke="currentColor" stroke-width="1.44" />
+  <line x1="168.6" y1="111.57" x2="166.09" y2="135.44" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol680:Bond:1" class="event" x1="168.6" y1="111.57" x2="146.67" y2="101.81" stroke-width="8" opacity="0" />
+  <line id="mol680:Bond:4" class="event" x1="142.62" y1="140.43" x2="166.09" y2="135.44" stroke-width="8" opacity="0" />
+  <line id="mol680:Bond:0" class="event" x1="189.38" y1="99.57" x2="168.6" y2="111.57" stroke-width="8" opacity="0" />
+  <line id="mol680:Bond:2" class="event" x1="146.67" y1="101.81" x2="130.62" y2="119.64" stroke-width="8" opacity="0" />
+  <line id="mol680:Bond:3" class="event" x1="130.62" y1="119.64" x2="142.62" y2="140.43" stroke-width="8" opacity="0" />
+  <line id="mol680:Bond:5" class="event" x1="168.6" y1="111.57" x2="166.09" y2="135.44" stroke-width="8" opacity="0" />
+  <circle id="mol680:Atom:0" class="event" cx="189.38" cy="99.57" r="8" opacity="0" />
+  <circle id="mol680:Atom:1" class="event" cx="168.6" cy="111.57" r="8" opacity="0" />
+  <circle id="mol680:Atom:2" class="event" cx="146.67" cy="101.81" r="8" opacity="0" />
+  <circle id="mol680:Atom:3" class="event" cx="130.62" cy="119.64" r="8" opacity="0" />
+  <circle id="mol680:Atom:4" class="event" cx="142.62" cy="140.43" r="8" opacity="0" />
+  <circle id="mol680:Atom:5" class="event" cx="166.09" cy="135.44" r="8" opacity="0" />
+</svg>

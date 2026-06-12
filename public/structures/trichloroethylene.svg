@@ -1,0 +1,20 @@
+<svg id="mol1648" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>1,1,2-trichloroethene</title>
+  <style> #mol1648 text {font-family: sans-serif;} #mol1648 { pointer-events:none; } #mol1648 .event  { pointer-events:all; } #mol1648 line { stroke-linecap:round; } #mol1648 polygon { stroke-linejoin:round; } </style>
+  <text x="184.57" y="106.67" stroke="none" font-size="14" fill="rgb(31,240,31)">Cl</text>
+  <text x="163.78" y="142.67" stroke="none" font-size="14" fill="rgb(31,240,31)">Cl</text>
+  <text x="122.22" y="118.67" stroke="none" font-size="14" fill="rgb(31,240,31)">Cl</text>
+  <line x1="149.61" y1="102" x2="170.39" y2="114" stroke="currentColor" stroke-width="1.44" />
+  <line x1="150.03" y1="106.4" x2="166.37" y2="115.84" stroke="currentColor" stroke-width="1.44" />
+  <line x1="170.39" y1="114" x2="183.57" y2="106.39" stroke="currentColor" stroke-width="1.44" />
+  <line x1="170.39" y1="114" x2="170.39" y2="131" stroke="currentColor" stroke-width="1.44" />
+  <line x1="149.61" y1="102" x2="136.43" y2="109.61" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1648:Bond:0" class="event" x1="149.61" y1="102" x2="170.39" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1648:Bond:1" class="event" x1="170.39" y1="114" x2="191.18" y2="102" stroke-width="8" opacity="0" />
+  <line id="mol1648:Bond:2" class="event" x1="170.39" y1="114" x2="170.39" y2="138" stroke-width="8" opacity="0" />
+  <line id="mol1648:Bond:3" class="event" x1="149.61" y1="102" x2="128.82" y2="114" stroke-width="8" opacity="0" />
+  <circle id="mol1648:Atom:0" class="event" cx="149.61" cy="102" r="8" opacity="0" />
+  <circle id="mol1648:Atom:1" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol1648:Atom:2" class="event" cx="191.18" cy="102" r="8" opacity="0" />
+  <circle id="mol1648:Atom:3" class="event" cx="170.39" cy="138" r="8" opacity="0" />
+  <circle id="mol1648:Atom:4" class="event" cx="128.82" cy="114" r="8" opacity="0" />
+</svg>

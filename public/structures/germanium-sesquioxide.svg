@@ -1,0 +1,27 @@
+<svg id="mol719" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>Germanium Sesquioxide</title>
+  <style> #mol719 text {font-family: sans-serif;} #mol719 { pointer-events:none; } #mol719 .event  { pointer-events:all; } #mol719 line { stroke-linecap:round; } #mol719 polygon { stroke-linejoin:round; } </style>
+  <text x="140.13" y="110.25" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="136.24" y="131.88" stroke="none" font-size="14" fill="rgb(102,143,143)">Ge</text>
+  <text x="160.75" y="130.86" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="157.87" y="110.25" stroke="none" font-size="14" fill="rgb(102,143,143)">Ge</text>
+  <text x="168.97" y="139.09" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <circle cx="133.36" cy="127.21" r="1.44" fill="currentColor" />
+  <circle cx="167.21" cy="93.36" r="1.44" fill="currentColor" />
+  <line x1="145.58" y1="112.58" x2="145.58" y2="120.21" stroke="currentColor" stroke-width="1.44" />
+  <line x1="155.92" y1="126.7" x2="159.75" y2="126.51" stroke="currentColor" stroke-width="1.44" />
+  <line x1="166.54" y1="119.2" x2="166.87" y2="112.58" stroke="currentColor" stroke-width="1.44" />
+  <line x1="152.03" y1="105.58" x2="156.87" y2="105.58" stroke="currentColor" stroke-width="1.44" />
+  <line x1="168.96" y1="112.58" x2="172.67" y2="127.42" stroke="currentColor" stroke-width="1.44" />
+  <line x1="155.92" y1="129.79" x2="159.75" y2="130.75" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol719:Bond:0" class="event" x1="145.58" y1="105.58" x2="145.58" y2="127.21" stroke-width="8" opacity="0" />
+  <line id="mol719:Bond:1" class="event" x1="145.58" y1="127.21" x2="166.2" y2="126.2" stroke-width="8" opacity="0" />
+  <line id="mol719:Bond:2" class="event" x1="166.2" y1="126.2" x2="167.21" y2="105.58" stroke-width="8" opacity="0" />
+  <line id="mol719:Bond:3" class="event" x1="145.58" y1="105.58" x2="167.21" y2="105.58" stroke-width="8" opacity="0" />
+  <line id="mol719:Bond:4" class="event" x1="167.21" y1="105.58" x2="174.42" y2="134.42" stroke-width="8" opacity="0" />
+  <line id="mol719:Bond:5" class="event" x1="145.58" y1="127.21" x2="174.42" y2="134.42" stroke-width="8" opacity="0" />
+  <circle id="mol719:Atom:0" class="event" cx="145.58" cy="105.58" r="8" opacity="0" />
+  <circle id="mol719:Atom:1" class="event" cx="145.58" cy="127.21" r="8" opacity="0" />
+  <circle id="mol719:Atom:2" class="event" cx="166.2" cy="126.2" r="8" opacity="0" />
+  <circle id="mol719:Atom:3" class="event" cx="167.21" cy="105.58" r="8" opacity="0" />
+  <circle id="mol719:Atom:4" class="event" cx="174.42" cy="134.42" r="8" opacity="0" />
+</svg>

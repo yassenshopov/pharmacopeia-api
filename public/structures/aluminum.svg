@@ -1,0 +1,7 @@
+<svg id="mol58" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>aluminum</title>
+  <style> #mol58 text {font-family: sans-serif;} #mol58 { pointer-events:none; } #mol58 .event  { pointer-events:all; } #mol58 line { stroke-linecap:round; } #mol58 polygon { stroke-linejoin:round; } </style>
+  <text x="153.78" y="124.67" stroke="none" font-size="14" fill="rgb(191,166,166)">Al</text>
+  <text x="176.33" y="128" stroke="none" font-size="9" fill="rgb(191,166,166)">3</text>
+  <text x="166.22" y="124.67" stroke="none" font-size="14" fill="rgb(191,166,166)">H</text>
+  <circle id="mol58:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

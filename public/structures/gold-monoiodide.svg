@@ -1,0 +1,9 @@
+<svg id="mol745" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>iodogold</title>
+  <style> #mol745 text {font-family: sans-serif;} #mol745 { pointer-events:none; } #mol745 .event  { pointer-events:all; } #mol745 line { stroke-linecap:round; } #mol745 polygon { stroke-linejoin:round; } </style>
+  <text x="168.45" y="118.67" stroke="none" font-size="14" fill="rgb(148,0,148)">I</text>
+  <text x="141.05" y="130.67" stroke="none" font-size="14" fill="rgb(244,200,33)">Au</text>
+  <line x1="167.45" y1="115.7" x2="159.17" y2="120.48" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol745:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol745:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol745:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

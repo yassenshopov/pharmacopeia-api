@@ -1,0 +1,9 @@
+<svg id="mol223" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>molecular bromine</title>
+  <style> #mol223 text {font-family: sans-serif;} #mol223 { pointer-events:none; } #mol223 .event  { pointer-events:all; } #mol223 line { stroke-linecap:round; } #mol223 polygon { stroke-linejoin:round; } </style>
+  <text x="163.39" y="118.67" stroke="none" font-size="14" fill="rgb(166,41,41)">Br</text>
+  <text x="142.61" y="130.67" stroke="none" font-size="14" fill="rgb(166,41,41)">Br</text>
+  <line x1="162.39" y1="118.62" x2="157.61" y2="121.38" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol223:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol223:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol223:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

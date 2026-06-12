@@ -25,11 +25,18 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import * as OCL from "openchemlib";
-import { SEED_DRUGS } from "../../lib/data/seed/drugs";
 import {
   ChemicalStructureSchema,
   type ChemicalStructure,
 } from "../../lib/schemas/drug";
+import {
+  enrichLimit,
+  enrichScaleMode,
+  loadEnrichmentDrugs,
+  openCheckpoint,
+} from "./enrich-shared";
+
+type StructureRow = ChemicalStructure & { slug: string };
 
 const STRUCTURES_DIR = join(process.cwd(), "public", "structures");
 const STRUCTURES_TS = join(
@@ -201,17 +208,101 @@ function delay(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+async function fetchStructure(drug: DrugLite): Promise<
+  | { kind: "ok"; record: ChemicalStructure }
+  | { kind: "skip"; reason: string }
+> {
+  const cid = await resolveCid(drug.name);
+  await delay(PUBCHEM_DELAY_MS);
+  if (cid == null) {
+    return { kind: "skip", reason: "PubChem could not resolve name" };
+  }
+  const props = await fetchProps(cid);
+  await delay(PUBCHEM_DELAY_MS);
+  if (!props) return { kind: "skip", reason: `CID ${cid} returned no SMILES` };
+  if (shouldSkipSmiles(props.smiles, drug)) {
+    return { kind: "skip", reason: "multi-component SMILES (salt or mixture)" };
+  }
+  const title = props.iupacName ?? drug.name;
+  const svg = renderSvg(props.smiles, { title });
+  writeFileSync(join(STRUCTURES_DIR, `${drug.slug}.svg`), svg, "utf8");
+  return {
+    kind: "ok",
+    record: {
+      smiles: props.smiles,
+      inchiKey: props.inchiKey,
+      iupacName: props.iupacName,
+      pubchemCid: cid,
+      structureSvgPath: `/structures/${drug.slug}.svg`,
+      provenance: {
+        sourceUrl: `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/cid/${cid}/property/SMILES,InChIKey,IUPACName/JSON`,
+        sourceHash: props.rawHash,
+        extractedAt: new Date().toISOString(),
+        extractor: "pubchem",
+        confidence: 0.95,
+      },
+    },
+  };
+}
+
+/**
+ * Scale path: render SVGs for the full dataset and emit
+ * `data/ingest/structures.ndjson` (slug-tagged) for db:seed. Resumable
+ * via checkpoint so a multi-thousand-drug PubChem walk survives sleeps.
+ */
+async function mainScale(drugs: DrugLite[]): Promise<void> {
+  const checkpoint = openCheckpoint<StructureRow>(
+    "structures.checkpoint.ndjson",
+    "structures.ndjson",
+  );
+  let processed = 0;
+  let ok = 0;
+  for (const drug of drugs) {
+    processed += 1;
+    if (!FORCE && checkpoint.done(drug.slug)) continue;
+    try {
+      const result = await fetchStructure(drug);
+      if (result.kind === "ok") {
+        ChemicalStructureSchema.parse(result.record);
+        checkpoint.record(drug.slug, { slug: drug.slug, ...result.record });
+        ok += 1;
+      } else {
+        checkpoint.record(drug.slug, null);
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      checkpoint.record(drug.slug, null);
+      console.error(`  ! ${drug.slug}: ${message}`);
+    }
+    if (processed % 100 === 0) {
+      console.error(`  [${processed}/${drugs.length}] structures so far: ${checkpoint.size}`);
+    }
+  }
+  const path = checkpoint.flush();
+  console.error(`[fetch-structures] wrote ${checkpoint.size} structures → ${path}`);
+}
+
 async function main(): Promise<void> {
   if (!existsSync(STRUCTURES_DIR)) {
     mkdirSync(STRUCTURES_DIR, { recursive: true });
   }
 
-  const drugs: DrugLite[] = SEED_DRUGS
+  const limit = enrichLimit();
+  let drugs: DrugLite[] = loadEnrichmentDrugs()
     .map((d) => ({ slug: d.slug, name: d.name }))
     .sort((a, b) => a.slug.localeCompare(b.slug));
+  if (limit) drugs = drugs.slice(0, limit);
+
+  if (enrichScaleMode()) {
+    console.error(
+      `[fetch-structures] mode=scale processing ${drugs.length} drugs (force=${FORCE})`,
+    );
+    await mainScale(drugs);
+    return;
+  }
 
   console.error(
-    `[fetch-structures] processing ${drugs.length} drugs (force=${FORCE})`,
+    `[fetch-structures] mode=static processing ${drugs.length} drugs (force=${FORCE})`,
   );
 
   const generated: ChemicalStructure[] = [];

@@ -1,0 +1,17 @@
+<svg id="mol109" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>tribromoarsane</title>
+  <style> #mol109 text {font-family: sans-serif;} #mol109 { pointer-events:none; } #mol109 .event  { pointer-events:all; } #mol109 line { stroke-linecap:round; } #mol109 polygon { stroke-linejoin:round; } </style>
+  <text x="151.83" y="130.67" stroke="none" font-size="14" fill="rgb(189,128,227)">As</text>
+  <text x="173.78" y="142.67" stroke="none" font-size="14" fill="rgb(166,41,41)">Br</text>
+  <text x="153" y="106.67" stroke="none" font-size="14" fill="rgb(166,41,41)">Br</text>
+  <text x="132.22" y="142.67" stroke="none" font-size="14" fill="rgb(166,41,41)">Br</text>
+  <line x1="169.17" y1="131.29" x2="172.78" y2="133.38" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="119" x2="160" y2="109" stroke="currentColor" stroke-width="1.44" />
+  <line x1="150.83" y1="131.29" x2="147.22" y2="133.38" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol109:Bond:0" class="event" x1="160" y1="126" x2="180.78" y2="138" stroke-width="8" opacity="0" />
+  <line id="mol109:Bond:1" class="event" x1="160" y1="126" x2="160" y2="102" stroke-width="8" opacity="0" />
+  <line id="mol109:Bond:2" class="event" x1="160" y1="126" x2="139.22" y2="138" stroke-width="8" opacity="0" />
+  <circle id="mol109:Atom:0" class="event" cx="160" cy="126" r="8" opacity="0" />
+  <circle id="mol109:Atom:1" class="event" cx="180.78" cy="138" r="8" opacity="0" />
+  <circle id="mol109:Atom:2" class="event" cx="160" cy="102" r="8" opacity="0" />
+  <circle id="mol109:Atom:3" class="event" cx="139.22" cy="138" r="8" opacity="0" />
+</svg>

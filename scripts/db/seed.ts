@@ -139,6 +139,15 @@ async function main() {
     dataset.name === "scale" ? "v0.2.0-scale" : "v0.1.0-db";
   console.log(`dataset source: ${dataset.name} (${dataset.drugs.length} drugs)`);
 
+  // Per-drug enrichment (structures, FAERS, literature, shortages) is
+  // produced for the full scale set as NDJSON under data/ingest/. Prefer
+  // it when seeding the scale dataset; fall back to the curated TS seed.
+  function scaleEnrichment<T>(file: string): T[] | null {
+    if (dataset.name !== "scale") return null;
+    const p = resolve(SCALE_DIR, file);
+    return existsSync(p) ? readNdjson<T>(p) : null;
+  }
+
   const prisma = new PrismaClient({
     adapter: new PrismaPg({ connectionString }),
   });
@@ -254,12 +263,13 @@ async function main() {
     console.log(`changelog entries: ${changelog.length}`);
 
     // ── Shortages ─────────────────────────────────────────────────────
-    const shortages = Object.values(SEED_SHORTAGES)
-      .flat()
-      .map((raw) => {
-        const entry = ShortageEntrySchema.parse(raw);
-        return { drugSlug: entry.drug, payload: json(entry) };
-      });
+    const shortageRows =
+      scaleEnrichment<unknown>("shortages.ndjson") ??
+      Object.values(SEED_SHORTAGES).flat();
+    const shortages = shortageRows.map((raw) => {
+      const entry = ShortageEntrySchema.parse(raw);
+      return { drugSlug: entry.drug, payload: json(entry) };
+    });
     await prisma.shortage.deleteMany();
     for (const batch of chunk(shortages, 200)) {
       await prisma.shortage.createMany({ data: batch });
@@ -267,7 +277,10 @@ async function main() {
     console.log(`shortage entries: ${shortages.length}`);
 
     // ── FAERS adverse-event aggregates ────────────────────────────────
-    const adverse = Object.values(SEED_ADVERSE_EVENTS).map((raw) => {
+    const adverseRows =
+      scaleEnrichment<unknown>("adverse-events.ndjson") ??
+      Object.values(SEED_ADVERSE_EVENTS);
+    const adverse = adverseRows.map((raw) => {
       const stats = AdverseEventStatsSchema.parse(raw);
       return { drugSlug: stats.drug, payload: json(stats) };
     });
@@ -278,7 +291,10 @@ async function main() {
     console.log(`adverse-event snapshots: ${adverse.length}`);
 
     // ── PubMed literature ─────────────────────────────────────────────
-    const literature = Object.values(SEED_LITERATURE).map((raw) => {
+    const literatureRows =
+      scaleEnrichment<unknown>("literature.ndjson") ??
+      Object.values(SEED_LITERATURE);
+    const literature = literatureRows.map((raw) => {
       const lit = DrugLiteratureSchema.parse(raw);
       return { drugSlug: lit.drug, payload: json(lit) };
     });
@@ -311,7 +327,14 @@ async function main() {
     console.log(`pgx crosswalks: ${pgx.length}`);
 
     // ── 2D structures ─────────────────────────────────────────────────
-    const structures = Object.entries(SEED_STRUCTURES).map(([slug, raw]) => {
+    // Scale NDJSON rows carry their slug inline; the curated map keys by
+    // slug. Normalise both to [slug, ChemicalStructure] pairs.
+    const structureRows: Array<[string, unknown]> =
+      scaleEnrichment<{ slug: string }>("structures.ndjson")?.map((row) => [
+        row.slug,
+        row,
+      ]) ?? Object.entries(SEED_STRUCTURES);
+    const structures = structureRows.map(([slug, raw]) => {
       const struct = ChemicalStructureSchema.parse(raw);
       return { drugSlug: slug, smiles: struct.smiles, payload: json(struct) };
     });

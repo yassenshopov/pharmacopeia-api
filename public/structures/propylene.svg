@@ -1,0 +1,11 @@
+<svg id="mol1333" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>prop-1-ene</title>
+  <style> #mol1333 text {font-family: sans-serif;} #mol1333 { pointer-events:none; } #mol1333 .event  { pointer-events:all; } #mol1333 line { stroke-linecap:round; } #mol1333 polygon { stroke-linejoin:round; } </style>
+  <line x1="160" y1="114" x2="139.22" y2="126" stroke="currentColor" stroke-width="1.44" />
+  <line x1="159.58" y1="118.4" x2="141.02" y2="129.12" stroke="currentColor" stroke-width="1.44" />
+  <line x1="180.78" y1="126" x2="160" y2="114" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1333:Bond:1" class="event" x1="160" y1="114" x2="139.22" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1333:Bond:0" class="event" x1="180.78" y1="126" x2="160" y2="114" stroke-width="8" opacity="0" />
+  <circle id="mol1333:Atom:0" class="event" cx="180.78" cy="126" r="8" opacity="0" />
+  <circle id="mol1333:Atom:1" class="event" cx="160" cy="114" r="8" opacity="0" />
+  <circle id="mol1333:Atom:2" class="event" cx="139.22" cy="126" r="8" opacity="0" />
+</svg>

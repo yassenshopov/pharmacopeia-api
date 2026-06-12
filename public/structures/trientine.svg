@@ -1,0 +1,41 @@
+<svg id="mol1651" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>N'-[2-(2-aminoethylamino)ethyl]ethane-1,2-diamine</title>
+  <style> #mol1651 text {font-family: sans-serif;} #mol1651 { pointer-events:none; } #mol1651 .event  { pointer-events:all; } #mol1651 line { stroke-linecap:round; } #mol1651 polygon { stroke-linejoin:round; } </style>
+  <text x="123.77" y="118.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="123.77" y="104.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="186.12" y="130.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="186.12" y="144.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="248.48" y="118.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="268.69" y="122" stroke="none" font-size="9" fill="rgb(48,80,248)">2</text>
+  <text x="258.58" y="118.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="61.42" y="130.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="56.41" y="134" stroke="none" font-size="9" fill="rgb(48,80,248)">2</text>
+  <text x="46.3" y="130.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <line x1="87.25" y1="114" x2="108.04" y2="126" stroke="currentColor" stroke-width="1.44" />
+  <line x1="108.04" y1="126" x2="122.77" y2="117.5" stroke="currentColor" stroke-width="1.44" />
+  <line x1="134.88" y1="117.5" x2="149.61" y2="126" stroke="currentColor" stroke-width="1.44" />
+  <line x1="149.61" y1="126" x2="170.39" y2="114" stroke="currentColor" stroke-width="1.44" />
+  <line x1="170.39" y1="114" x2="185.12" y2="122.5" stroke="currentColor" stroke-width="1.44" />
+  <line x1="197.23" y1="122.5" x2="211.96" y2="114" stroke="currentColor" stroke-width="1.44" />
+  <line x1="211.96" y1="114" x2="232.75" y2="126" stroke="currentColor" stroke-width="1.44" />
+  <line x1="232.75" y1="126" x2="247.48" y2="117.5" stroke="currentColor" stroke-width="1.44" />
+  <line x1="87.25" y1="114" x2="72.52" y2="122.5" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1651:Bond:0" class="event" x1="87.25" y1="114" x2="108.04" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:1" class="event" x1="108.04" y1="126" x2="128.82" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:2" class="event" x1="128.82" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:3" class="event" x1="149.61" y1="126" x2="170.39" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:4" class="event" x1="170.39" y1="114" x2="191.18" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:5" class="event" x1="191.18" y1="126" x2="211.96" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:6" class="event" x1="211.96" y1="114" x2="232.75" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:7" class="event" x1="232.75" y1="126" x2="253.53" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1651:Bond:8" class="event" x1="87.25" y1="114" x2="66.47" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol1651:Atom:0" class="event" cx="87.25" cy="114" r="8" opacity="0" />
+  <circle id="mol1651:Atom:1" class="event" cx="108.04" cy="126" r="8" opacity="0" />
+  <circle id="mol1651:Atom:2" class="event" cx="128.82" cy="114" r="8" opacity="0" />
+  <circle id="mol1651:Atom:3" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+  <circle id="mol1651:Atom:4" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol1651:Atom:5" class="event" cx="191.18" cy="126" r="8" opacity="0" />
+  <circle id="mol1651:Atom:6" class="event" cx="211.96" cy="114" r="8" opacity="0" />
+  <circle id="mol1651:Atom:7" class="event" cx="232.75" cy="126" r="8" opacity="0" />
+  <circle id="mol1651:Atom:8" class="event" cx="253.53" cy="114" r="8" opacity="0" />
+  <circle id="mol1651:Atom:9" class="event" cx="66.47" cy="126" r="8" opacity="0" />
+</svg>

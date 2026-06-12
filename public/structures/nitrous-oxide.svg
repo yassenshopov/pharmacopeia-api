@@ -1,0 +1,17 @@
+<svg id="mol1133" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>nitrous oxide</title>
+  <style> #mol1133 text {font-family: sans-serif;} #mol1133 { pointer-events:none; } #mol1133 .event  { pointer-events:all; } #mol1133 line { stroke-linecap:round; } #mol1133 polygon { stroke-linejoin:round; } </style>
+  <text x="130.95" y="124.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="142.05" y="119" stroke="none" font-size="9" fill="rgb(48,80,248)">-</text>
+  <text x="154.95" y="124.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="166.05" y="119" stroke="none" font-size="9" fill="rgb(48,80,248)">+</text>
+  <text x="178.55" y="124.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <line x1="142.05" y1="121.8" x2="153.95" y2="121.8" stroke="currentColor" stroke-width="1.44" />
+  <line x1="142.05" y1="118.2" x2="153.95" y2="118.2" stroke="currentColor" stroke-width="1.44" />
+  <line x1="166.05" y1="121.8" x2="177.55" y2="121.8" stroke="currentColor" stroke-width="1.44" />
+  <line x1="166.05" y1="118.2" x2="177.55" y2="118.2" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1133:Bond:0" class="event" x1="136" y1="120" x2="160" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol1133:Bond:1" class="event" x1="160" y1="120" x2="184" y2="120" stroke-width="8" opacity="0" />
+  <circle id="mol1133:Atom:0" class="event" cx="136" cy="120" r="8" opacity="0" />
+  <circle id="mol1133:Atom:1" class="event" cx="160" cy="120" r="8" opacity="0" />
+  <circle id="mol1133:Atom:2" class="event" cx="184" cy="120" r="8" opacity="0" />
+</svg>

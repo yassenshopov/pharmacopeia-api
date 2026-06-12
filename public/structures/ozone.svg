@@ -1,0 +1,16 @@
+<svg id="mol1197" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>ozone</title>
+  <style> #mol1197 text {font-family: sans-serif;} #mol1197 { pointer-events:none; } #mol1197 .event  { pointer-events:all; } #mol1197 line { stroke-linecap:round; } #mol1197 polygon { stroke-linejoin:round; } </style>
+  <text x="175.34" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="187.23" y="125" stroke="none" font-size="9" fill="rgb(255,13,13)">-</text>
+  <text x="154.55" y="118.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="166.45" y="113" stroke="none" font-size="9" fill="rgb(255,13,13)">+</text>
+  <text x="133.77" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <line x1="152.65" y1="116.16" x2="144.76" y2="120.72" stroke="currentColor" stroke-width="1.44" />
+  <line x1="154.45" y1="119.28" x2="146.56" y2="123.84" stroke="currentColor" stroke-width="1.44" />
+  <line x1="174.34" y1="122.28" x2="166.45" y2="117.72" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1197:Bond:1" class="event" x1="160" y1="114" x2="139.22" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1197:Bond:0" class="event" x1="180.78" y1="126" x2="160" y2="114" stroke-width="8" opacity="0" />
+  <circle id="mol1197:Atom:0" class="event" cx="180.78" cy="126" r="8" opacity="0" />
+  <circle id="mol1197:Atom:1" class="event" cx="160" cy="114" r="8" opacity="0" />
+  <circle id="mol1197:Atom:2" class="event" cx="139.22" cy="126" r="8" opacity="0" />
+</svg>

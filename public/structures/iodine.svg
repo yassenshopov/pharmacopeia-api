@@ -1,0 +1,9 @@
+<svg id="mol820" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>molecular iodine</title>
+  <style> #mol820 text {font-family: sans-serif;} #mol820 { pointer-events:none; } #mol820 .event  { pointer-events:all; } #mol820 line { stroke-linecap:round; } #mol820 polygon { stroke-linejoin:round; } </style>
+  <text x="168.45" y="118.67" stroke="none" font-size="14" fill="rgb(148,0,148)">I</text>
+  <text x="147.66" y="130.67" stroke="none" font-size="14" fill="rgb(148,0,148)">I</text>
+  <line x1="167.45" y1="115.7" x2="152.55" y2="124.3" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol820:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol820:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol820:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

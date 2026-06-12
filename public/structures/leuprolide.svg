@@ -1,0 +1,385 @@
+<svg id="mol896" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>(2S)-N-[(2S)-1-[[(2S)-1-[[(2S)-1-[[(2S)-1-[[(2R)-1-[[(2S)-1-[[(2S)-5-(diaminomethylideneamino)-1-[(2S)-2-(ethylcarbamoyl)pyrrolidin-1-yl]-1-oxopentan-2-yl]amino]-4-methyl-1-oxopentan-2-yl]amino]-4-methyl-1-oxopentan-2-yl]amino]-3-(4-hydroxyphenyl)-1-oxopropan-2-yl]amino]-3-hydroxy-1-oxopropan-2-yl]amino]-3-(1H-indol-3-yl)-1-oxopropan-2-yl]amino]-3-(1H-imidazol-5-yl)-1-oxopropan-2-yl]-5-oxopyrrolidine-2-carboxamide</title>
+  <style> #mol896 text {font-family: sans-serif;} #mol896 { pointer-events:none; } #mol896 .event  { pointer-events:all; } #mol896 line { stroke-linecap:round; } #mol896 polygon { stroke-linejoin:round; } </style>
+  <text x="136.07" y="188.98" stroke="none" font-size="7" fill="rgb(160,0,0)">this enantiomer</text>
+  <text x="299.82" y="143.21" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="294.04" y="143.21" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="306.95" y="165.83" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="283.45" y="162.89" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="283.31" y="156.43" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="272.79" y="152.81" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="284.46" y="132.21" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="260.45" y="134.21" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="262.78" y="129.46" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="284.68" y="91" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="296.58" y="70.4" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="308.13" y="72.4" stroke="none" font-size="5" fill="rgb(48,80,248)">2</text>
+  <text x="302.35" y="70.4" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="272.79" y="70.4" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="270.01" y="72.4" stroke="none" font-size="5" fill="rgb(48,80,248)">2</text>
+  <text x="264.23" y="70.4" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="249" y="139.08" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="249" y="147.08" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="224.98" y="139.08" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="236.65" y="120.47" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="235.96" y="113.97" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="225.21" y="111.61" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="225.21" y="103.61" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="213.09" y="132.21" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="200.69" y="113.61" stroke="none" font-size="5" fill="rgb(160,0,0)">R</text>
+  <text x="203.3" y="108.86" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="189.52" y="118.47" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="189.52" y="126.47" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="177.4" y="97.87" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="165.28" y="120.47" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="164.59" y="113.97" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="213.09" y="159.68" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="219.31" y="159.68" stroke="none" font-size="8" fill="rgb(255,13,13)">H</text>
+  <text x="153.83" y="111.61" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="153.83" y="103.61" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="141.71" y="132.21" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="129.6" y="113.61" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="131.93" y="108.86" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="117.92" y="91" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="112.15" y="91" stroke="none" font-size="8" fill="rgb(255,13,13)">H</text>
+  <text x="118.15" y="118.47" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="118.15" y="126.47" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="106.03" y="97.87" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="93.91" y="120.47" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="93.22" y="113.97" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="127.99" y="143.7" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="133.77" y="143.7" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="82.46" y="111.61" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="82.46" y="103.61" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="70.34" y="132.21" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="58.22" y="113.61" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="60.56" y="108.86" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="85.44" y="74.49" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="83.11" y="96.59" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="83.11" y="104.59" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="46.78" y="118.47" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="46.78" y="126.47" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <text x="34.66" y="97.87" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="22.54" y="120.47" stroke="none" font-size="5" fill="rgb(160,0,0)">S</text>
+  <text x="21.66" y="113.98" stroke="none" font-size="5" fill="rgb(160,0,0)">abs</text>
+  <text x="2.3" y="147.54" stroke="none" font-size="8" fill="rgb(255,13,13)">O</text>
+  <text x="21.55" y="132.13" stroke="none" font-size="8" fill="rgb(48,80,248)">N</text>
+  <text x="27.33" y="132.13" stroke="none" font-size="8" fill="rgb(48,80,248)">H</text>
+  <line x1="298.72" y1="154.34" x2="305.26" y2="160.23" stroke="currentColor" stroke-width="1" />
+  <line x1="300.1" y1="152.81" x2="306.64" y2="158.7" stroke="currentColor" stroke-width="1" />
+  <line x1="275.68" y1="137.6" x2="283.97" y2="132.81" stroke="currentColor" stroke-width="1" />
+  <line x1="274.65" y1="135.82" x2="282.94" y2="131.03" stroke="currentColor" stroke-width="1" />
+  <line x1="286.54" y1="74.01" x2="286.54" y2="84.34" stroke="currentColor" stroke-width="1" />
+  <line x1="288.6" y1="74.01" x2="288.6" y2="84.34" stroke="currentColor" stroke-width="1" />
+  <line x1="239.99" y1="128.35" x2="231.69" y2="133.14" stroke="currentColor" stroke-width="1" />
+  <line x1="241.02" y1="130.14" x2="232.72" y2="134.93" stroke="currentColor" stroke-width="1" />
+  <line x1="215.17" y1="115.21" x2="215.17" y2="125.54" stroke="currentColor" stroke-width="1" />
+  <line x1="217.23" y1="115.21" x2="217.23" y2="125.54" stroke="currentColor" stroke-width="1" />
+  <line x1="181.54" y1="109.53" x2="181.54" y2="99.2" stroke="currentColor" stroke-width="1" />
+  <line x1="179.48" y1="109.53" x2="179.48" y2="99.2" stroke="currentColor" stroke-width="1" />
+  <line x1="180.51" y1="136.41" x2="180.51" y2="150.15" stroke="currentColor" stroke-width="1" />
+  <line x1="182.57" y1="137.88" x2="182.57" y2="148.68" stroke="currentColor" stroke-width="1" />
+  <line x1="192.41" y1="157.01" x2="204.3" y2="150.15" stroke="currentColor" stroke-width="1" />
+  <line x1="192.65" y1="154.5" x2="202" y2="149.1" stroke="currentColor" stroke-width="1" />
+  <line x1="204.3" y1="136.41" x2="192.41" y2="129.54" stroke="currentColor" stroke-width="1" />
+  <line x1="202" y1="137.46" x2="192.65" y2="132.06" stroke="currentColor" stroke-width="1" />
+  <line x1="143.8" y1="115.21" x2="143.8" y2="125.54" stroke="currentColor" stroke-width="1" />
+  <line x1="145.86" y1="115.21" x2="145.86" y2="125.54" stroke="currentColor" stroke-width="1" />
+  <line x1="110.17" y1="109.53" x2="110.17" y2="99.2" stroke="currentColor" stroke-width="1" />
+  <line x1="108.11" y1="109.53" x2="108.11" y2="99.2" stroke="currentColor" stroke-width="1" />
+  <line x1="109.14" y1="136.41" x2="121.69" y2="130.82" stroke="currentColor" stroke-width="1" />
+  <line x1="111.55" y1="137.59" x2="120.95" y2="133.41" stroke="currentColor" stroke-width="1" />
+  <line x1="124.01" y1="152.93" x2="128.26" y2="165.99" stroke="currentColor" stroke-width="1" />
+  <line x1="122.51" y1="154.96" x2="125.84" y2="165.23" stroke="currentColor" stroke-width="1" />
+  <line x1="119.07" y1="176.2" x2="105.63" y2="173.34" stroke="currentColor" stroke-width="1" />
+  <line x1="118.06" y1="173.88" x2="107.49" y2="171.63" stroke="currentColor" stroke-width="1" />
+  <line x1="101.39" y1="160.28" x2="110.58" y2="150.07" stroke="currentColor" stroke-width="1" />
+  <line x1="103.9" y1="160.57" x2="111.13" y2="152.54" stroke="currentColor" stroke-width="1" />
+  <line x1="72.42" y1="115.21" x2="72.42" y2="125.54" stroke="currentColor" stroke-width="1" />
+  <line x1="74.48" y1="115.21" x2="74.48" y2="125.54" stroke="currentColor" stroke-width="1" />
+  <line x1="73.45" y1="88.34" x2="74.89" y2="74.68" stroke="currentColor" stroke-width="1" />
+  <line x1="75.68" y1="86.84" x2="76.76" y2="76.61" stroke="currentColor" stroke-width="1" />
+  <line x1="95.19" y1="83.72" x2="90.63" y2="75.82" stroke="currentColor" stroke-width="1" />
+  <line x1="92.55" y1="83.25" x2="88.85" y2="76.85" stroke="currentColor" stroke-width="1" />
+  <line x1="38.8" y1="109.53" x2="38.8" y2="99.2" stroke="currentColor" stroke-width="1" />
+  <line x1="36.74" y1="109.53" x2="36.74" y2="99.2" stroke="currentColor" stroke-width="1" />
+  <line x1="10.36" y1="131.22" x2="6.25" y2="140.45" stroke="currentColor" stroke-width="1" />
+  <line x1="12.25" y1="132.06" x2="8.14" y2="141.29" stroke="currentColor" stroke-width="1" />
+  <line x1="318.63" y1="122.86" x2="315.77" y2="136.3" stroke="currentColor" stroke-width="1" />
+  <line x1="315.77" y1="136.3" x2="306.6" y2="139.28" stroke="currentColor" stroke-width="1" />
+  <line x1="301.86" y1="144.54" x2="299.85" y2="153.98" stroke="currentColor" stroke-width="1" />
+  <line x1="288.39" y1="157.93" x2="288.26" y2="157.52" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="289.99" y1="157.63" x2="289.73" y2="156.81" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="291.6" y1="157.33" x2="291.2" y2="156.11" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="293.2" y1="157.04" x2="292.67" y2="155.41" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="294.8" y1="156.74" x2="294.14" y2="154.7" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="296.41" y1="156.45" x2="295.61" y2="154" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="298.01" y1="156.15" x2="297.08" y2="153.3" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="299.61" y1="155.86" x2="298.55" y2="152.59" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="286.79" y1="158.22" x2="282.54" y2="171.28" stroke="currentColor" stroke-width="1" />
+  <line x1="282.54" y1="171.28" x2="268.81" y2="171.28" stroke="currentColor" stroke-width="1" />
+  <line x1="268.81" y1="171.28" x2="264.56" y2="158.22" stroke="currentColor" stroke-width="1" />
+  <line x1="264.56" y1="158.22" x2="271.79" y2="152.97" stroke="currentColor" stroke-width="1" />
+  <line x1="286.79" y1="158.22" x2="279.56" y2="152.97" stroke="currentColor" stroke-width="1" />
+  <line x1="275.68" y1="146.15" x2="275.68" y2="136.41" stroke="currentColor" stroke-width="1" />
+  <line x1="275.68" y1="136.41" x2="263.78" y2="129.54" stroke="currentColor" stroke-width="1" />
+  <line x1="263.78" y1="129.54" x2="263.78" y2="115.81" stroke="currentColor" stroke-width="1" />
+  <line x1="263.78" y1="115.81" x2="275.68" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <line x1="275.68" y1="108.94" x2="275.68" y2="95.2" stroke="currentColor" stroke-width="1" />
+  <line x1="275.68" y1="95.2" x2="283.68" y2="90.58" stroke="currentColor" stroke-width="1" />
+  <line x1="287.57" y1="74.6" x2="295.58" y2="69.98" stroke="currentColor" stroke-width="1" />
+  <line x1="287.57" y1="74.6" x2="279.56" y2="69.98" stroke="currentColor" stroke-width="1" />
+  <polygon points="264,130 260,131 260,132 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <polygon points="260,132 260,131 255,133 256,135 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="248" y1="134.17" x2="239.99" y2="129.54" stroke="currentColor" stroke-width="1" />
+  <line x1="239.99" y1="129.54" x2="239.99" y2="115.81" stroke="currentColor" stroke-width="1" />
+  <line x1="239.99" y1="115.81" x2="251.89" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <line x1="251.89" y1="108.94" x2="251.89" y2="95.2" stroke="currentColor" stroke-width="1" />
+  <line x1="251.89" y1="95.2" x2="239.99" y2="88.34" stroke="currentColor" stroke-width="1" />
+  <line x1="251.89" y1="95.2" x2="263.78" y2="88.34" stroke="currentColor" stroke-width="1" />
+  <polygon points="240,116 236,113 236,114 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <polygon points="236,114 236,113 232,110 231,112 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="224.21" y1="111.18" x2="216.2" y2="115.81" stroke="currentColor" stroke-width="1" />
+  <line x1="216.2" y1="115.81" x2="204.3" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <line x1="204.3" y1="108.94" x2="204.3" y2="95.2" stroke="currentColor" stroke-width="1" />
+  <line x1="204.3" y1="95.2" x2="216.2" y2="88.34" stroke="currentColor" stroke-width="1" />
+  <line x1="216.2" y1="88.34" x2="228.09" y2="95.2" stroke="currentColor" stroke-width="1" />
+  <line x1="216.2" y1="88.34" x2="216.2" y2="74.6" stroke="currentColor" stroke-width="1" />
+  <line x1="202.8" y1="109.56" x2="203.01" y2="109.93" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="201.29" y1="110.18" x2="201.72" y2="110.93" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="199.78" y1="110.81" x2="200.43" y2="111.92" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="198.28" y1="111.43" x2="199.13" y2="112.92" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="196.77" y1="112.05" x2="197.84" y2="113.91" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="196.3" y1="114.46" x2="196.55" y2="114.9" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="188.52" y1="113.56" x2="180.51" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <line x1="180.51" y1="108.94" x2="168.62" y2="115.81" stroke="currentColor" stroke-width="1" />
+  <line x1="168.62" y1="115.81" x2="168.62" y2="129.54" stroke="currentColor" stroke-width="1" />
+  <line x1="168.62" y1="129.54" x2="180.51" y2="136.41" stroke="currentColor" stroke-width="1" />
+  <line x1="180.51" y1="150.15" x2="192.41" y2="157.01" stroke="currentColor" stroke-width="1" />
+  <line x1="204.3" y1="150.15" x2="204.3" y2="136.41" stroke="currentColor" stroke-width="1" />
+  <line x1="180.51" y1="136.41" x2="192.41" y2="129.54" stroke="currentColor" stroke-width="1" />
+  <line x1="204.3" y1="150.15" x2="212.09" y2="154.64" stroke="currentColor" stroke-width="1" />
+  <line x1="167.33" y1="114.81" x2="167.11" y2="115.19" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="166.03" y1="113.82" x2="165.6" y2="114.56" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="164.74" y1="112.83" x2="164.1" y2="113.94" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="163.45" y1="111.83" x2="162.59" y2="113.32" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="162.16" y1="110.84" x2="161.08" y2="112.7" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="160.86" y1="109.84" x2="160.61" y2="110.29" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="152.83" y1="111.18" x2="144.83" y2="115.81" stroke="currentColor" stroke-width="1" />
+  <line x1="144.83" y1="115.81" x2="132.93" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <line x1="132.93" y1="108.94" x2="132.93" y2="95.2" stroke="currentColor" stroke-width="1" />
+  <line x1="132.93" y1="95.2" x2="125.15" y2="90.71" stroke="currentColor" stroke-width="1" />
+  <polygon points="133,109 129,111 129,112 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <polygon points="129,112 129,111 124,113 125,114 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="117.15" y1="113.56" x2="109.14" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <line x1="109.14" y1="108.94" x2="97.25" y2="115.81" stroke="currentColor" stroke-width="1" />
+  <line x1="97.25" y1="115.81" x2="97.25" y2="129.54" stroke="currentColor" stroke-width="1" />
+  <line x1="97.25" y1="129.54" x2="109.14" y2="136.41" stroke="currentColor" stroke-width="1" />
+  <line x1="121.69" y1="130.82" x2="127.28" y2="137.03" stroke="currentColor" stroke-width="1" />
+  <line x1="128.57" y1="145.03" x2="124.01" y2="152.93" stroke="currentColor" stroke-width="1" />
+  <line x1="128.26" y1="165.99" x2="119.07" y2="176.2" stroke="currentColor" stroke-width="1" />
+  <line x1="105.63" y1="173.34" x2="101.39" y2="160.28" stroke="currentColor" stroke-width="1" />
+  <line x1="124.01" y1="152.93" x2="110.58" y2="150.07" stroke="currentColor" stroke-width="1" />
+  <line x1="109.14" y1="136.41" x2="110.58" y2="150.07" stroke="currentColor" stroke-width="1" />
+  <line x1="95.95" y1="114.81" x2="95.74" y2="115.19" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="94.66" y1="113.82" x2="94.23" y2="114.56" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="93.37" y1="112.83" x2="92.72" y2="113.94" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="92.08" y1="111.83" x2="91.22" y2="113.32" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="90.78" y1="110.84" x2="89.71" y2="112.7" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="89.49" y1="109.84" x2="89.24" y2="110.29" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="81.46" y1="111.18" x2="73.45" y2="115.81" stroke="currentColor" stroke-width="1" />
+  <line x1="73.45" y1="115.81" x2="61.56" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <line x1="61.56" y1="108.94" x2="61.56" y2="95.2" stroke="currentColor" stroke-width="1" />
+  <line x1="61.56" y1="95.2" x2="73.45" y2="88.34" stroke="currentColor" stroke-width="1" />
+  <line x1="74.89" y1="74.68" x2="84.44" y2="72.65" stroke="currentColor" stroke-width="1" />
+  <line x1="95.19" y1="83.72" x2="89.6" y2="89.92" stroke="currentColor" stroke-width="1" />
+  <line x1="73.45" y1="88.34" x2="82.11" y2="92.19" stroke="currentColor" stroke-width="1" />
+  <polygon points="62,109 57,111 58,112 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <polygon points="58,112 57,111 53,113 54,114 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="45.78" y1="113.56" x2="37.77" y2="108.94" stroke="currentColor" stroke-width="1" />
+  <polygon points="26,116 32,113 31,112 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <polygon points="31,112 32,113 39,110 37,108 " fill="rgb(160,0,0)" stroke="rgb(160,0,0)" stroke-width="1" />
+  <line x1="25.87" y1="115.81" x2="13.32" y2="110.22" stroke="currentColor" stroke-width="1" />
+  <line x1="13.32" y1="110.22" x2="4.13" y2="120.43" stroke="currentColor" stroke-width="1" />
+  <line x1="4.13" y1="120.43" x2="11" y2="132.32" stroke="currentColor" stroke-width="1" />
+  <line x1="11" y1="132.32" x2="20.55" y2="130.29" stroke="currentColor" stroke-width="1" />
+  <line x1="25.87" y1="115.81" x2="24.86" y2="125.47" stroke="currentColor" stroke-width="1" />
+  <line id="mol896:Bond:3" class="event" x1="299.85" y1="153.98" x2="310.06" y2="163.17" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:11" class="event" x1="275.68" y1="136.41" x2="287.57" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:17" class="event" x1="287.57" y1="88.34" x2="287.57" y2="74.6" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:22" class="event" x1="239.99" y1="129.54" x2="228.09" y2="136.41" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:30" class="event" x1="216.2" y1="115.81" x2="216.2" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:38" class="event" x1="180.51" y1="108.94" x2="180.51" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:42" class="event" x1="180.51" y1="136.41" x2="180.51" y2="150.15" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:44" class="event" x1="192.41" y1="157.01" x2="204.3" y2="150.15" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:46" class="event" x1="204.3" y1="136.41" x2="192.41" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:51" class="event" x1="144.83" y1="115.81" x2="144.83" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:57" class="event" x1="109.14" y1="108.94" x2="109.14" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:61" class="event" x1="109.14" y1="136.41" x2="121.69" y2="130.82" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:64" class="event" x1="124.01" y1="152.93" x2="128.26" y2="165.99" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:66" class="event" x1="119.07" y1="176.2" x2="105.63" y2="173.34" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:68" class="event" x1="101.39" y1="160.28" x2="110.58" y2="150.07" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:73" class="event" x1="73.45" y1="115.81" x2="73.45" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:77" class="event" x1="73.45" y1="88.34" x2="74.89" y2="74.68" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:79" class="event" x1="88.33" y1="71.82" x2="95.19" y2="83.72" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:84" class="event" x1="37.77" y1="108.94" x2="37.77" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:89" class="event" x1="11" y1="132.32" x2="5.41" y2="144.87" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:0" class="event" x1="318.63" y1="122.86" x2="315.77" y2="136.3" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:1" class="event" x1="315.77" y1="136.3" x2="302.71" y2="140.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:2" class="event" x1="302.71" y1="140.54" x2="299.85" y2="153.98" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:4" class="event" x1="286.79" y1="158.22" x2="299.85" y2="153.98" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:5" class="event" x1="286.79" y1="158.22" x2="282.54" y2="171.28" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:6" class="event" x1="282.54" y1="171.28" x2="268.81" y2="171.28" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:7" class="event" x1="268.81" y1="171.28" x2="264.56" y2="158.22" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:8" class="event" x1="264.56" y1="158.22" x2="275.68" y2="150.15" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:9" class="event" x1="286.79" y1="158.22" x2="275.68" y2="150.15" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:10" class="event" x1="275.68" y1="150.15" x2="275.68" y2="136.41" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:12" class="event" x1="275.68" y1="136.41" x2="263.78" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:13" class="event" x1="263.78" y1="129.54" x2="263.78" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:14" class="event" x1="263.78" y1="115.81" x2="275.68" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:15" class="event" x1="275.68" y1="108.94" x2="275.68" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:16" class="event" x1="275.68" y1="95.2" x2="287.57" y2="88.34" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:18" class="event" x1="287.57" y1="74.6" x2="299.47" y2="67.73" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:19" class="event" x1="287.57" y1="74.6" x2="275.68" y2="67.73" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:20" class="event" x1="263.78" y1="129.54" x2="251.89" y2="136.41" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:21" class="event" x1="251.89" y1="136.41" x2="239.99" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:23" class="event" x1="239.99" y1="129.54" x2="239.99" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:24" class="event" x1="239.99" y1="115.81" x2="251.89" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:25" class="event" x1="251.89" y1="108.94" x2="251.89" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:26" class="event" x1="251.89" y1="95.2" x2="239.99" y2="88.34" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:27" class="event" x1="251.89" y1="95.2" x2="263.78" y2="88.34" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:28" class="event" x1="239.99" y1="115.81" x2="228.09" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:29" class="event" x1="228.09" y1="108.94" x2="216.2" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:31" class="event" x1="216.2" y1="115.81" x2="204.3" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:32" class="event" x1="204.3" y1="108.94" x2="204.3" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:33" class="event" x1="204.3" y1="95.2" x2="216.2" y2="88.34" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:34" class="event" x1="216.2" y1="88.34" x2="228.09" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:35" class="event" x1="216.2" y1="88.34" x2="216.2" y2="74.6" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:36" class="event" x1="204.3" y1="108.94" x2="192.41" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:37" class="event" x1="192.41" y1="115.81" x2="180.51" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:39" class="event" x1="180.51" y1="108.94" x2="168.62" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:40" class="event" x1="168.62" y1="115.81" x2="168.62" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:41" class="event" x1="168.62" y1="129.54" x2="180.51" y2="136.41" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:43" class="event" x1="180.51" y1="150.15" x2="192.41" y2="157.01" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:45" class="event" x1="204.3" y1="150.15" x2="204.3" y2="136.41" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:47" class="event" x1="180.51" y1="136.41" x2="192.41" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:48" class="event" x1="204.3" y1="150.15" x2="216.2" y2="157.01" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:49" class="event" x1="168.62" y1="115.81" x2="156.72" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:50" class="event" x1="156.72" y1="108.94" x2="144.83" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:52" class="event" x1="144.83" y1="115.81" x2="132.93" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:53" class="event" x1="132.93" y1="108.94" x2="132.93" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:54" class="event" x1="132.93" y1="95.2" x2="121.04" y2="88.34" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:55" class="event" x1="132.93" y1="108.94" x2="121.04" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:56" class="event" x1="121.04" y1="115.81" x2="109.14" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:58" class="event" x1="109.14" y1="108.94" x2="97.25" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:59" class="event" x1="97.25" y1="115.81" x2="97.25" y2="129.54" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:60" class="event" x1="97.25" y1="129.54" x2="109.14" y2="136.41" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:62" class="event" x1="121.69" y1="130.82" x2="130.88" y2="141.03" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:63" class="event" x1="130.88" y1="141.03" x2="124.01" y2="152.93" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:65" class="event" x1="128.26" y1="165.99" x2="119.07" y2="176.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:67" class="event" x1="105.63" y1="173.34" x2="101.39" y2="160.28" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:69" class="event" x1="124.01" y1="152.93" x2="110.58" y2="150.07" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:70" class="event" x1="109.14" y1="136.41" x2="110.58" y2="150.07" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:71" class="event" x1="97.25" y1="115.81" x2="85.35" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:72" class="event" x1="85.35" y1="108.94" x2="73.45" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:74" class="event" x1="73.45" y1="115.81" x2="61.56" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:75" class="event" x1="61.56" y1="108.94" x2="61.56" y2="95.2" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:76" class="event" x1="61.56" y1="95.2" x2="73.45" y2="88.34" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:78" class="event" x1="74.89" y1="74.68" x2="88.33" y2="71.82" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:80" class="event" x1="95.19" y1="83.72" x2="86" y2="93.92" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:81" class="event" x1="73.45" y1="88.34" x2="86" y2="93.92" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:82" class="event" x1="61.56" y1="108.94" x2="49.66" y2="115.81" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:83" class="event" x1="49.66" y1="115.81" x2="37.77" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:85" class="event" x1="25.87" y1="115.81" x2="37.77" y2="108.94" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:86" class="event" x1="25.87" y1="115.81" x2="13.32" y2="110.22" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:87" class="event" x1="13.32" y1="110.22" x2="4.13" y2="120.43" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:88" class="event" x1="4.13" y1="120.43" x2="11" y2="132.32" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:90" class="event" x1="11" y1="132.32" x2="24.44" y2="129.47" stroke-width="8" opacity="0" />
+  <line id="mol896:Bond:91" class="event" x1="25.87" y1="115.81" x2="24.44" y2="129.47" stroke-width="8" opacity="0" />
+  <circle id="mol896:Atom:0" class="event" cx="318.63" cy="122.86" r="8" opacity="0" />
+  <circle id="mol896:Atom:1" class="event" cx="315.77" cy="136.3" r="8" opacity="0" />
+  <circle id="mol896:Atom:2" class="event" cx="302.71" cy="140.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:3" class="event" cx="299.85" cy="153.98" r="8" opacity="0" />
+  <circle id="mol896:Atom:4" class="event" cx="310.06" cy="163.17" r="8" opacity="0" />
+  <circle id="mol896:Atom:5" class="event" cx="286.79" cy="158.22" r="8" opacity="0" />
+  <circle id="mol896:Atom:6" class="event" cx="282.54" cy="171.28" r="8" opacity="0" />
+  <circle id="mol896:Atom:7" class="event" cx="268.81" cy="171.28" r="8" opacity="0" />
+  <circle id="mol896:Atom:8" class="event" cx="264.56" cy="158.22" r="8" opacity="0" />
+  <circle id="mol896:Atom:9" class="event" cx="275.68" cy="150.15" r="8" opacity="0" />
+  <circle id="mol896:Atom:10" class="event" cx="275.68" cy="136.41" r="8" opacity="0" />
+  <circle id="mol896:Atom:11" class="event" cx="287.57" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:12" class="event" cx="263.78" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:13" class="event" cx="263.78" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:14" class="event" cx="275.68" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:15" class="event" cx="275.68" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:16" class="event" cx="287.57" cy="88.34" r="8" opacity="0" />
+  <circle id="mol896:Atom:17" class="event" cx="287.57" cy="74.6" r="8" opacity="0" />
+  <circle id="mol896:Atom:18" class="event" cx="299.47" cy="67.73" r="8" opacity="0" />
+  <circle id="mol896:Atom:19" class="event" cx="275.68" cy="67.73" r="8" opacity="0" />
+  <circle id="mol896:Atom:20" class="event" cx="251.89" cy="136.41" r="8" opacity="0" />
+  <circle id="mol896:Atom:21" class="event" cx="239.99" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:22" class="event" cx="228.09" cy="136.41" r="8" opacity="0" />
+  <circle id="mol896:Atom:23" class="event" cx="239.99" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:24" class="event" cx="251.89" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:25" class="event" cx="251.89" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:26" class="event" cx="239.99" cy="88.34" r="8" opacity="0" />
+  <circle id="mol896:Atom:27" class="event" cx="263.78" cy="88.34" r="8" opacity="0" />
+  <circle id="mol896:Atom:28" class="event" cx="228.09" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:29" class="event" cx="216.2" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:30" class="event" cx="216.2" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:31" class="event" cx="204.3" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:32" class="event" cx="204.3" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:33" class="event" cx="216.2" cy="88.34" r="8" opacity="0" />
+  <circle id="mol896:Atom:34" class="event" cx="228.09" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:35" class="event" cx="216.2" cy="74.6" r="8" opacity="0" />
+  <circle id="mol896:Atom:36" class="event" cx="192.41" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:37" class="event" cx="180.51" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:38" class="event" cx="180.51" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:39" class="event" cx="168.62" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:40" class="event" cx="168.62" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:41" class="event" cx="180.51" cy="136.41" r="8" opacity="0" />
+  <circle id="mol896:Atom:42" class="event" cx="180.51" cy="150.15" r="8" opacity="0" />
+  <circle id="mol896:Atom:43" class="event" cx="192.41" cy="157.01" r="8" opacity="0" />
+  <circle id="mol896:Atom:44" class="event" cx="204.3" cy="150.15" r="8" opacity="0" />
+  <circle id="mol896:Atom:45" class="event" cx="204.3" cy="136.41" r="8" opacity="0" />
+  <circle id="mol896:Atom:46" class="event" cx="192.41" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:47" class="event" cx="216.2" cy="157.01" r="8" opacity="0" />
+  <circle id="mol896:Atom:48" class="event" cx="156.72" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:49" class="event" cx="144.83" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:50" class="event" cx="144.83" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:51" class="event" cx="132.93" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:52" class="event" cx="132.93" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:53" class="event" cx="121.04" cy="88.34" r="8" opacity="0" />
+  <circle id="mol896:Atom:54" class="event" cx="121.04" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:55" class="event" cx="109.14" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:56" class="event" cx="109.14" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:57" class="event" cx="97.25" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:58" class="event" cx="97.25" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:59" class="event" cx="109.14" cy="136.41" r="8" opacity="0" />
+  <circle id="mol896:Atom:60" class="event" cx="121.69" cy="130.82" r="8" opacity="0" />
+  <circle id="mol896:Atom:61" class="event" cx="130.88" cy="141.03" r="8" opacity="0" />
+  <circle id="mol896:Atom:62" class="event" cx="124.01" cy="152.93" r="8" opacity="0" />
+  <circle id="mol896:Atom:63" class="event" cx="128.26" cy="165.99" r="8" opacity="0" />
+  <circle id="mol896:Atom:64" class="event" cx="119.07" cy="176.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:65" class="event" cx="105.63" cy="173.34" r="8" opacity="0" />
+  <circle id="mol896:Atom:66" class="event" cx="101.39" cy="160.28" r="8" opacity="0" />
+  <circle id="mol896:Atom:67" class="event" cx="110.58" cy="150.07" r="8" opacity="0" />
+  <circle id="mol896:Atom:68" class="event" cx="85.35" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:69" class="event" cx="73.45" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:70" class="event" cx="73.45" cy="129.54" r="8" opacity="0" />
+  <circle id="mol896:Atom:71" class="event" cx="61.56" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:72" class="event" cx="61.56" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:73" class="event" cx="73.45" cy="88.34" r="8" opacity="0" />
+  <circle id="mol896:Atom:74" class="event" cx="74.89" cy="74.68" r="8" opacity="0" />
+  <circle id="mol896:Atom:75" class="event" cx="88.33" cy="71.82" r="8" opacity="0" />
+  <circle id="mol896:Atom:76" class="event" cx="95.19" cy="83.72" r="8" opacity="0" />
+  <circle id="mol896:Atom:77" class="event" cx="86" cy="93.92" r="8" opacity="0" />
+  <circle id="mol896:Atom:78" class="event" cx="49.66" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:79" class="event" cx="37.77" cy="108.94" r="8" opacity="0" />
+  <circle id="mol896:Atom:80" class="event" cx="37.77" cy="95.2" r="8" opacity="0" />
+  <circle id="mol896:Atom:81" class="event" cx="25.87" cy="115.81" r="8" opacity="0" />
+  <circle id="mol896:Atom:82" class="event" cx="13.32" cy="110.22" r="8" opacity="0" />
+  <circle id="mol896:Atom:83" class="event" cx="4.13" cy="120.43" r="8" opacity="0" />
+  <circle id="mol896:Atom:84" class="event" cx="11" cy="132.32" r="8" opacity="0" />
+  <circle id="mol896:Atom:85" class="event" cx="5.41" cy="144.87" r="8" opacity="0" />
+  <circle id="mol896:Atom:86" class="event" cx="24.44" cy="129.47" r="8" opacity="0" />
+</svg>

@@ -1,0 +1,5 @@
+<svg id="mol744" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>gold</title>
+  <style> #mol744 text {font-family: sans-serif;} #mol744 { pointer-events:none; } #mol744 .event  { pointer-events:all; } #mol744 line { stroke-linecap:round; } #mol744 polygon { stroke-linejoin:round; } </style>
+  <text x="151.44" y="124.67" stroke="none" font-size="14" fill="rgb(244,200,33)">Au</text>
+  <circle id="mol744:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

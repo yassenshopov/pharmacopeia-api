@@ -1,0 +1,10 @@
+<svg id="mol1455" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>Selenium Sulfide</title>
+  <style> #mol1455 text {font-family: sans-serif;} #mol1455 { pointer-events:none; } #mol1455 .event  { pointer-events:all; } #mol1455 line { stroke-linecap:round; } #mol1455 polygon { stroke-linejoin:round; } </style>
+  <text x="165.72" y="118.67" stroke="none" font-size="14" fill="rgb(205,205,38)">S</text>
+  <text x="141.05" y="130.67" stroke="none" font-size="14" fill="rgb(255,161,0)">Se</text>
+  <line x1="163.82" y1="115.71" x2="158.27" y2="118.92" stroke="currentColor" stroke-width="1.44" />
+  <line x1="165.62" y1="118.83" x2="160.07" y2="122.04" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1455:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol1455:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol1455:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

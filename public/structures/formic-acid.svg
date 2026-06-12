@@ -1,0 +1,14 @@
+<svg id="mol684" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>formic acid</title>
+  <style> #mol684 text {font-family: sans-serif;} #mol684 { pointer-events:none; } #mol684 .event  { pointer-events:all; } #mol684 line { stroke-linecap:round; } #mol684 polygon { stroke-linejoin:round; } </style>
+  <text x="175.34" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="133.77" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="123.66" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">H</text>
+  <line x1="161.32" y1="116.84" x2="173.44" y2="123.84" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160.9" y1="112.44" x2="175.24" y2="120.72" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160.9" y1="112.44" x2="145.66" y2="121.97" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol684:Bond:0" class="event" x1="160" y1="114" x2="180.78" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol684:Bond:1" class="event" x1="160" y1="114" x2="139.22" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol684:Atom:0" class="event" cx="160" cy="114" r="8" opacity="0" />
+  <circle id="mol684:Atom:1" class="event" cx="180.78" cy="126" r="8" opacity="0" />
+  <circle id="mol684:Atom:2" class="event" cx="139.22" cy="126" r="8" opacity="0" />
+</svg>

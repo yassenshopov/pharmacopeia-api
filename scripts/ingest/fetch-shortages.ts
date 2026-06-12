@@ -26,7 +26,11 @@ import {
   buildShortageEntries,
   fetchAllShortageRecords,
 } from "../../lib/ingest/shortages";
-import { SEED_DRUGS_BY_SLUG } from "../../lib/data/seed/drugs";
+import {
+  enrichScaleMode,
+  loadEnrichmentDrugs,
+  writeEnrichmentNdjson,
+} from "./enrich-shared";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -103,11 +107,17 @@ export function listAllSeedShortages(): ShortageEntry[] {
 }
 
 async function main(): Promise<void> {
+  const scale = enrichScaleMode();
+  const drugs = loadEnrichmentDrugs();
+  process.stderr.write(
+    `[fetch-shortages] mode=${scale ? "scale" : "static"} drugs=${drugs.length}\n`,
+  );
+
   const records = await fetchAllShortageRecords((line) =>
     process.stderr.write(`[fetch-shortages] ${line}\n`),
   );
   const crosswalk = buildShortageCrosswalk(
-    Object.values(SEED_DRUGS_BY_SLUG).map((drug) => ({
+    drugs.map((drug) => ({
       slug: drug.slug,
       names: [drug.name, ...drug.ingredients.map((i) => i.name)],
     })),
@@ -122,6 +132,18 @@ async function main(): Promise<void> {
       `${total} entries / ${bySlug.size} drugs ` +
       `(skipped: ${unmatched} unmatched, ${unknownStatus} unknown-status)\n`,
   );
+
+  if (scale) {
+    // db:seed flattens shortages into one ShortageEntry[] keyed by
+    // entry.drug, so the NDJSON artifact is exactly that flat list.
+    const flat = [...bySlug.keys()]
+      .sort()
+      .flatMap((slug) => bySlug.get(slug)!);
+    const path = writeEnrichmentNdjson("shortages.ndjson", flat);
+    process.stderr.write(`[fetch-shortages] wrote ${flat.length} entries → ${path}\n`);
+    return;
+  }
+
   const text = emitSeed(bySlug);
   writeFileSync(OUT_FILE, text, "utf8");
   process.stderr.write(`[fetch-shortages] wrote ${OUT_FILE}\n`);

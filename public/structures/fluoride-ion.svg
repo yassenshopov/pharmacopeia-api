@@ -1,0 +1,6 @@
+<svg id="mol662" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>fluoride</title>
+  <style> #mol662 text {font-family: sans-serif;} #mol662 { pointer-events:none; } #mol662 .event  { pointer-events:all; } #mol662 line { stroke-linecap:round; } #mol662 polygon { stroke-linejoin:round; } </style>
+  <text x="155.72" y="124.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <text x="165.28" y="119" stroke="none" font-size="9" fill="rgb(144,224,80)">-</text>
+  <circle id="mol662:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

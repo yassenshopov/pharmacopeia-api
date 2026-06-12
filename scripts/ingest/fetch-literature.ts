@@ -40,7 +40,12 @@ import {
   type LiteratureReference,
   type Provenance,
 } from "../../lib/schemas";
-import { SEED_DRUGS } from "../../lib/data/seed/drugs";
+import {
+  enrichLimit,
+  enrichScaleMode,
+  loadEnrichmentDrugs,
+  openCheckpoint,
+} from "./enrich-shared";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -294,19 +299,34 @@ export function getSeedLiterature(slug: string): DrugLiterature | null {
 }
 
 async function main(): Promise<void> {
+  const scale = enrichScaleMode();
+  const limit = enrichLimit();
+  let drugs = loadEnrichmentDrugs();
+  if (limit) drugs = drugs.slice(0, limit);
   process.stderr.write(
-    `[fetch-literature] indexing ${SEED_DRUGS.length} drugs ` +
+    `[fetch-literature] mode=${scale ? "scale" : "static"} indexing ${drugs.length} drugs ` +
       `(topN=${TOP_N}, throttle=${THROTTLE_MS}ms${NCBI_KEY ? ", api_key set" : ""})\n`,
   );
 
+  const checkpoint = scale
+    ? openCheckpoint<DrugLiterature>(
+        "literature.checkpoint.ndjson",
+        "literature.ndjson",
+      )
+    : null;
   const out = new Map<string, DrugLiterature>();
   let withRefs = 0;
+  let processed = 0;
 
-  for (const drug of SEED_DRUGS) {
+  for (const drug of drugs) {
+    processed += 1;
+    if (checkpoint?.done(drug.slug)) continue;
+
     const pmids = await searchPmids(drug.name);
     await sleep(THROTTLE_MS);
     if (pmids.length === 0) {
-      process.stderr.write(`  ${drug.slug}: no MeSH-major-topic hits\n`);
+      checkpoint?.record(drug.slug, null);
+      if (!checkpoint) process.stderr.write(`  ${drug.slug}: no MeSH-major-topic hits\n`);
       continue;
     }
     const summaries = await summarisePmids(pmids);
@@ -315,7 +335,8 @@ async function main(): Promise<void> {
       .map(toReference)
       .filter((r): r is LiteratureReference => r !== null);
     if (references.length === 0) {
-      process.stderr.write(`  ${drug.slug}: no valid summaries\n`);
+      checkpoint?.record(drug.slug, null);
+      if (!checkpoint) process.stderr.write(`  ${drug.slug}: no valid summaries\n`);
       continue;
     }
     const entry: DrugLiterature = {
@@ -325,8 +346,21 @@ async function main(): Promise<void> {
     };
     DrugLiteratureSchema.parse(entry);
     out.set(drug.slug, entry);
+    checkpoint?.record(drug.slug, entry);
     withRefs += 1;
-    process.stderr.write(`  ${drug.slug}: ${references.length} references\n`);
+    if (processed % 100 === 0 || !checkpoint) {
+      process.stderr.write(
+        `  [${processed}/${drugs.length}] ${drug.slug}: ${references.length} references\n`,
+      );
+    }
+  }
+
+  if (checkpoint) {
+    const path = checkpoint.flush();
+    process.stderr.write(
+      `[fetch-literature] wrote ${checkpoint.size} drugs with references → ${path}\n`,
+    );
+    return;
   }
 
   const text = emitSeed(out);

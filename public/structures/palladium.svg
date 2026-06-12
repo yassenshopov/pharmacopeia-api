@@ -1,0 +1,5 @@
+<svg id="mol1203" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>palladium</title>
+  <style> #mol1203 text {font-family: sans-serif;} #mol1203 { pointer-events:none; } #mol1203 .event  { pointer-events:all; } #mol1203 line { stroke-linecap:round; } #mol1203 polygon { stroke-linejoin:round; } </style>
+  <text x="151.44" y="124.67" stroke="none" font-size="14" fill="rgb(0,105,133)">Pd</text>
+  <circle id="mol1203:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

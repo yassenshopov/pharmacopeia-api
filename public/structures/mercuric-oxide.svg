@@ -1,0 +1,10 @@
+<svg id="mol997" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>oxomercury</title>
+  <style> #mol997 text {font-family: sans-serif;} #mol997 { pointer-events:none; } #mol997 .event  { pointer-events:all; } #mol997 line { stroke-linecap:round; } #mol997 polygon { stroke-linejoin:round; } </style>
+  <text x="164.95" y="118.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="140.66" y="130.67" stroke="none" font-size="14" fill="rgb(184,184,208)">Hg</text>
+  <line x1="163.05" y1="116.16" x2="158.65" y2="118.7" stroke="currentColor" stroke-width="1.44" />
+  <line x1="164.85" y1="119.28" x2="160.45" y2="121.82" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol997:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol997:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol997:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

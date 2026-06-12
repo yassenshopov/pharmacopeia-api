@@ -1,0 +1,40 @@
+<svg id="mol401" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>(4R)-4-amino-1,2-oxazolidin-3-one</title>
+  <style> #mol401 text {font-family: sans-serif;} #mol401 { pointer-events:none; } #mol401 .event  { pointer-events:all; } #mol401 line { stroke-linecap:round; } #mol401 polygon { stroke-linejoin:round; } </style>
+  <text x="116.48" y="180.2" stroke="none" font-size="12" fill="rgb(160,0,0)">this enantiomer</text>
+  <text x="144.9" y="125.81" stroke="none" font-size="9" fill="rgb(160,0,0)">R</text>
+  <text x="149.6" y="117.66" stroke="none" font-size="9" fill="rgb(160,0,0)">abs</text>
+  <text x="172.87" y="155.71" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="184.33" y="114.4" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="194.44" y="114.4" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="171.94" y="93.62" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="125.56" y="134.48" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="120.56" y="137.81" stroke="none" font-size="9" fill="rgb(48,80,248)">2</text>
+  <text x="110.45" y="134.48" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <line x1="171.29" y1="126.67" x2="175.07" y2="144.42" stroke="currentColor" stroke-width="1.44" />
+  <line x1="174.81" y1="125.92" x2="178.59" y2="143.67" stroke="currentColor" stroke-width="1.44" />
+  <line x1="153.91" y1="93.94" x2="151.4" y2="117.81" stroke="currentColor" stroke-width="1.44" />
+  <line x1="151.4" y1="117.81" x2="173.33" y2="127.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="173.33" y1="127.57" x2="183.33" y2="116.46" stroke="currentColor" stroke-width="1.44" />
+  <line x1="185.34" y1="102.74" x2="181.43" y2="95.95" stroke="currentColor" stroke-width="1.44" />
+  <line x1="153.91" y1="93.94" x2="170.94" y2="90.32" stroke="currentColor" stroke-width="1.44" />
+  <line x1="148.77" y1="118.9" x2="149.14" y2="119.55" stroke="rgb(160,0,0)" stroke-width="1.44" />
+  <line x1="146.13" y1="119.98" x2="146.88" y2="121.28" stroke="rgb(160,0,0)" stroke-width="1.44" />
+  <line x1="143.5" y1="121.07" x2="144.63" y2="123.02" stroke="rgb(160,0,0)" stroke-width="1.44" />
+  <line x1="140.87" y1="122.16" x2="142.37" y2="124.76" stroke="rgb(160,0,0)" stroke-width="1.44" />
+  <line x1="138.24" y1="123.25" x2="140.11" y2="126.49" stroke="rgb(160,0,0)" stroke-width="1.44" />
+  <line x1="136.67" y1="126.18" x2="137.85" y2="128.23" stroke="rgb(160,0,0)" stroke-width="1.44" />
+  <line id="mol401:Bond:2" class="event" x1="173.33" y1="127.57" x2="178.32" y2="151.05" stroke-width="8" opacity="0" />
+  <line id="mol401:Bond:0" class="event" x1="153.91" y1="93.94" x2="151.4" y2="117.81" stroke-width="8" opacity="0" />
+  <line id="mol401:Bond:1" class="event" x1="151.4" y1="117.81" x2="173.33" y2="127.57" stroke-width="8" opacity="0" />
+  <line id="mol401:Bond:3" class="event" x1="173.33" y1="127.57" x2="189.38" y2="109.74" stroke-width="8" opacity="0" />
+  <line id="mol401:Bond:4" class="event" x1="189.38" y1="109.74" x2="177.38" y2="88.95" stroke-width="8" opacity="0" />
+  <line id="mol401:Bond:5" class="event" x1="153.91" y1="93.94" x2="177.38" y2="88.95" stroke-width="8" opacity="0" />
+  <line id="mol401:Bond:6" class="event" x1="151.4" y1="117.81" x2="130.62" y2="129.81" stroke-width="8" opacity="0" />
+  <circle id="mol401:Atom:0" class="event" cx="153.91" cy="93.94" r="8" opacity="0" />
+  <circle id="mol401:Atom:1" class="event" cx="151.4" cy="117.81" r="8" opacity="0" />
+  <circle id="mol401:Atom:2" class="event" cx="173.33" cy="127.57" r="8" opacity="0" />
+  <circle id="mol401:Atom:3" class="event" cx="178.32" cy="151.05" r="8" opacity="0" />
+  <circle id="mol401:Atom:4" class="event" cx="189.38" cy="109.74" r="8" opacity="0" />
+  <circle id="mol401:Atom:5" class="event" cx="177.38" cy="88.95" r="8" opacity="0" />
+  <circle id="mol401:Atom:6" class="event" cx="130.62" cy="129.81" r="8" opacity="0" />
+</svg>

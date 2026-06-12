@@ -1,0 +1,7 @@
+<svg id="mol1009" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>methane</title>
+  <style> #mol1009 text {font-family: sans-serif;} #mol1009 { pointer-events:none; } #mol1009 .event  { pointer-events:all; } #mol1009 line { stroke-linecap:round; } #mol1009 polygon { stroke-linejoin:round; } </style>
+  <text x="154.95" y="124.67" stroke="none" font-size="14" fill="currentColor">C</text>
+  <text x="175.16" y="128" stroke="none" font-size="9" fill="currentColor">4</text>
+  <text x="165.05" y="124.67" stroke="none" font-size="14" fill="currentColor">H</text>
+  <circle id="mol1009:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

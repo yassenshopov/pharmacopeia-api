@@ -1,0 +1,55 @@
+<svg id="mol1343" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>1-methyl-2-[(E)-2-thiophen-2-ylethenyl]-5,6-dihydro-4H-pyrimidine</title>
+  <style> #mol1343 text {font-family: sans-serif;} #mol1343 { pointer-events:none; } #mol1343 .event  { pointer-events:all; } #mol1343 line { stroke-linecap:round; } #mol1343 polygon { stroke-linejoin:round; } </style>
+  <text x="205.12" y="134.24" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="184.33" y="98.24" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="119.85" y="158.11" stroke="none" font-size="14" fill="rgb(205,205,38)">S</text>
+  <line x1="189.38" y1="117.57" x2="189.38" y2="100.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="192.98" y1="115.01" x2="192.98" y2="100.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="168.6" y1="129.57" x2="147.82" y2="117.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="168.18" y1="125.17" x2="150.03" y2="114.69" stroke="currentColor" stroke-width="1.44" />
+  <line x1="127.03" y1="129.57" x2="105.11" y2="119.81" stroke="currentColor" stroke-width="1.44" />
+  <line x1="122.81" y1="131.63" x2="106.4" y2="124.32" stroke="currentColor" stroke-width="1.44" />
+  <line x1="89.05" y1="137.64" x2="101.05" y2="158.43" stroke="currentColor" stroke-width="1.44" />
+  <line x1="93.67" y1="138.46" x2="102.66" y2="154.02" stroke="currentColor" stroke-width="1.44" />
+  <line x1="210.17" y1="153.57" x2="210.17" y2="136.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="216.22" y1="126.08" x2="230.95" y2="117.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="230.95" y1="117.57" x2="230.95" y2="93.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="230.95" y1="93.57" x2="210.17" y2="81.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="210.17" y1="81.57" x2="195.44" y2="90.08" stroke="currentColor" stroke-width="1.44" />
+  <line x1="204.12" y1="126.08" x2="189.38" y2="117.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="189.38" y1="117.57" x2="168.6" y2="129.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="147.82" y1="117.57" x2="127.03" y2="129.57" stroke="currentColor" stroke-width="1.44" />
+  <line x1="105.11" y1="119.81" x2="89.05" y2="137.64" stroke="currentColor" stroke-width="1.44" />
+  <line x1="101.05" y1="158.43" x2="118.85" y2="154.64" stroke="currentColor" stroke-width="1.44" />
+  <line x1="127.03" y1="129.57" x2="125.26" y2="146.44" stroke="currentColor" stroke-width="1.44" />
+  <text x="159.21" y="119.64" stroke="none" font-size="9" fill="rgb(160,0,0)">E</text>
+  <line id="mol1343:Bond:5" class="event" x1="189.38" y1="93.57" x2="189.38" y2="117.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:8" class="event" x1="168.6" y1="129.57" x2="147.82" y2="117.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:10" class="event" x1="127.03" y1="129.57" x2="105.11" y2="119.81" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:12" class="event" x1="89.05" y1="137.64" x2="101.05" y2="158.43" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:0" class="event" x1="210.17" y1="153.57" x2="210.17" y2="129.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:1" class="event" x1="210.17" y1="129.57" x2="230.95" y2="117.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:2" class="event" x1="230.95" y1="117.57" x2="230.95" y2="93.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:3" class="event" x1="230.95" y1="93.57" x2="210.17" y2="81.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:4" class="event" x1="210.17" y1="81.57" x2="189.38" y2="93.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:6" class="event" x1="210.17" y1="129.57" x2="189.38" y2="117.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:7" class="event" x1="189.38" y1="117.57" x2="168.6" y2="129.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:9" class="event" x1="147.82" y1="117.57" x2="127.03" y2="129.57" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:11" class="event" x1="105.11" y1="119.81" x2="89.05" y2="137.64" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:13" class="event" x1="101.05" y1="158.43" x2="124.52" y2="153.44" stroke-width="8" opacity="0" />
+  <line id="mol1343:Bond:14" class="event" x1="127.03" y1="129.57" x2="124.52" y2="153.44" stroke-width="8" opacity="0" />
+  <circle id="mol1343:Atom:0" class="event" cx="210.17" cy="153.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:1" class="event" cx="210.17" cy="129.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:2" class="event" cx="230.95" cy="117.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:3" class="event" cx="230.95" cy="93.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:4" class="event" cx="210.17" cy="81.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:5" class="event" cx="189.38" cy="93.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:6" class="event" cx="189.38" cy="117.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:7" class="event" cx="168.6" cy="129.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:8" class="event" cx="147.82" cy="117.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:9" class="event" cx="127.03" cy="129.57" r="8" opacity="0" />
+  <circle id="mol1343:Atom:10" class="event" cx="105.11" cy="119.81" r="8" opacity="0" />
+  <circle id="mol1343:Atom:11" class="event" cx="89.05" cy="137.64" r="8" opacity="0" />
+  <circle id="mol1343:Atom:12" class="event" cx="101.05" cy="158.43" r="8" opacity="0" />
+  <circle id="mol1343:Atom:13" class="event" cx="124.52" cy="153.44" r="8" opacity="0" />
+</svg>

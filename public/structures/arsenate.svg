@@ -1,0 +1,25 @@
+<svg id="mol107" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>arsorate</title>
+  <style> #mol107 text {font-family: sans-serif;} #mol107 { pointer-events:none; } #mol107 .event  { pointer-events:all; } #mol107 line { stroke-linecap:round; } #mol107 polygon { stroke-linejoin:round; } </style>
+  <text x="175.34" y="136.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="187.23" y="131" stroke="none" font-size="9" fill="rgb(255,13,13)">-</text>
+  <text x="151.83" y="124.67" stroke="none" font-size="14" fill="rgb(189,128,227)">As</text>
+  <text x="154.55" y="100.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="154.55" y="148.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="166.45" y="143" stroke="none" font-size="9" fill="rgb(255,13,13)">-</text>
+  <text x="133.77" y="136.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="145.66" y="131" stroke="none" font-size="9" fill="rgb(255,13,13)">-</text>
+  <line x1="161.8" y1="113" x2="161.8" y2="103" stroke="currentColor" stroke-width="1.44" />
+  <line x1="158.2" y1="113" x2="158.2" y2="103" stroke="currentColor" stroke-width="1.44" />
+  <line x1="174.34" y1="128.28" x2="169.17" y2="125.29" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="127" x2="160" y2="137" stroke="currentColor" stroke-width="1.44" />
+  <line x1="150.83" y1="125.29" x2="149.66" y2="125.97" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol107:Bond:1" class="event" x1="160" y1="120" x2="160" y2="96" stroke-width="8" opacity="0" />
+  <line id="mol107:Bond:0" class="event" x1="180.78" y1="132" x2="160" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol107:Bond:2" class="event" x1="160" y1="120" x2="160" y2="144" stroke-width="8" opacity="0" />
+  <line id="mol107:Bond:3" class="event" x1="160" y1="120" x2="139.22" y2="132" stroke-width="8" opacity="0" />
+  <circle id="mol107:Atom:0" class="event" cx="180.78" cy="132" r="8" opacity="0" />
+  <circle id="mol107:Atom:1" class="event" cx="160" cy="120" r="8" opacity="0" />
+  <circle id="mol107:Atom:2" class="event" cx="160" cy="96" r="8" opacity="0" />
+  <circle id="mol107:Atom:3" class="event" cx="160" cy="144" r="8" opacity="0" />
+  <circle id="mol107:Atom:4" class="event" cx="139.22" cy="132" r="8" opacity="0" />
+</svg>

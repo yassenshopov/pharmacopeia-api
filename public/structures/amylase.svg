@@ -1,0 +1,56 @@
+<svg id="mol82" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>N-buta-2,3-dienyl-4-fluorobenzamide</title>
+  <style> #mol82 text {font-family: sans-serif;} #mol82 { pointer-events:none; } #mol82 .event  { pointer-events:all; } #mol82 line { stroke-linecap:round; } #mol82 polygon { stroke-linejoin:round; } </style>
+  <text x="165.34" y="124.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="165.34" y="138.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="144.16" y="88.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="62.19" y="160.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <circle cx="232.75" cy="108" r="1.44" fill="currentColor" />
+  <line x1="252.63" y1="94.44" x2="234.73" y2="104.78" stroke="currentColor" stroke-width="1.44" />
+  <line x1="254.43" y1="97.56" x2="236.53" y2="107.9" stroke="currentColor" stroke-width="1.44" />
+  <line x1="212.86" y1="121.56" x2="230.77" y2="111.22" stroke="currentColor" stroke-width="1.44" />
+  <line x1="213.28" y1="117.16" x2="228.97" y2="108.1" stroke="currentColor" stroke-width="1.44" />
+  <line x1="151.41" y1="109.04" x2="151.41" y2="91" stroke="currentColor" stroke-width="1.44" />
+  <line x1="147.81" y1="109.04" x2="147.81" y2="91" stroke="currentColor" stroke-width="1.44" />
+  <line x1="128.82" y1="120" x2="108.04" y2="108" stroke="currentColor" stroke-width="1.44" />
+  <line x1="124.81" y1="121.84" x2="108.46" y2="112.4" stroke="currentColor" stroke-width="1.44" />
+  <line x1="87.25" y1="120" x2="87.25" y2="144" stroke="currentColor" stroke-width="1.44" />
+  <line x1="90.85" y1="122.56" x2="90.85" y2="141.44" stroke="currentColor" stroke-width="1.44" />
+  <line x1="108.04" y1="156" x2="128.82" y2="144" stroke="currentColor" stroke-width="1.44" />
+  <line x1="108.46" y1="151.6" x2="124.81" y2="142.16" stroke="currentColor" stroke-width="1.44" />
+  <line x1="212.86" y1="121.56" x2="191.18" y2="108" stroke="currentColor" stroke-width="1.44" />
+  <line x1="191.18" y1="108" x2="176.45" y2="116.5" stroke="currentColor" stroke-width="1.44" />
+  <line x1="164.34" y1="116.5" x2="149.61" y2="108" stroke="currentColor" stroke-width="1.44" />
+  <line x1="149.61" y1="108" x2="128.82" y2="120" stroke="currentColor" stroke-width="1.44" />
+  <line x1="108.04" y1="108" x2="87.25" y2="120" stroke="currentColor" stroke-width="1.44" />
+  <line x1="87.25" y1="144" x2="108.04" y2="156" stroke="currentColor" stroke-width="1.44" />
+  <line x1="128.82" y1="120" x2="128.82" y2="144" stroke="currentColor" stroke-width="1.44" />
+  <line x1="87.25" y1="144" x2="71.75" y2="152.95" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol82:Bond:0" class="event" x1="253.53" y1="96" x2="232.75" y2="108" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:1" class="event" x1="232.75" y1="108" x2="211.96" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:5" class="event" x1="149.61" y1="108" x2="149.61" y2="84" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:7" class="event" x1="128.82" y1="120" x2="108.04" y2="108" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:9" class="event" x1="87.25" y1="120" x2="87.25" y2="144" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:11" class="event" x1="108.04" y1="156" x2="128.82" y2="144" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:2" class="event" x1="211.96" y1="120" x2="191.18" y2="108" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:3" class="event" x1="191.18" y1="108" x2="170.39" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:4" class="event" x1="170.39" y1="120" x2="149.61" y2="108" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:6" class="event" x1="149.61" y1="108" x2="128.82" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:8" class="event" x1="108.04" y1="108" x2="87.25" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:10" class="event" x1="87.25" y1="144" x2="108.04" y2="156" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:12" class="event" x1="128.82" y1="120" x2="128.82" y2="144" stroke-width="8" opacity="0" />
+  <line id="mol82:Bond:13" class="event" x1="87.25" y1="144" x2="66.47" y2="156" stroke-width="8" opacity="0" />
+  <circle id="mol82:Atom:0" class="event" cx="253.53" cy="96" r="8" opacity="0" />
+  <circle id="mol82:Atom:1" class="event" cx="232.75" cy="108" r="8" opacity="0" />
+  <circle id="mol82:Atom:2" class="event" cx="211.96" cy="120" r="8" opacity="0" />
+  <circle id="mol82:Atom:3" class="event" cx="191.18" cy="108" r="8" opacity="0" />
+  <circle id="mol82:Atom:4" class="event" cx="170.39" cy="120" r="8" opacity="0" />
+  <circle id="mol82:Atom:5" class="event" cx="149.61" cy="108" r="8" opacity="0" />
+  <circle id="mol82:Atom:6" class="event" cx="149.61" cy="84" r="8" opacity="0" />
+  <circle id="mol82:Atom:7" class="event" cx="128.82" cy="120" r="8" opacity="0" />
+  <circle id="mol82:Atom:8" class="event" cx="108.04" cy="108" r="8" opacity="0" />
+  <circle id="mol82:Atom:9" class="event" cx="87.25" cy="120" r="8" opacity="0" />
+  <circle id="mol82:Atom:10" class="event" cx="87.25" cy="144" r="8" opacity="0" />
+  <circle id="mol82:Atom:11" class="event" cx="108.04" cy="156" r="8" opacity="0" />
+  <circle id="mol82:Atom:12" class="event" cx="128.82" cy="144" r="8" opacity="0" />
+  <circle id="mol82:Atom:13" class="event" cx="66.47" cy="156" r="8" opacity="0" />
+</svg>

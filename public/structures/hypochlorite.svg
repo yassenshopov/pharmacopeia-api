@@ -1,0 +1,10 @@
+<svg id="mol788" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>hypochlorite</title>
+  <style> #mol788 text {font-family: sans-serif;} #mol788 { pointer-events:none; } #mol788 .event  { pointer-events:all; } #mol788 line { stroke-linecap:round; } #mol788 polygon { stroke-linejoin:round; } </style>
+  <text x="164.95" y="118.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="176.84" y="113" stroke="none" font-size="9" fill="rgb(255,13,13)">-</text>
+  <text x="143" y="130.67" stroke="none" font-size="14" fill="rgb(31,240,31)">Cl</text>
+  <line x1="163.95" y1="117.72" x2="157.22" y2="121.61" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol788:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol788:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol788:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

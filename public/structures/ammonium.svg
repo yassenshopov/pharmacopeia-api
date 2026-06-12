@@ -1,0 +1,8 @@
+<svg id="mol74" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>azanium</title>
+  <style> #mol74 text {font-family: sans-serif;} #mol74 { pointer-events:none; } #mol74 .event  { pointer-events:all; } #mol74 line { stroke-linecap:round; } #mol74 polygon { stroke-linejoin:round; } </style>
+  <text x="154.95" y="124.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="166.05" y="119" stroke="none" font-size="9" fill="rgb(48,80,248)">+</text>
+  <text x="149.94" y="128" stroke="none" font-size="9" fill="rgb(48,80,248)">4</text>
+  <text x="139.83" y="124.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <circle id="mol74:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

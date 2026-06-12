@@ -1,0 +1,22 @@
+<svg id="mol1353" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>1H-pyrrole</title>
+  <style> #mol1353 text {font-family: sans-serif;} #mol1353 { pointer-events:none; } #mol1353 .event  { pointer-events:all; } #mol1353 line { stroke-linecap:round; } #mol1353 polygon { stroke-linejoin:round; } </style>
+  <text x="159.31" y="144.08" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="169.41" y="144.08" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <line x1="141.53" y1="108" x2="141.53" y2="132" stroke="currentColor" stroke-width="1.44" />
+  <line x1="145.13" y1="111.02" x2="145.13" y2="128.98" stroke="currentColor" stroke-width="1.44" />
+  <line x1="178.47" y1="120" x2="164.36" y2="100.58" stroke="currentColor" stroke-width="1.44" />
+  <line x1="173.78" y1="119.68" x2="163.22" y2="105.14" stroke="currentColor" stroke-width="1.44" />
+  <line x1="141.53" y1="132" x2="158.31" y2="137.45" stroke="currentColor" stroke-width="1.44" />
+  <line x1="169.45" y1="132.42" x2="178.47" y2="120" stroke="currentColor" stroke-width="1.44" />
+  <line x1="141.53" y1="108" x2="164.36" y2="100.58" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1353:Bond:0" class="event" x1="141.53" y1="108" x2="141.53" y2="132" stroke-width="8" opacity="0" />
+  <line id="mol1353:Bond:3" class="event" x1="178.47" y1="120" x2="164.36" y2="100.58" stroke-width="8" opacity="0" />
+  <line id="mol1353:Bond:1" class="event" x1="141.53" y1="132" x2="164.36" y2="139.42" stroke-width="8" opacity="0" />
+  <line id="mol1353:Bond:2" class="event" x1="164.36" y1="139.42" x2="178.47" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol1353:Bond:4" class="event" x1="141.53" y1="108" x2="164.36" y2="100.58" stroke-width="8" opacity="0" />
+  <circle id="mol1353:Atom:0" class="event" cx="141.53" cy="108" r="8" opacity="0" />
+  <circle id="mol1353:Atom:1" class="event" cx="141.53" cy="132" r="8" opacity="0" />
+  <circle id="mol1353:Atom:2" class="event" cx="164.36" cy="139.42" r="8" opacity="0" />
+  <circle id="mol1353:Atom:3" class="event" cx="178.47" cy="120" r="8" opacity="0" />
+  <circle id="mol1353:Atom:4" class="event" cx="164.36" cy="100.58" r="8" opacity="0" />
+</svg>

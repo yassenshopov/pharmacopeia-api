@@ -1,0 +1,5 @@
+<svg id="mol314" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>methane</title>
+  <style> #mol314 text {font-family: sans-serif;} #mol314 { pointer-events:none; } #mol314 .event  { pointer-events:all; } #mol314 line { stroke-linecap:round; } #mol314 polygon { stroke-linejoin:round; } </style>
+  <text x="154.95" y="124.67" stroke="none" font-size="14" fill="currentColor">C</text>
+  <circle id="mol314:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

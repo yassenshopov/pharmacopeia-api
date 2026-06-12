@@ -1,0 +1,5 @@
+<svg id="mol1750" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>yttrium</title>
+  <style> #mol1750 text {font-family: sans-serif;} #mol1750 { pointer-events:none; } #mol1750 .event  { pointer-events:all; } #mol1750 line { stroke-linecap:round; } #mol1750 polygon { stroke-linejoin:round; } </style>
+  <text x="155.33" y="124.67" stroke="none" font-size="14" fill="rgb(125,215,215)">Y</text>
+  <circle id="mol1750:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

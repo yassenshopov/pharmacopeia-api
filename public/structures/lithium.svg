@@ -1,5 +1,5 @@
-<svg id="mol79" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>lithium</title>
-  <style> #mol79 text {font-family: sans-serif;} #mol79 { pointer-events:none; } #mol79 .event  { pointer-events:all; } #mol79 line { stroke-linecap:round; } #mol79 polygon { stroke-linejoin:round; } </style>
+<svg id="mol925" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>lithium</title>
+  <style> #mol925 text {font-family: sans-serif;} #mol925 { pointer-events:none; } #mol925 .event  { pointer-events:all; } #mol925 line { stroke-linecap:round; } #mol925 polygon { stroke-linejoin:round; } </style>
   <text x="154.55" y="124.67" stroke="none" font-size="14" fill="rgb(204,128,255)">Li</text>
-  <circle id="mol79:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+  <circle id="mol925:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
 </svg>

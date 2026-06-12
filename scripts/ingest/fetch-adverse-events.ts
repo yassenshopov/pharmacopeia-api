@@ -40,7 +40,11 @@ import { fileURLToPath } from "node:url";
 
 import type { AdverseEventStats } from "../../lib/schemas";
 import { fetchAdverseEventStats } from "../../lib/ingest/adverse-events";
-import { SEED_DRUGS } from "../../lib/data/seed/drugs";
+import {
+  enrichScaleMode,
+  loadEnrichmentDrugs,
+  openCheckpoint,
+} from "./enrich-shared";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -128,17 +132,29 @@ export function getSeedAdverseEvents(slug: string): AdverseEventStats | null {
 }
 
 async function main(): Promise<void> {
-  const drugs = SEED_DRUGS.slice(0, MAX_DRUGS);
+  const scale = enrichScaleMode();
+  const drugs = loadEnrichmentDrugs().slice(0, MAX_DRUGS);
   process.stderr.write(
-    `[fetch-adverse-events] processing ${drugs.length} drugs ` +
-      `(topN=${TOP_N}, throttle=${THROTTLE_MS}ms)\n`,
+    `[fetch-adverse-events] mode=${scale ? "scale" : "static"} ` +
+      `processing ${drugs.length} drugs (topN=${TOP_N}, throttle=${THROTTLE_MS}ms)\n`,
   );
 
+  // Scale runs are long and resumable; the curated run stays in-memory.
+  const checkpoint = scale
+    ? openCheckpoint<AdverseEventStats>(
+        "adverse-events.checkpoint.ndjson",
+        "adverse-events.ndjson",
+      )
+    : null;
   const out = new Map<string, AdverseEventStats>();
   let withData = 0;
   let withoutData = 0;
+  let processed = 0;
 
   for (const drug of drugs) {
+    processed += 1;
+    if (checkpoint?.done(drug.slug)) continue;
+
     const stats = await fetchAdverseEventStats(drug.slug, drug.name, {
       topN: TOP_N,
       extractedAt: EXTRACTED_AT,
@@ -151,10 +167,21 @@ async function main(): Promise<void> {
     } else {
       withoutData += 1;
     }
-    process.stderr.write(
-      `  ${drug.slug}: ${stats ? `${stats.totalReports} reports / ${stats.topReactions.length} top reactions` : "no data"}\n`,
-    );
+    checkpoint?.record(drug.slug, stats ?? null);
+    if (processed % 100 === 0 || !checkpoint) {
+      process.stderr.write(
+        `  [${processed}/${drugs.length}] ${drug.slug}: ${stats ? `${stats.totalReports} reports` : "no data"}\n`,
+      );
+    }
     await sleep(THROTTLE_MS);
+  }
+
+  if (checkpoint) {
+    const path = checkpoint.flush();
+    process.stderr.write(
+      `[fetch-adverse-events] wrote ${checkpoint.size} drugs with data → ${path}\n`,
+    );
+    return;
   }
 
   const text = emitSeed(out);

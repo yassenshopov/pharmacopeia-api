@@ -1,0 +1,5 @@
+<svg id="mol1063" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>molybdenum</title>
+  <style> #mol1063 text {font-family: sans-serif;} #mol1063 { pointer-events:none; } #mol1063 .event  { pointer-events:all; } #mol1063 line { stroke-linecap:round; } #mol1063 polygon { stroke-linejoin:round; } </style>
+  <text x="150.28" y="124.67" stroke="none" font-size="14" fill="rgb(84,181,181)">Mo</text>
+  <circle id="mol1063:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

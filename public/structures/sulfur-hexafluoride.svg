@@ -1,0 +1,29 @@
+<svg id="mol1523" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>hexafluoro-lambda6-sulfane</title>
+  <style> #mol1523 text {font-family: sans-serif;} #mol1523 { pointer-events:none; } #mol1523 .event  { pointer-events:all; } #mol1523 line { stroke-linecap:round; } #mol1523 polygon { stroke-linejoin:round; } </style>
+  <text x="134.94" y="112.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <text x="155.33" y="124.67" stroke="none" font-size="14" fill="rgb(205,205,38)">S</text>
+  <text x="134.94" y="136.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <text x="155.72" y="148.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <text x="176.51" y="136.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <text x="176.51" y="112.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <text x="155.72" y="100.67" stroke="none" font-size="14" fill="rgb(144,224,80)">F</text>
+  <line x1="144.49" y1="111.05" x2="154.33" y2="116.73" stroke="currentColor" stroke-width="1.44" />
+  <line x1="154.33" y1="123.27" x2="144.49" y2="128.95" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="127" x2="160" y2="137" stroke="currentColor" stroke-width="1.44" />
+  <line x1="165.67" y1="123.27" x2="175.51" y2="128.95" stroke="currentColor" stroke-width="1.44" />
+  <line x1="165.67" y1="116.73" x2="175.51" y2="111.05" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="113" x2="160" y2="103" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1523:Bond:0" class="event" x1="139.22" y1="108" x2="160" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol1523:Bond:1" class="event" x1="160" y1="120" x2="139.22" y2="132" stroke-width="8" opacity="0" />
+  <line id="mol1523:Bond:2" class="event" x1="160" y1="120" x2="160" y2="144" stroke-width="8" opacity="0" />
+  <line id="mol1523:Bond:3" class="event" x1="160" y1="120" x2="180.78" y2="132" stroke-width="8" opacity="0" />
+  <line id="mol1523:Bond:4" class="event" x1="160" y1="120" x2="180.78" y2="108" stroke-width="8" opacity="0" />
+  <line id="mol1523:Bond:5" class="event" x1="160" y1="120" x2="160" y2="96" stroke-width="8" opacity="0" />
+  <circle id="mol1523:Atom:0" class="event" cx="139.22" cy="108" r="8" opacity="0" />
+  <circle id="mol1523:Atom:1" class="event" cx="160" cy="120" r="8" opacity="0" />
+  <circle id="mol1523:Atom:2" class="event" cx="139.22" cy="132" r="8" opacity="0" />
+  <circle id="mol1523:Atom:3" class="event" cx="160" cy="144" r="8" opacity="0" />
+  <circle id="mol1523:Atom:4" class="event" cx="180.78" cy="132" r="8" opacity="0" />
+  <circle id="mol1523:Atom:5" class="event" cx="180.78" cy="108" r="8" opacity="0" />
+  <circle id="mol1523:Atom:6" class="event" cx="160" cy="96" r="8" opacity="0" />
+</svg>

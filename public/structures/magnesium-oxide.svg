@@ -1,0 +1,10 @@
+<svg id="mol958" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>oxomagnesium</title>
+  <style> #mol958 text {font-family: sans-serif;} #mol958 { pointer-events:none; } #mol958 .event  { pointer-events:all; } #mol958 line { stroke-linecap:round; } #mol958 polygon { stroke-linejoin:round; } </style>
+  <text x="164.95" y="118.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="139.88" y="130.67" stroke="none" font-size="14" fill="rgb(138,255,0)">Mg</text>
+  <line x1="163.05" y1="116.16" x2="159.43" y2="118.25" stroke="currentColor" stroke-width="1.44" />
+  <line x1="164.85" y1="119.28" x2="161.23" y2="121.37" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol958:Bond:0" class="event" x1="170.39" y1="114" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol958:Atom:0" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol958:Atom:1" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+</svg>

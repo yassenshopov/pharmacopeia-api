@@ -1,0 +1,13 @@
+<svg id="mol882" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>diiodolead</title>
+  <style> #mol882 text {font-family: sans-serif;} #mol882 { pointer-events:none; } #mol882 .event  { pointer-events:all; } #mol882 line { stroke-linecap:round; } #mol882 polygon { stroke-linejoin:round; } </style>
+  <text x="178.84" y="130.67" stroke="none" font-size="14" fill="rgb(148,0,148)">I</text>
+  <text x="151.44" y="118.67" stroke="none" font-size="14" fill="rgb(87,89,97)">Pb</text>
+  <text x="137.27" y="130.67" stroke="none" font-size="14" fill="rgb(148,0,148)">I</text>
+  <line x1="177.84" y1="124.3" x2="169.56" y2="119.52" stroke="currentColor" stroke-width="1.44" />
+  <line x1="150.44" y1="119.52" x2="142.16" y2="124.3" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol882:Bond:0" class="event" x1="180.78" y1="126" x2="160" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol882:Bond:1" class="event" x1="160" y1="114" x2="139.22" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol882:Atom:0" class="event" cx="180.78" cy="126" r="8" opacity="0" />
+  <circle id="mol882:Atom:1" class="event" cx="160" cy="114" r="8" opacity="0" />
+  <circle id="mol882:Atom:2" class="event" cx="139.22" cy="126" r="8" opacity="0" />
+</svg>

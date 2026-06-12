@@ -1,0 +1,23 @@
+<svg id="mol995" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>dicyanomercury</title>
+  <style> #mol995 text {font-family: sans-serif;} #mol995 { pointer-events:none; } #mol995 .event  { pointer-events:all; } #mol995 line { stroke-linecap:round; } #mol995 polygon { stroke-linejoin:round; } </style>
+  <text x="190.95" y="103.88" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="139.05" y="103.88" stroke="none" font-size="14" fill="rgb(184,184,208)">Hg</text>
+  <text x="118.95" y="145.45" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <line x1="172" y1="99.22" x2="189.95" y2="99.22" stroke="currentColor" stroke-width="1.44" />
+  <line x1="172" y1="102.82" x2="189.95" y2="102.82" stroke="currentColor" stroke-width="1.44" />
+  <line x1="172" y1="95.62" x2="189.95" y2="95.62" stroke="currentColor" stroke-width="1.44" />
+  <line x1="172" y1="99.22" x2="157.95" y2="99.22" stroke="currentColor" stroke-width="1.44" />
+  <line x1="143.96" y1="106.22" x2="136" y2="120" stroke="currentColor" stroke-width="1.44" />
+  <line x1="136" y1="120" x2="128.04" y2="133.78" stroke="currentColor" stroke-width="1.44" />
+  <line x1="132.88" y1="118.2" x2="124.92" y2="131.98" stroke="currentColor" stroke-width="1.44" />
+  <line x1="139.12" y1="121.8" x2="131.16" y2="135.58" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol995:Bond:0" class="event" x1="172" y1="99.22" x2="196" y2="99.22" stroke-width="8" opacity="0" />
+  <line id="mol995:Bond:1" class="event" x1="172" y1="99.22" x2="148" y2="99.22" stroke-width="8" opacity="0" />
+  <line id="mol995:Bond:2" class="event" x1="148" y1="99.22" x2="136" y2="120" stroke-width="8" opacity="0" />
+  <line id="mol995:Bond:3" class="event" x1="136" y1="120" x2="124" y2="140.78" stroke-width="8" opacity="0" />
+  <circle id="mol995:Atom:0" class="event" cx="172" cy="99.22" r="8" opacity="0" />
+  <circle id="mol995:Atom:1" class="event" cx="196" cy="99.22" r="8" opacity="0" />
+  <circle id="mol995:Atom:2" class="event" cx="148" cy="99.22" r="8" opacity="0" />
+  <circle id="mol995:Atom:3" class="event" cx="136" cy="120" r="8" opacity="0" />
+  <circle id="mol995:Atom:4" class="event" cx="124" cy="140.78" r="8" opacity="0" />
+</svg>

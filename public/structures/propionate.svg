@@ -1,0 +1,20 @@
+<svg id="mol1329" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>propanoate</title>
+  <style> #mol1329 text {font-family: sans-serif;} #mol1329 { pointer-events:none; } #mol1329 .event  { pointer-events:all; } #mol1329 line { stroke-linecap:round; } #mol1329 polygon { stroke-linejoin:round; } </style>
+  <text x="144.16" y="106.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="123.38" y="142.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="135.27" y="137" stroke="none" font-size="9" fill="rgb(255,13,13)">-</text>
+  <line x1="151.41" y1="127.04" x2="151.41" y2="109" stroke="currentColor" stroke-width="1.44" />
+  <line x1="147.81" y1="127.04" x2="147.81" y2="109" stroke="currentColor" stroke-width="1.44" />
+  <line x1="191.18" y1="126" x2="170.39" y2="138" stroke="currentColor" stroke-width="1.44" />
+  <line x1="170.39" y1="138" x2="149.61" y2="126" stroke="currentColor" stroke-width="1.44" />
+  <line x1="149.61" y1="126" x2="139.27" y2="131.97" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1329:Bond:2" class="event" x1="149.61" y1="126" x2="149.61" y2="102" stroke-width="8" opacity="0" />
+  <line id="mol1329:Bond:0" class="event" x1="191.18" y1="126" x2="170.39" y2="138" stroke-width="8" opacity="0" />
+  <line id="mol1329:Bond:1" class="event" x1="170.39" y1="138" x2="149.61" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1329:Bond:3" class="event" x1="149.61" y1="126" x2="128.82" y2="138" stroke-width="8" opacity="0" />
+  <circle id="mol1329:Atom:0" class="event" cx="191.18" cy="126" r="8" opacity="0" />
+  <circle id="mol1329:Atom:1" class="event" cx="170.39" cy="138" r="8" opacity="0" />
+  <circle id="mol1329:Atom:2" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+  <circle id="mol1329:Atom:3" class="event" cx="149.61" cy="102" r="8" opacity="0" />
+  <circle id="mol1329:Atom:4" class="event" cx="128.82" cy="138" r="8" opacity="0" />
+</svg>

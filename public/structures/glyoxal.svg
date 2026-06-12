@@ -1,0 +1,17 @@
+<svg id="mol742" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>oxaldehyde</title>
+  <style> #mol742 text {font-family: sans-serif;} #mol742 { pointer-events:none; } #mol742 .event  { pointer-events:all; } #mol742 line { stroke-linecap:round; } #mol742 polygon { stroke-linejoin:round; } </style>
+  <text x="185.73" y="118.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="123.38" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <line x1="171.29" y1="127.56" x2="185.63" y2="119.28" stroke="currentColor" stroke-width="1.44" />
+  <line x1="171.71" y1="123.16" x2="183.83" y2="116.16" stroke="currentColor" stroke-width="1.44" />
+  <line x1="148.71" y1="112.44" x2="134.37" y2="120.72" stroke="currentColor" stroke-width="1.44" />
+  <line x1="148.29" y1="116.84" x2="136.17" y2="123.84" stroke="currentColor" stroke-width="1.44" />
+  <line x1="171.29" y1="127.56" x2="148.71" y2="112.44" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol742:Bond:0" class="event" x1="170.39" y1="126" x2="191.18" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol742:Bond:2" class="event" x1="149.61" y1="114" x2="128.82" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol742:Bond:1" class="event" x1="170.39" y1="126" x2="149.61" y2="114" stroke-width="8" opacity="0" />
+  <circle id="mol742:Atom:0" class="event" cx="170.39" cy="126" r="8" opacity="0" />
+  <circle id="mol742:Atom:1" class="event" cx="191.18" cy="114" r="8" opacity="0" />
+  <circle id="mol742:Atom:2" class="event" cx="149.61" cy="114" r="8" opacity="0" />
+  <circle id="mol742:Atom:3" class="event" cx="128.82" cy="126" r="8" opacity="0" />
+</svg>

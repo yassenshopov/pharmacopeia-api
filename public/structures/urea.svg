@@ -1,0 +1,21 @@
+<svg id="mol1683" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>urea</title>
+  <style> #mol1683 text {font-family: sans-serif;} #mol1683 { pointer-events:none; } #mol1683 .event  { pointer-events:all; } #mol1683 line { stroke-linecap:round; } #mol1683 polygon { stroke-linejoin:round; } </style>
+  <text x="175.34" y="142.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="154.95" y="106.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="175.16" y="110" stroke="none" font-size="9" fill="rgb(48,80,248)">2</text>
+  <text x="165.05" y="106.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <text x="134.16" y="142.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
+  <text x="129.16" y="146" stroke="none" font-size="9" fill="rgb(48,80,248)">2</text>
+  <text x="119.05" y="142.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
+  <line x1="158.2" y1="127.04" x2="173.44" y2="135.84" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="123.92" x2="175.24" y2="132.72" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="126" x2="160" y2="109" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="126" x2="145.27" y2="134.5" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1683:Bond:0" class="event" x1="160" y1="126" x2="180.78" y2="138" stroke-width="8" opacity="0" />
+  <line id="mol1683:Bond:1" class="event" x1="160" y1="126" x2="160" y2="102" stroke-width="8" opacity="0" />
+  <line id="mol1683:Bond:2" class="event" x1="160" y1="126" x2="139.22" y2="138" stroke-width="8" opacity="0" />
+  <circle id="mol1683:Atom:0" class="event" cx="160" cy="126" r="8" opacity="0" />
+  <circle id="mol1683:Atom:1" class="event" cx="180.78" cy="138" r="8" opacity="0" />
+  <circle id="mol1683:Atom:2" class="event" cx="160" cy="102" r="8" opacity="0" />
+  <circle id="mol1683:Atom:3" class="event" cx="139.22" cy="138" r="8" opacity="0" />
+</svg>

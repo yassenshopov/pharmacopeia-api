@@ -1,0 +1,7 @@
+<svg id="mol1743" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>oxidane</title>
+  <style> #mol1743 text {font-family: sans-serif;} #mol1743 { pointer-events:none; } #mol1743 .event  { pointer-events:all; } #mol1743 line { stroke-linecap:round; } #mol1743 polygon { stroke-linejoin:round; } </style>
+  <text x="154.55" y="124.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="149.55" y="128" stroke="none" font-size="9" fill="rgb(255,13,13)">2</text>
+  <text x="139.44" y="124.67" stroke="none" font-size="14" fill="rgb(255,13,13)">H</text>
+  <circle id="mol1743:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

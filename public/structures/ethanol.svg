@@ -1,0 +1,12 @@
+<svg id="mol601" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>ethanol</title>
+  <style> #mol601 text {font-family: sans-serif;} #mol601 { pointer-events:none; } #mol601 .event  { pointer-events:all; } #mol601 line { stroke-linecap:round; } #mol601 polygon { stroke-linejoin:round; } </style>
+  <text x="133.77" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="123.66" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">H</text>
+  <line x1="180.78" y1="126" x2="160" y2="114" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="114" x2="145.66" y2="122.28" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol601:Bond:0" class="event" x1="180.78" y1="126" x2="160" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol601:Bond:1" class="event" x1="160" y1="114" x2="139.22" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol601:Atom:0" class="event" cx="180.78" cy="126" r="8" opacity="0" />
+  <circle id="mol601:Atom:1" class="event" cx="160" cy="114" r="8" opacity="0" />
+  <circle id="mol601:Atom:2" class="event" cx="139.22" cy="126" r="8" opacity="0" />
+</svg>

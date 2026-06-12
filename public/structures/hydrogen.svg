@@ -1,0 +1,5 @@
+<svg id="mol778" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>molecular hydrogen</title>
+  <style> #mol778 text {font-family: sans-serif;} #mol778 { pointer-events:none; } #mol778 .event  { pointer-events:all; } #mol778 line { stroke-linecap:round; } #mol778 polygon { stroke-linejoin:round; } </style>
+  <text x="154.95" y="124.67" stroke="none" font-size="14" fill="currentColor">H</text>
+  <circle id="mol778:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>

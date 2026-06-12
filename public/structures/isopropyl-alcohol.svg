@@ -1,0 +1,15 @@
+<svg id="mol841" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>propan-2-ol</title>
+  <style> #mol841 text {font-family: sans-serif;} #mol841 { pointer-events:none; } #mol841 .event  { pointer-events:all; } #mol841 line { stroke-linecap:round; } #mol841 polygon { stroke-linejoin:round; } </style>
+  <text x="133.77" y="142.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="123.66" y="142.67" stroke="none" font-size="14" fill="rgb(255,13,13)">H</text>
+  <line x1="180.78" y1="138" x2="160" y2="126" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="126" x2="160" y2="102" stroke="currentColor" stroke-width="1.44" />
+  <line x1="160" y1="126" x2="145.66" y2="134.28" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol841:Bond:0" class="event" x1="180.78" y1="138" x2="160" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol841:Bond:1" class="event" x1="160" y1="126" x2="160" y2="102" stroke-width="8" opacity="0" />
+  <line id="mol841:Bond:2" class="event" x1="160" y1="126" x2="139.22" y2="138" stroke-width="8" opacity="0" />
+  <circle id="mol841:Atom:0" class="event" cx="180.78" cy="138" r="8" opacity="0" />
+  <circle id="mol841:Atom:1" class="event" cx="160" cy="126" r="8" opacity="0" />
+  <circle id="mol841:Atom:2" class="event" cx="160" cy="102" r="8" opacity="0" />
+  <circle id="mol841:Atom:3" class="event" cx="139.22" cy="138" r="8" opacity="0" />
+</svg>

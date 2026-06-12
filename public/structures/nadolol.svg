@@ -1,5 +1,5 @@
-<svg id="mol99" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>(2R,3S)-5-[3-(tert-butylamino)-2-hydroxypropoxy]-1,2,3,4-tetrahydronaphthalene-2,3-diol</title>
-  <style> #mol99 text {font-family: sans-serif;} #mol99 { pointer-events:none; } #mol99 .event  { pointer-events:all; } #mol99 line { stroke-linecap:round; } #mol99 polygon { stroke-linejoin:round; } </style>
+<svg id="mol1080" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>(2R,3S)-5-[3-(tert-butylamino)-2-hydroxypropoxy]-1,2,3,4-tetrahydronaphthalene-2,3-diol</title>
+  <style> #mol1080 text {font-family: sans-serif;} #mol1080 { pointer-events:none; } #mol1080 .event  { pointer-events:all; } #mol1080 line { stroke-linecap:round; } #mol1080 polygon { stroke-linejoin:round; } </style>
   <text x="113.99" y="215.15" stroke="none" font-size="12" fill="rgb(160,0,0)">unknown chirality</text>
   <text x="206.91" y="82.67" stroke="none" font-size="14" fill="rgb(48,80,248)">N</text>
   <text x="206.91" y="68.67" stroke="none" font-size="14" fill="rgb(48,80,248)">H</text>
@@ -51,49 +51,49 @@
   <line x1="140.11" y1="158.68" x2="141.99" y2="155.44" stroke="rgb(160,0,0)" stroke-width="1.44" />
   <line x1="142.37" y1="160.42" x2="143.16" y2="159.05" stroke="rgb(160,0,0)" stroke-width="1.44" />
   <line x1="170.39" y1="78" x2="170.39" y2="61" stroke="currentColor" stroke-width="1.44" />
-  <line id="mol99:Bond:9" class="event" x1="108.04" y1="90" x2="87.25" y2="78" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:11" class="event" x1="66.47" y1="90" x2="66.47" y2="114" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:13" class="event" x1="87.25" y1="126" x2="108.04" y2="114" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:0" class="event" x1="244.75" y1="69.22" x2="232.75" y2="90" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:1" class="event" x1="232.75" y1="90" x2="253.53" y2="102" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:2" class="event" x1="232.75" y1="90" x2="220.75" y2="110.78" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:3" class="event" x1="232.75" y1="90" x2="211.96" y2="78" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:4" class="event" x1="211.96" y1="78" x2="191.18" y2="90" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:5" class="event" x1="191.18" y1="90" x2="170.39" y2="78" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:6" class="event" x1="170.39" y1="78" x2="149.61" y2="90" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:7" class="event" x1="149.61" y1="90" x2="128.82" y2="78" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:8" class="event" x1="128.82" y1="78" x2="108.04" y2="90" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:10" class="event" x1="87.25" y1="78" x2="66.47" y2="90" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:12" class="event" x1="66.47" y1="114" x2="87.25" y2="126" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:14" class="event" x1="108.04" y1="90" x2="108.04" y2="114" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:15" class="event" x1="108.04" y1="114" x2="128.82" y2="126" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:16" class="event" x1="128.82" y1="126" x2="128.82" y2="150" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:17" class="event" x1="128.82" y1="150" x2="108.04" y2="162" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:18" class="event" x1="108.04" y1="162" x2="87.25" y2="150" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:19" class="event" x1="87.25" y1="126" x2="87.25" y2="150" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:20" class="event" x1="108.04" y1="162" x2="108.04" y2="186" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:21" class="event" x1="128.82" y1="150" x2="149.61" y2="162" stroke-width="8" opacity="0" />
-  <line id="mol99:Bond:22" class="event" x1="170.39" y1="78" x2="170.39" y2="54" stroke-width="8" opacity="0" />
-  <circle id="mol99:Atom:0" class="event" cx="244.75" cy="69.22" r="8" opacity="0" />
-  <circle id="mol99:Atom:1" class="event" cx="232.75" cy="90" r="8" opacity="0" />
-  <circle id="mol99:Atom:2" class="event" cx="253.53" cy="102" r="8" opacity="0" />
-  <circle id="mol99:Atom:3" class="event" cx="220.75" cy="110.78" r="8" opacity="0" />
-  <circle id="mol99:Atom:4" class="event" cx="211.96" cy="78" r="8" opacity="0" />
-  <circle id="mol99:Atom:5" class="event" cx="191.18" cy="90" r="8" opacity="0" />
-  <circle id="mol99:Atom:6" class="event" cx="170.39" cy="78" r="8" opacity="0" />
-  <circle id="mol99:Atom:7" class="event" cx="149.61" cy="90" r="8" opacity="0" />
-  <circle id="mol99:Atom:8" class="event" cx="128.82" cy="78" r="8" opacity="0" />
-  <circle id="mol99:Atom:9" class="event" cx="108.04" cy="90" r="8" opacity="0" />
-  <circle id="mol99:Atom:10" class="event" cx="87.25" cy="78" r="8" opacity="0" />
-  <circle id="mol99:Atom:11" class="event" cx="66.47" cy="90" r="8" opacity="0" />
-  <circle id="mol99:Atom:12" class="event" cx="66.47" cy="114" r="8" opacity="0" />
-  <circle id="mol99:Atom:13" class="event" cx="87.25" cy="126" r="8" opacity="0" />
-  <circle id="mol99:Atom:14" class="event" cx="108.04" cy="114" r="8" opacity="0" />
-  <circle id="mol99:Atom:15" class="event" cx="128.82" cy="126" r="8" opacity="0" />
-  <circle id="mol99:Atom:16" class="event" cx="128.82" cy="150" r="8" opacity="0" />
-  <circle id="mol99:Atom:17" class="event" cx="108.04" cy="162" r="8" opacity="0" />
-  <circle id="mol99:Atom:18" class="event" cx="87.25" cy="150" r="8" opacity="0" />
-  <circle id="mol99:Atom:19" class="event" cx="108.04" cy="186" r="8" opacity="0" />
-  <circle id="mol99:Atom:20" class="event" cx="149.61" cy="162" r="8" opacity="0" />
-  <circle id="mol99:Atom:21" class="event" cx="170.39" cy="54" r="8" opacity="0" />
+  <line id="mol1080:Bond:9" class="event" x1="108.04" y1="90" x2="87.25" y2="78" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:11" class="event" x1="66.47" y1="90" x2="66.47" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:13" class="event" x1="87.25" y1="126" x2="108.04" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:0" class="event" x1="244.75" y1="69.22" x2="232.75" y2="90" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:1" class="event" x1="232.75" y1="90" x2="253.53" y2="102" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:2" class="event" x1="232.75" y1="90" x2="220.75" y2="110.78" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:3" class="event" x1="232.75" y1="90" x2="211.96" y2="78" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:4" class="event" x1="211.96" y1="78" x2="191.18" y2="90" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:5" class="event" x1="191.18" y1="90" x2="170.39" y2="78" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:6" class="event" x1="170.39" y1="78" x2="149.61" y2="90" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:7" class="event" x1="149.61" y1="90" x2="128.82" y2="78" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:8" class="event" x1="128.82" y1="78" x2="108.04" y2="90" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:10" class="event" x1="87.25" y1="78" x2="66.47" y2="90" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:12" class="event" x1="66.47" y1="114" x2="87.25" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:14" class="event" x1="108.04" y1="90" x2="108.04" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:15" class="event" x1="108.04" y1="114" x2="128.82" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:16" class="event" x1="128.82" y1="126" x2="128.82" y2="150" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:17" class="event" x1="128.82" y1="150" x2="108.04" y2="162" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:18" class="event" x1="108.04" y1="162" x2="87.25" y2="150" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:19" class="event" x1="87.25" y1="126" x2="87.25" y2="150" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:20" class="event" x1="108.04" y1="162" x2="108.04" y2="186" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:21" class="event" x1="128.82" y1="150" x2="149.61" y2="162" stroke-width="8" opacity="0" />
+  <line id="mol1080:Bond:22" class="event" x1="170.39" y1="78" x2="170.39" y2="54" stroke-width="8" opacity="0" />
+  <circle id="mol1080:Atom:0" class="event" cx="244.75" cy="69.22" r="8" opacity="0" />
+  <circle id="mol1080:Atom:1" class="event" cx="232.75" cy="90" r="8" opacity="0" />
+  <circle id="mol1080:Atom:2" class="event" cx="253.53" cy="102" r="8" opacity="0" />
+  <circle id="mol1080:Atom:3" class="event" cx="220.75" cy="110.78" r="8" opacity="0" />
+  <circle id="mol1080:Atom:4" class="event" cx="211.96" cy="78" r="8" opacity="0" />
+  <circle id="mol1080:Atom:5" class="event" cx="191.18" cy="90" r="8" opacity="0" />
+  <circle id="mol1080:Atom:6" class="event" cx="170.39" cy="78" r="8" opacity="0" />
+  <circle id="mol1080:Atom:7" class="event" cx="149.61" cy="90" r="8" opacity="0" />
+  <circle id="mol1080:Atom:8" class="event" cx="128.82" cy="78" r="8" opacity="0" />
+  <circle id="mol1080:Atom:9" class="event" cx="108.04" cy="90" r="8" opacity="0" />
+  <circle id="mol1080:Atom:10" class="event" cx="87.25" cy="78" r="8" opacity="0" />
+  <circle id="mol1080:Atom:11" class="event" cx="66.47" cy="90" r="8" opacity="0" />
+  <circle id="mol1080:Atom:12" class="event" cx="66.47" cy="114" r="8" opacity="0" />
+  <circle id="mol1080:Atom:13" class="event" cx="87.25" cy="126" r="8" opacity="0" />
+  <circle id="mol1080:Atom:14" class="event" cx="108.04" cy="114" r="8" opacity="0" />
+  <circle id="mol1080:Atom:15" class="event" cx="128.82" cy="126" r="8" opacity="0" />
+  <circle id="mol1080:Atom:16" class="event" cx="128.82" cy="150" r="8" opacity="0" />
+  <circle id="mol1080:Atom:17" class="event" cx="108.04" cy="162" r="8" opacity="0" />
+  <circle id="mol1080:Atom:18" class="event" cx="87.25" cy="150" r="8" opacity="0" />
+  <circle id="mol1080:Atom:19" class="event" cx="108.04" cy="186" r="8" opacity="0" />
+  <circle id="mol1080:Atom:20" class="event" cx="149.61" cy="162" r="8" opacity="0" />
+  <circle id="mol1080:Atom:21" class="event" cx="170.39" cy="54" r="8" opacity="0" />
 </svg>

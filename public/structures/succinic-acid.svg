@@ -1,0 +1,33 @@
+<svg id="mol1510" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>butanedioic acid</title>
+  <style> #mol1510 text {font-family: sans-serif;} #mol1510 { pointer-events:none; } #mol1510 .event  { pointer-events:all; } #mol1510 line { stroke-linecap:round; } #mol1510 polygon { stroke-linejoin:round; } </style>
+  <text x="206.52" y="118.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="185.73" y="154.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="196.62" y="154.67" stroke="none" font-size="14" fill="rgb(255,13,13)">H</text>
+  <text x="123.38" y="94.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="102.59" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">O</text>
+  <text x="92.48" y="130.67" stroke="none" font-size="14" fill="rgb(255,13,13)">H</text>
+  <line x1="191.18" y1="128.08" x2="206.42" y2="119.28" stroke="currentColor" stroke-width="1.44" />
+  <line x1="189.38" y1="124.96" x2="204.62" y2="116.16" stroke="currentColor" stroke-width="1.44" />
+  <line x1="130.62" y1="115.04" x2="130.62" y2="97" stroke="currentColor" stroke-width="1.44" />
+  <line x1="127.02" y1="115.04" x2="127.02" y2="97" stroke="currentColor" stroke-width="1.44" />
+  <line x1="149.61" y1="126" x2="170.39" y2="114" stroke="currentColor" stroke-width="1.44" />
+  <line x1="170.39" y1="114" x2="191.18" y2="126" stroke="currentColor" stroke-width="1.44" />
+  <line x1="191.18" y1="126" x2="191.18" y2="143" stroke="currentColor" stroke-width="1.44" />
+  <line x1="149.61" y1="126" x2="128.82" y2="114" stroke="currentColor" stroke-width="1.44" />
+  <line x1="128.82" y1="114" x2="114.48" y2="122.28" stroke="currentColor" stroke-width="1.44" />
+  <line id="mol1510:Bond:2" class="event" x1="191.18" y1="126" x2="211.96" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1510:Bond:5" class="event" x1="128.82" y1="114" x2="128.82" y2="90" stroke-width="8" opacity="0" />
+  <line id="mol1510:Bond:0" class="event" x1="149.61" y1="126" x2="170.39" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1510:Bond:1" class="event" x1="170.39" y1="114" x2="191.18" y2="126" stroke-width="8" opacity="0" />
+  <line id="mol1510:Bond:3" class="event" x1="191.18" y1="126" x2="191.18" y2="150" stroke-width="8" opacity="0" />
+  <line id="mol1510:Bond:4" class="event" x1="149.61" y1="126" x2="128.82" y2="114" stroke-width="8" opacity="0" />
+  <line id="mol1510:Bond:6" class="event" x1="128.82" y1="114" x2="108.04" y2="126" stroke-width="8" opacity="0" />
+  <circle id="mol1510:Atom:0" class="event" cx="149.61" cy="126" r="8" opacity="0" />
+  <circle id="mol1510:Atom:1" class="event" cx="170.39" cy="114" r="8" opacity="0" />
+  <circle id="mol1510:Atom:2" class="event" cx="191.18" cy="126" r="8" opacity="0" />
+  <circle id="mol1510:Atom:3" class="event" cx="211.96" cy="114" r="8" opacity="0" />
+  <circle id="mol1510:Atom:4" class="event" cx="191.18" cy="150" r="8" opacity="0" />
+  <circle id="mol1510:Atom:5" class="event" cx="128.82" cy="114" r="8" opacity="0" />
+  <circle id="mol1510:Atom:6" class="event" cx="128.82" cy="90" r="8" opacity="0" />
+  <circle id="mol1510:Atom:7" class="event" cx="108.04" cy="126" r="8" opacity="0" />
+</svg>

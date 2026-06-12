@@ -1,0 +1,7 @@
+<svg id="mol1557" xmlns="http://www.w3.org/2000/svg" version="1.1" width="320px" height="240px" viewBox="0 0 320 240" role="img"><title>tellurium</title>
+  <style> #mol1557 text {font-family: sans-serif;} #mol1557 { pointer-events:none; } #mol1557 .event  { pointer-events:all; } #mol1557 line { stroke-linecap:round; } #mol1557 polygon { stroke-linejoin:round; } </style>
+  <text x="151.83" y="124.67" stroke="none" font-size="14" fill="rgb(212,122,0)">Te</text>
+  <circle cx="148.95" cy="117.12" r="1.44" fill="currentColor" />
+  <circle cx="148.95" cy="122.88" r="1.44" fill="currentColor" />
+  <circle id="mol1557:Atom:0" class="event" cx="160" cy="120" r="8" opacity="0" />
+</svg>
