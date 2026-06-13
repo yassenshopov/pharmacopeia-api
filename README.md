@@ -3,11 +3,13 @@
 > An open, developer-first reference API for medications. JSON in, JSON
 > out, validated with Zod, free to use.
 
-This repository is the v0 preview. It ships with **~310 of the most-
-prescribed drugs in the United States**, ingested from RxNav, openFDA,
-and PubChem and baked into the source tree as static seed data, so the
-entire site and API are browsable end-to-end without any database or
-external service.
+This repository ships **310 of the most-prescribed U.S. drugs** as
+static seed data baked into the source tree, so the entire site and API
+are browsable end-to-end with no database or external service.
+Configure a Supabase Postgres backend and the same code serves the full
+production catalog — **2,577 FDA-labeled single-substance drugs** built
+by the scale ingest pipeline. Everything is ingested from RxNav,
+openFDA, and PubChem; `/api/v1/health` reports which backend answered.
 
 Each drug record carries mechanism + derived targets, indications and
 contraindications, FDA label sections (boxed warning, dosing, adverse
@@ -81,13 +83,33 @@ so none can drift from the API.
 
 ## What's in the dataset
 
+Two tiers ship from the same code. With no database, the bundled static
+seed answers every route; point it at Postgres and the full production
+catalog takes over.
+
+**Bundled static seed** (committed to the repo, the zero-dependency
+fallback):
+
 | Entity        | Count | Notes                                            |
 |---------------|-------|--------------------------------------------------|
-| Drugs         | ~310  | Full records with FDA label depth + provenance   |
-| Classes       | ~730  | RxClass: ATC, FDA EPC, mechanism of action, MeSH |
-| Ingredients   | ~310  | Active ingredients linked to their drugs         |
-| 2D structures | ~304  | Self-hosted SVGs rendered from PubChem SMILES     |
-| Analogs       | ~125  | Drugs with ≥1 structural analog (Tanimoto ≥ 0.75) |
+| Drugs         | 310   | Full records with FDA label depth + provenance   |
+| Classes       | 730   | RxClass: ATC, FDA EPC, mechanism of action, MeSH |
+| Ingredients   | 310   | Active ingredients linked to their drugs         |
+| 2D structures | 304   | Self-hosted SVGs rendered from PubChem SMILES     |
+| Analogs       | 125   | Drugs with ≥1 structural analog (Tanimoto ≥ 0.75) |
+
+**Production catalog** (Supabase Postgres, built by the scale ingest +
+enrichment pipelines):
+
+| Layer                                | Coverage      |
+|--------------------------------------|---------------|
+| Drugs (FDA-labeled, single-substance)| 2,577         |
+| 2D structures                        | 1,773         |
+| Adverse-event (FAERS) snapshots      | 2,220         |
+| PubMed literature                    | 1,522         |
+| FDA shortage entries                 | 606           |
+| CPIC pharmacogenomics                | 249           |
+| ClinicalTrials.gov crosswalks        | full catalog  |
 
 ## Project layout
 
@@ -219,13 +241,13 @@ The build is staged so each step delivers a working, shippable product.
 The live roadmap lives at [`/roadmap`](http://localhost:3000/roadmap)
 (source: [`lib/roadmap/items.ts`](./lib/roadmap/items.ts)).
 
-| Stage | Scope | Anthropic credits |
+| Stage | Scope | Status |
 |-------|----------------------------------------------|----------|
-| 0 ✅ | ~310 drugs, static seed, full API + UI, structures + analogs | ~$0 |
-| 1 | openFDA + Sonnet extraction at depth, Supabase persistence | ~$200 |
-| 2 | Top 1,000 drugs, MCP server, llms.txt | ~$500 |
-| 3 | Top 5,000 drugs, Stripe billing, Pro endpoint | ~$1,500 |
-| 4 | Community PRs, new entity types | ongoing |
+| 0 | 310-drug static seed, full API + UI, structures + analogs | ✅ shipped |
+| 1 | openFDA depth, Supabase Postgres persistence, semantic + grounded retrieval | ✅ shipped |
+| 2 | 2,577-drug scale catalog, MCP server, bulk export, webhooks | ✅ shipped |
+| 3 | Stripe billing + Pro tier, marketplace listings (RapidAPI) | planned |
+| 4 | Combination products, new jurisdictions (EMA), community PRs | ongoing |
 
 See [`AGENTS.md`](./AGENTS.md) for guidance on extending the data model
 or wiring in a real backend.
