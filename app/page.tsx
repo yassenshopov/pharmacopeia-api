@@ -30,6 +30,7 @@ import { HeroAurora } from "@/components/hero-aurora";
 import { StatCard } from "@/components/stat-card";
 import { Badge } from "@/components/ui/badge";
 import { getRepository } from "@/lib/data/repository";
+import { datasetJsonLd, jsonLdScriptProps } from "@/lib/seo/jsonld";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL, ogImageUrl } from "@/lib/seo/site";
 
 const HOME_TITLE = `${SITE_NAME} · an open API for medications`;
@@ -165,6 +166,17 @@ export default async function Home() {
 
   return (
     <div>
+      <script
+        {...jsonLdScriptProps(
+          datasetJsonLd({
+            drugs: stats.drugs,
+            classes: stats.classes,
+            ingredients: stats.ingredients,
+            version: stats.version,
+            updatedAt: stats.updatedAt,
+          }),
+        )}
+      />
       {/* ─────────────────────────────── Hero */}
       {/* `isolate` confines the inner `z-10` wrapper and the aurora's
           mix-blend-mode to this section's stacking context so portaled

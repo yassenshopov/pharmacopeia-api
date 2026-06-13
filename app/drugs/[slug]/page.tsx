@@ -31,7 +31,13 @@ import type {
   Severity,
   ShortageStatus,
 } from "@/lib/schemas";
-import { drugJsonLd, jsonLdScriptProps } from "@/lib/seo/jsonld";
+import {
+  drugFaqItems,
+  drugJsonLd,
+  faqPageJsonLd,
+  jsonLdScriptProps,
+  medicalWebPageJsonLd,
+} from "@/lib/seo/jsonld";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
 interface PageProps {
@@ -193,6 +199,8 @@ export default async function DrugDetailPage({ params }: PageProps) {
     : null;
 
   const ls = drug.labelSections;
+  const drugUrl = `/drugs/${drug.slug}`;
+  const faqItems = drugFaqItems(drug);
   const tocItems: TocItem[] = [];
   if (ls?.boxedWarning)
     tocItems.push({ id: "boxed-warning", label: "Boxed warning" });
@@ -228,6 +236,7 @@ export default async function DrugDetailPage({ params }: PageProps) {
     tocItems.push({ id: "pharmacogenomics", label: "Pharmacogenomics" });
   if (similar.length > 0)
     tocItems.push({ id: "analogs", label: "Structural analogs" });
+  if (faqItems.length > 0) tocItems.push({ id: "faq", label: "FAQ" });
 
   const proseTexts = [
     ls?.boxedWarning,
@@ -249,7 +258,22 @@ export default async function DrugDetailPage({ params }: PageProps) {
   return (
     <PlainLanguageProvider>
     <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
-      <script {...jsonLdScriptProps(drugJsonLd(drug))} />
+      <script
+        {...jsonLdScriptProps([
+          drugJsonLd(drug),
+          medicalWebPageJsonLd({
+            name: `${drug.name} — drug reference`,
+            description: drugDescription(drug),
+            url: drugUrl,
+            lastReviewed: drug.provenance.extractedAt,
+            citationUrl: drug.provenance.sourceUrl,
+            about: { "@id": absoluteUrl(`${drugUrl}#drug`) },
+          }),
+          ...(faqItems.length > 0
+            ? [faqPageJsonLd(faqItems, drugUrl)]
+            : []),
+        ])}
+      />
 
       <Breadcrumbs
         items={[
@@ -1143,6 +1167,36 @@ export default async function DrugDetailPage({ params }: PageProps) {
             <Section title="Patient summary">
               <p className="text-sm">{drug.patientSummary}</p>
             </Section>
+          )}
+
+          {faqItems.length > 0 && (
+            <section
+              id="faq"
+              className="scroll-mt-24"
+              aria-labelledby="faq-title"
+            >
+              <h2
+                id="faq-title"
+                className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground"
+              >
+                Frequently asked questions
+              </h2>
+              <dl className="space-y-3">
+                {faqItems.map((item) => (
+                  <div
+                    key={item.question}
+                    className="rounded-md border border-border/60 px-4 py-3"
+                  >
+                    <dt className="text-sm font-medium text-foreground">
+                      {item.question}
+                    </dt>
+                    <dd className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                      {item.answer}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
           )}
         </div>
 

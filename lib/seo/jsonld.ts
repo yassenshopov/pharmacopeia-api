@@ -1,5 +1,11 @@
 import type { Drug } from "@/lib/schemas";
-import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./site";
+import {
+  absoluteUrl,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_SAME_AS,
+  SITE_URL,
+} from "./site";
 
 /**
  * Typed JSON-LD builders. Every helper returns a plain object that is
@@ -41,11 +47,18 @@ export function organizationJsonLd(): JsonLd {
     "@id": `${SITE_URL}/#organization`,
     name: SITE_NAME,
     url: SITE_URL,
+    description: SITE_DESCRIPTION,
     logo: {
       "@type": "ImageObject",
-      url: absoluteUrl("/favicon.ico"),
+      "@id": `${SITE_URL}/#logo`,
+      url: absoluteUrl("/icon.svg"),
+      contentUrl: absoluteUrl("/icon.svg"),
+      width: 512,
+      height: 512,
+      caption: SITE_NAME,
     },
-    sameAs: ["https://github.com"],
+    image: { "@id": `${SITE_URL}/#logo` },
+    sameAs: [...SITE_SAME_AS],
   };
 }
 
@@ -117,6 +130,193 @@ export function drugJsonLd(drug: Drug): JsonLd {
     ...(codes.length ? { code: codes } : {}),
     isProprietary: drug.brands.length > 0,
     legalStatus: drug.jurisdiction,
+  };
+}
+
+/**
+ * Page-level wrapper for a drug record. `schema.org/Drug` describes the
+ * substance; `MedicalWebPage` describes *this page about it* and carries
+ * the YMYL trust signals Google's medical systems look for —
+ * `lastReviewed`, `reviewedBy`, `medicalAudience`, and a `citation` back
+ * to the authoritative source. The framing stays strictly reference: the
+ * audience is described, never advised.
+ */
+export function medicalWebPageJsonLd(params: {
+  name: string;
+  description: string;
+  url: string;
+  lastReviewed?: string;
+  datePublished?: string;
+  citationUrl?: string;
+  about?: { "@id": string };
+}): JsonLd {
+  const url = absoluteUrl(params.url);
+  return {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "@id": `${url}#webpage`,
+    name: params.name,
+    description: params.description,
+    url,
+    inLanguage: "en",
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    medicalAudience: [
+      { "@type": "MedicalAudience", audienceType: "Clinician" },
+      { "@type": "MedicalAudience", audienceType: "Researcher" },
+    ],
+    reviewedBy: { "@id": `${SITE_URL}/#organization` },
+    ...(params.about ? { mainEntity: params.about } : {}),
+    ...(params.lastReviewed ? { lastReviewed: params.lastReviewed } : {}),
+    ...(params.datePublished
+      ? { datePublished: params.datePublished }
+      : {}),
+    ...(params.lastReviewed ? { dateModified: params.lastReviewed } : {}),
+    ...(params.citationUrl
+      ? { citation: { "@type": "CreativeWork", url: params.citationUrl } }
+      : {}),
+  };
+}
+
+/**
+ * Derive a small, self-contained FAQ from a drug record. Every answer is
+ * lifted verbatim or near-verbatim from the structured record so the
+ * `FAQPage` schema never asserts anything the page itself doesn't show.
+ * These match real long-tail queries ("what is X used for", "what class
+ * is X") where the structured data is the differentiator.
+ */
+export function drugFaqItems(
+  drug: Drug,
+): { question: string; answer: string }[] {
+  const items: { question: string; answer: string }[] = [];
+  const className = drug.classes[0]?.name;
+
+  if (drug.mechanism?.summary) {
+    items.push({
+      question: `How does ${drug.name} work?`,
+      answer: drug.mechanism.summary,
+    });
+  }
+  if (drug.indications.length > 0) {
+    const uses = drug.indications.map((i) => i.text).slice(0, 4).join("; ");
+    items.push({
+      question: `What is ${drug.name} used for?`,
+      answer: `According to FDA labeling, ${drug.name} carries indications including: ${uses}. This is a reference summary of labeled uses, not medical advice or a treatment recommendation.`,
+    });
+  }
+  if (className) {
+    items.push({
+      question: `What class of drug is ${drug.name}?`,
+      answer: `${drug.name} is classified as ${drug.classes
+        .map((c) => c.name)
+        .join(", ")}.`,
+    });
+  }
+  if (drug.brands.length > 0) {
+    items.push({
+      question: `What are the brand names for ${drug.name}?`,
+      answer: `${drug.name} is marketed under brand names including ${drug.brands
+        .slice(0, 8)
+        .join(", ")}.`,
+    });
+  }
+  if (drug.contraindications.length > 0) {
+    items.push({
+      question: `What are the contraindications for ${drug.name}?`,
+      answer: `${drug.name} labeling lists contraindications including: ${drug.contraindications
+        .map((c) => c.text)
+        .slice(0, 4)
+        .join("; ")}. Always consult the full prescribing information and a clinician.`,
+    });
+  }
+  return items;
+}
+
+/**
+ * A `CollectionPage` wrapping an ordered `ItemList`. Used for hub pages
+ * (drugs in a class, drugs for a condition) so the list relationship is
+ * machine-readable and the members can surface as sitelinks.
+ */
+export function collectionPageJsonLd(params: {
+  name: string;
+  description: string;
+  url: string;
+  items: { name: string; url: string }[];
+}): JsonLd {
+  const url = absoluteUrl(params.url);
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${url}#webpage`,
+    name: params.name,
+    description: params.description,
+    url,
+    inLanguage: "en",
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: params.items.length,
+      itemListElement: params.items.map((item, idx) => ({
+        "@type": "ListItem",
+        position: idx + 1,
+        name: item.name,
+        url: absoluteUrl(item.url),
+      })),
+    },
+  };
+}
+
+/**
+ * Describes the whole dataset as a `Dataset` entity (Google Dataset
+ * Search + AI ingestion). Points at the machine-readable surfaces and
+ * the open licence so the corpus is discoverable as data, not just pages.
+ */
+export function datasetJsonLd(params: {
+  drugs: number;
+  classes: number;
+  ingredients: number;
+  version: string;
+  updatedAt: string;
+}): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "@id": `${SITE_URL}/#dataset`,
+    name: `${SITE_NAME} — open medication reference dataset`,
+    description: `Structured, versioned reference data for ${params.drugs} medications, ${params.classes} pharmacological classes, and ${params.ingredients} active ingredients, with per-record provenance. Snapshot ${params.version}.`,
+    url: absoluteUrl("/data"),
+    sameAs: absoluteUrl("/data"),
+    version: params.version,
+    dateModified: params.updatedAt,
+    inLanguage: "en",
+    isAccessibleForFree: true,
+    creator: { "@id": `${SITE_URL}/#organization` },
+    publisher: { "@id": `${SITE_URL}/#organization` },
+    keywords: [
+      "medications",
+      "drugs",
+      "drug classes",
+      "drug interactions",
+      "RxNorm",
+      "ATC",
+      "openFDA",
+      "pharmacology",
+    ],
+    distribution: [
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: absoluteUrl("/api/v1/openapi.json"),
+        name: "OpenAPI 3.1 document",
+      },
+      {
+        "@type": "DataDownload",
+        encodingFormat: "application/json",
+        contentUrl: absoluteUrl("/api/v1/drugs"),
+        name: "Drugs collection (paginated JSON)",
+      },
+    ],
   };
 }
 

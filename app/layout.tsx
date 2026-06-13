@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter, Outfit } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { CommandSearch } from "@/components/command-search";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
@@ -10,9 +12,11 @@ import {
   websiteJsonLd,
 } from "@/lib/seo/jsonld";
 import {
+  GA_MEASUREMENT_ID,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_URL,
+  SITE_VERIFICATION,
   ogImageUrl,
 } from "@/lib/seo/site";
 import "./globals.css";
@@ -88,6 +92,17 @@ export const metadata: Metadata = {
       "application/rss+xml": `${SITE_URL}/feed.xml`,
       "application/feed+json": `${SITE_URL}/feed.json`,
     },
+  },
+  verification: {
+    ...(SITE_VERIFICATION.google
+      ? { google: SITE_VERIFICATION.google }
+      : {}),
+    ...(SITE_VERIFICATION.yandex
+      ? { yandex: SITE_VERIFICATION.yandex }
+      : {}),
+    ...(SITE_VERIFICATION.bing
+      ? { other: { "msvalidate.01": SITE_VERIFICATION.bing } }
+      : {}),
   },
   robots: {
     index: true,
@@ -176,6 +191,8 @@ export default function RootLayout({
           <SiteFooter />
           <CommandSearch />
         </ThemeProvider>
+        <SpeedInsights />
+        {GA_MEASUREMENT_ID && <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />}
       </body>
     </html>
   );

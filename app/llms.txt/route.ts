@@ -101,12 +101,15 @@ function renderLlmsTxt(stats: {
   push("## Browsable reference (HTML)");
   push();
   link("Docs", "/docs", "endpoint reference + conventions + indicator legend");
+  link("Methodology", "/methodology", "data sources, provenance model, review process, and limitations");
   link("Drugs", "/drugs");
   link("Classes", "/classes");
   link("Ingredients", "/ingredients");
   link("Brands", "/brands");
+  link("Conditions", "/conditions", "ICD-10-CM concepts → drugs labeled for them");
   link("ATC explorer", "/atc");
   link("Interactions", "/interactions");
+  link("Compare drugs", "/compare/atorvastatin-vs-rosuvastatin", "side-by-side drug-vs-drug contrasts at /compare/{a}-vs-{b} (slugs in alphabetical order)");
   link("FAQ", "/faq");
   link("Glossary", "/glossary");
   link("Roadmap", "/roadmap");

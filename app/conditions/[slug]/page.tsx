@@ -8,6 +8,11 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getRepository } from "@/lib/data/repository";
 import type { Condition } from "@/lib/schemas";
+import {
+  collectionPageJsonLd,
+  jsonLdScriptProps,
+  medicalWebPageJsonLd,
+} from "@/lib/seo/jsonld";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
 interface PageProps {
@@ -89,11 +94,34 @@ export async function generateMetadata({
 
 export default async function ConditionDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const condition = await getRepository().getCondition(slug);
+  const repo = getRepository();
+  const condition = await repo.getCondition(slug);
   if (!condition) notFound();
+  const stats = await repo.getStats();
+  const conditionUrl = `/conditions/${condition.slug}`;
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      <script
+        {...jsonLdScriptProps([
+          medicalWebPageJsonLd({
+            name: `${condition.name} — drugs labeled for this condition`,
+            description: conditionDescription(condition),
+            url: conditionUrl,
+            lastReviewed: stats.updatedAt,
+          }),
+          collectionPageJsonLd({
+            name: `Drugs labeled for ${condition.name}`,
+            description: `Medications whose FDA-labeled indications map to ${condition.name} (ICD-10-CM ${condition.icd10}).`,
+            url: conditionUrl,
+            items: condition.drugs.map((d) => ({
+              name: d.name,
+              url: `/drugs/${d.slug}`,
+            })),
+          }),
+        ])}
+      />
+
       <Breadcrumbs
         items={[
           { label: "Conditions", href: "/conditions" },

@@ -71,6 +71,7 @@ const developerLinks: ReadonlyArray<FooterLink> = [
   { href: "/api/graphql", label: "GraphQL" },
   { href: "/api/v1/openapi.json", label: "OpenAPI 3.1 spec", raw: true },
   { href: "/data", label: "Bulk data" },
+  { href: "/methodology", label: "Methodology" },
   { href: "/changelog", label: "Changelog" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/faq", label: "FAQ" },

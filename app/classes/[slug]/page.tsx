@@ -7,6 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { getRepository } from "@/lib/data/repository";
 import type { DrugClass } from "@/lib/schemas";
+import {
+  collectionPageJsonLd,
+  jsonLdScriptProps,
+} from "@/lib/seo/jsonld";
 import { absoluteUrl, ogImageUrl, SITE_NAME } from "@/lib/seo/site";
 
 interface PageProps {
@@ -93,6 +97,20 @@ export default async function ClassDetailPage({ params }: PageProps) {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6">
+      <script
+        {...jsonLdScriptProps(
+          collectionPageJsonLd({
+            name: `${cls.name} — drugs in this class`,
+            description: classDescription(cls),
+            url: `/classes/${cls.slug}`,
+            items: drugs.map((d) => ({
+              name: d.name,
+              url: `/drugs/${d.slug}`,
+            })),
+          }),
+        )}
+      />
+
       <Breadcrumbs
         items={[
           { label: "Classes", href: "/classes" },

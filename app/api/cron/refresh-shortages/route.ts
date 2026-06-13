@@ -28,6 +28,7 @@ import {
   fetchAllShortageRecords,
   shortageDatasetHash,
 } from "@/lib/ingest/shortages";
+import { submitToIndexNow } from "@/lib/seo/indexnow";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -105,8 +106,20 @@ async function refresh(request: Request): Promise<Response> {
     }
   });
 
+  // Best-effort: nudge IndexNow for the drug pages whose shortage status
+  // changed, plus the shortage index. Never blocks or fails the refresh.
+  const indexNow = await submitToIndexNow([
+    "/shortages",
+    ...[...bySlug.keys()].map((slug) => `/drugs/${slug}`),
+  ]);
+
   return Response.json({
-    data: { changed: true, ...summary, tookMs: Date.now() - startedAt },
+    data: {
+      changed: true,
+      ...summary,
+      indexNow,
+      tookMs: Date.now() - startedAt,
+    },
   });
 }
 
